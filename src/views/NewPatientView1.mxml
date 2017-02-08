@@ -18,6 +18,7 @@
 			
 			// Define local vars
 			public var aq10:String = "0";
+			public var agelimit:int = 18;
 			public var q11:String = "0";
 			public var q11a:String = "0";
 			public var q12:String;	
@@ -326,296 +327,161 @@
 			protected function q11aYes_clickHandler(event:MouseEvent):void
 			{
 					
+				warningtext.visible=false;	
+				nextButton.visible=true;
 					
-					
-					 if (!q1.selected) 
-					{
-						q1w.visible=true;	
-						nextButton.visible=false;
-						q11aYes.selected=false;
-						
-					}else 
-					{
-					
-					
-					no_1.visible=false;
-					no_2.visible=false;
-					no_3.visible=false;
-					no_4.visible=false;
-					q1w.visible=false;	
-					q2w.visible=false;
-					q3w.visible=false;
-					q4w.visible=false;
-					q5w.visible=false;
-					q7w.visible=false;
-					q8w.visible=false;
-					q9w.visible=false;
-					
-					q11w.visible=false;
-					warningtext2.visible=false;
-					nextButton.visible=true;
-					nextButton.label="Proceed"
-					warningtext.visible=false;
-					
-					}
+			
 					 
+					 if(!q1.selected)
+						 
+					 {
+						 q1w.visible=true;	
+						 warningtext.visible=true;	
+						 nextButton.visible=false;
+						 q11aYes.selected=false;
+					 }else 
+					 {
+						 q1w.visible=false;	
+						 
+						 
+						 
+						 
+					 }
 					 
-					 if (!q2.selected) 
+					 if(!q2.selected)
+						 
 					 {
 						 q2w.visible=true;	
+						 warningtext.visible=true;	
 						 nextButton.visible=false;
 						 q11aYes.selected=false;
-						 
 					 }else 
 					 {
+						 q2w.visible=false;	
 						 
 						 
-						 no_1.visible=false;
-						 no_2.visible=false;
-						 no_3.visible=false;
-						 no_4.visible=false;
-						 q1w.visible=false;	
-						 q2w.visible=false;
-						 q3w.visible=false;
-						 q4w.visible=false;
-						 q5w.visible=false;
-						 q7w.visible=false;
-						 q8w.visible=false;
-						 q9w.visible=false;
-						
-						 q11w.visible=false;
-						 warningtext2.visible=false;
-						 nextButton.visible=true;
-						 nextButton.label="Proceed"
-						 warningtext.visible=false;
 						 
 					 }
 					 
+					
+						
 					 
-					 if (!q3.selected) 
+					 if(!q3.selected)
+						 
 					 {
 						 q3w.visible=true;	
+						 warningtext.visible=true;	
 						 nextButton.visible=false;
 						 q11aYes.selected=false;
-						 
 					 }else 
 					 {
-						 
-						 
-						 no_1.visible=false;
-						 no_2.visible=false;
-						 no_3.visible=false;
-						 no_4.visible=false;
-						 q1w.visible=false;	
-						 q2w.visible=false;
-						 q3w.visible=false;
-						 q4w.visible=false;
-						 q5w.visible=false;
-						 q7w.visible=false;
-						 q8w.visible=false;
-						 q9w.visible=false;
-						 
-						 q11w.visible=false;
-						 warningtext2.visible=false;
-						 nextButton.visible=true;
-						 nextButton.label="Proceed"
-						 warningtext.visible=false;
-						 
+						 q3w.visible=false;	
+						
+					 
 					 }
 					 
-					 if (!q4.selected) 
+					 
+					 
+					 if(!q4.selected)
+						 
 					 {
 						 q4w.visible=true;	
+						 warningtext.visible=true;	
 						 nextButton.visible=false;
 						 q11aYes.selected=false;
-						 
 					 }else 
 					 {
-						 
-						 
-						 no_1.visible=false;
-						 no_2.visible=false;
-						 no_3.visible=false;
-						 no_4.visible=false;
-						 q1w.visible=false;	
-						 q2w.visible=false;
-						 q3w.visible=false;
-						 q4w.visible=false;
-						 q5w.visible=false;
-						 q7w.visible=false;
-						 q8w.visible=false;
-						 q9w.visible=false;
+						 q4w.visible=false;	
 						
-						 q11w.visible=false;
-						 warningtext2.visible=false;
-						 nextButton.visible=true;
-						 nextButton.label="Proceed"
-						 warningtext.visible=false;
+					 }
+					 
+					 
+					 
+					 
+					 
+					 
+					 
+					 if(!month1.selected && !year1.selected)
+						 
+					 {
+						 
+						 warningtext.visible=true;	
+						 nextButton.visible=false;
+						 q11aYes.selected=false;
+					 }else 
+					 {
+						 warningtext.visible=false;	
+						 
 						 
 					 }
 					 
-					 if (!q5.selected) 
+					 
+					 if(ageNum.text =="")
+						 
 					 {
-						 q5w.visible=true;	
+						 
+						 warningtext.visible=true;	
 						 nextButton.visible=false;
 						 q11aYes.selected=false;
-						 
-					 }else 
-					 {
-						 
-						 
-						 no_1.visible=false;
-						 no_2.visible=false;
-						 no_3.visible=false;
-						 no_4.visible=false;
-						 q1w.visible=false;	
-						 q2w.visible=false;
-						 q3w.visible=false;
-						 q4w.visible=false;
-						 q5w.visible=false;
-						 q7w.visible=false;
-						 q8w.visible=false;
-						 q9w.visible=false;
-						
-						 q11w.visible=false;
-						 warningtext2.visible=false;
-						 nextButton.visible=true;
-						 nextButton.label="Proceed"
-						 warningtext.visible=false;
-						 
 					 }
+					 
+						 
+					 
 					 
 					 if (hemoglobin_measure.text == "") 
 					 {
 						 warningtext.visible=true;	
+						 warningtext2.visible=true;	
 						 nextButton.visible=false;
 						 q11aYes.selected=false;
-						 
-					 } else 
-					 {
-						 
-						 
-						 no_1.visible=false;
-						 no_2.visible=false;
-						 no_3.visible=false;
-						 no_4.visible=false;
-						 q1w.visible=false;	
-						 q2w.visible=false;
-						 q3w.visible=false;
-						 q4w.visible=false;
-						 q5w.visible=false;
-						 q7w.visible=false;
-						 q8w.visible=false;
-						 q9w.visible=false;
-						 
-						 q11w.visible=false;
-						 warningtext2.visible=false;
-						 nextButton.visible=true;
-						 nextButton.label="Proceed"
-						 warningtext.visible=false;
-						 
 					 }
 					 
 					 
-					 
-					 if (!q7.selected) 
+					 if(!q7.selected )
+						 
 					 {
-						 q7w.visible=true;	
+						 q7w.visible=true;
+						 warningtext.visible=true;	
 						 nextButton.visible=false;
 						 q11aYes.selected=false;
-						 
 					 }else 
 					 {
-						 
-						 
-						 no_1.visible=false;
-						 no_2.visible=false;
-						 no_3.visible=false;
-						 no_4.visible=false;
-						 q1w.visible=false;	
-						 q2w.visible=false;
-						 q3w.visible=false;
-						 q4w.visible=false;
-						 q5w.visible=false;
 						 q7w.visible=false;
-						 q8w.visible=false;
-						 q9w.visible=false;
 						
-						 q11w.visible=false;
-						 warningtext2.visible=false;
-						 nextButton.visible=true;
-						 nextButton.label="Proceed"
-						 warningtext.visible=false;
 						 
 					 }
 					 
-					 if (!q8.selected) 
+					 if(!q8.selected )
+						 
 					 {
-						 q8w.visible=true;	
+						 q8w.visible=true;
+						 warningtext.visible=true;	
 						 nextButton.visible=false;
 						 q11aYes.selected=false;
-						 
 					 }else 
 					 {
-						 
-						 
-						 no_1.visible=false;
-						 no_2.visible=false;
-						 no_3.visible=false;
-						 no_4.visible=false;
-						 q1w.visible=false;	
-						 q2w.visible=false;
-						 q3w.visible=false;
-						 q4w.visible=false;
-						 q5w.visible=false;
-						 q7w.visible=false;
 						 q8w.visible=false;
-						 q9w.visible=false;
-						
-						 q11w.visible=false;
-						 warningtext2.visible=false;
-						 nextButton.visible=true;
-						 nextButton.label="Proceed"
-						 warningtext.visible=false;
 						 
 					 }
+					 
+					 
 					 
 					 
 					 if(!male.selected && !female.selected)
 						 
 					 {
-						 q9w.visible=true;	
+						 q9w.visible=true;
+						 warningtext.visible=true;	
 						 nextButton.visible=false;
 						 q11aYes.selected=false;
-						 
 					 }else 
 					 {
-						 
-						 
-						 no_1.visible=false;
-						 no_2.visible=false;
-						 no_3.visible=false;
-						 no_4.visible=false;
-						 q1w.visible=false;	
-						 q2w.visible=false;
-						 q3w.visible=false;
-						 q4w.visible=false;
-						 q5w.visible=false;
-						 q7w.visible=false;
-						 q8w.visible=false;
 						 q9w.visible=false;
 						
-						 q11w.visible=false;
-						 warningtext2.visible=false;
-						 nextButton.visible=true;
-						 nextButton.label="Proceed"
-						 warningtext.visible=false;
 						 
 					 }
 					 
-					 
-					 
-					 
+					 					 
 					 if(!q191y.selected && !q191n.selected)
 						 
 					 {
@@ -626,7 +492,7 @@
 					 }
 					
 					 
-					 if(!q192y.selected && !q192n.selected)
+					 if(!q192y.selected && !q192n.selected && !q191n.selected)
 						 
 					 {
 						 q92w.visible=true;	
@@ -637,48 +503,67 @@
 				
 					 
 					 
-					 
 					 if (!q11_yes.selected && !q11_no.selected) 
+						 
 					 {
-						 q11w.visible=true;	
+						 q11w.visible=true;
+						 warningtext.visible=true;	
 						 nextButton.visible=false;
 						 q11aYes.selected=false;
-						 
 					 }else 
 					 {
-						 
-						 
-						 no_1.visible=false;
-						 no_2.visible=false;
-						 no_3.visible=false;
-						 no_4.visible=false;
-						 q1w.visible=false;	
-						 q2w.visible=false;
-						 q3w.visible=false;
-						 q4w.visible=false;
-						 q5w.visible=false;
-						 q7w.visible=false;
-						 q8w.visible=false;
-						 q9w.visible=false;
-						 warningtext2.visible=false;
 						 q11w.visible=false;
+					
 						 
-						 nextButton.visible=true;
-						 nextButton.label="Proceed"
-						 warningtext.visible=false;
 						 
 					 }
 					 
-					 
-					 if (!q11aYes.selected) {
+					 if(!q5.selected)
 						 
-											 
+					 {
+						 q5w.visible=true;	
+						 warningtext.visible=true;	
 						 nextButton.visible=false;
-						 warningtext2.visible=true;	
+						 q11aYes.selected=false;
+					 }else 
+					 {
+						 q5w.visible=false;	
+						 
 						 
 					 }
 					 
 					 
+					
+					 // if goes back on selection
+					 
+					 if (no_1.visible=true) {
+						 
+					
+					 q11_no.selected = false;
+					 q11_yes.selected= true;
+					 q11_yes.enabled= true;
+					 
+					 
+					 no_1.visible=false;
+					 no_2.visible=false;
+					 no_3.visible=false;
+					 no_4.visible=false;
+					 
+					 nextButton.visible=true;
+					 nextButton.label="Proceed"
+					 warningtext.visible=false;
+					 
+					 }
+					 
+					 
+					 if(!q11aYes.selected)
+						 
+					 {
+							
+						 warningtext.visible=true;	
+						 nextButton.visible=false;
+						
+					 } 
 					
 					 
 					 
@@ -696,7 +581,7 @@
 				no_4.visible=false;
 				hemoglobin_measure.visible=false;
 				hemo.visible=false;
-				warningtext.visible=false;	
+				warningtext2.visible=false;	
 				q1w.visible=false;
 				q2w.visible=false;
 				q3w.visible=false;
@@ -731,7 +616,7 @@
 					dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
 					dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
 					
-					dbConnection.openAsync(dbFile);
+					dbConnection.open(dbFile);
 					
 					
 					// check if db exists, then create if doesnt 
@@ -908,7 +793,7 @@
 				SQLStatement1.text ="INSERT INTO eligibility (q1, age, ageType, guardian, q2, q3, q4, q5, q6, q7, q8, gender, childbearing_age, breast_feeding, q10, q10_isTested, q10_pregnant, q11, q11a, no_2, no_4, hemoglobin, tabletId, interviewer, dateModified, cField) VALUES ('"+aq1+"','"+ageNum.text+"','"+ageTypes+"','"+guardian_name.text+"','"+aq2+"','"+aq3+"','"+aq4+"','"+aq5+"','"+aq6+"','"+aq7+"','"+aq8+"','"+thegenders+"','"+q191+"','"+q192+"','"+aq10+"','"+q10_isTested+"','"+q10_pregnant+"','"+q11+"','"+q11a+"','"+no_2.text+"','"+no_4.text+"','"+hemoglobin_measure.text+"','"+tabletID+"','"+interviewerName+"','"+date1+"','"+CHK+"')";
 				
 				SQLStatement1.execute();
-				
+				dbConnection.close();
 				
 				// proceed to next screen
 				
@@ -953,7 +838,7 @@
 				SQLStatement1.text ="INSERT INTO eligibility (q1, age, ageType, guardian, q2, q3, q4, q5, q6, q7, q8, gender, childbearing_age, breast_feeding, q10, q10_isTested, q10_pregnant, q11, q11a, no_2, no_4, hemoglobin, tabletId, interviewer, dateModified, cField) VALUES ('"+aq1+"','"+ageNum.text+"','"+ageTypes+"','"+guardian_name.text+"','"+aq2+"','"+aq3+"','"+aq4+"','"+aq5+"','"+aq6+"','"+aq7+"','"+aq8+"','"+thegenders+"','"+q191+"','"+q192+"','"+aq10+"','"+q10_isTested+"','"+q10_pregnant+"','"+q11+"','"+q11a+"','"+no_2.text+"','"+no_4.text+"','"+hemoglobin_measure.text+"','"+tabletID+"','"+interviewerName+"','"+date1+"','"+CHK+"')";
 				
 				SQLStatement1.execute();
-				
+				dbConnection.close();
 				
 				// proceed to next screen
 								
@@ -984,7 +869,7 @@
 			{
 				month1.selected=false;
 				
-				if (ageNum.text < '18') {
+				if (int(ageNum.text) < agelimit) {
 				guardian_name.visible=true;
 				guardian_nameLabel.visible=true;
 				} else
@@ -1063,15 +948,14 @@
 				
 				nextButton.visible=false;
 				nextButton.label="Proceed"
-				warningtext2.visible=true;
+				warningtext.visible=true;
 				
 			}
 			
 			protected function q2_clickHandler(event:MouseEvent):void
 			{
 				// check for guardian
-				
-				if (ageNum.text < '18') {
+				if (int(ageNum.text) < agelimit) {
 					guardian_name.visible=true;
 					guardian_nameLabel.visible=true;
 				} else
@@ -1229,7 +1113,7 @@
 	<s:Label id="q10_pregnant_text" x="157" y="1482" width="524" height="27" fontSize="22"
 			 fontWeight="normal" text="Was the test positive for pregnancy?" textAlign="left"
 			 verticalAlign="top"/>
-	<s:Label id="warningtext" x="289" y="691" color="#C01111" fontSize="20" fontWeight="bold"
+	<s:Label id="warningtext2" x="289" y="691" color="#C01111" fontSize="20" fontWeight="bold"
 			 text="You must enter hemoglobin!"/>
 	<s:Label id="q9w" x="302" y="1057" color="#C01111" fontSize="22" fontWeight="bold"
 			 text="This is required!"/>
@@ -1269,7 +1153,7 @@
 										   textAlign="left" verticalAlign="middle"/>
 	<s:Label id="q1w" x="319" y="126" color="#C01111" fontSize="20" fontWeight="bold"
 			 text="This is required!"/>
-	<s:Label id="warningtext2" x="224" y="1941" color="#EA0C0C" fontSize="35" fontWeight="bold"
+	<s:Label id="warningtext" x="224" y="1941" color="#EA0C0C" fontSize="35" fontWeight="bold"
 			 text="Answer all questions!"/>
 								  <s:Label x="84" y="180" fontSize="22" fontWeight="normal" text="Enter Age:"/>
 								  <s:TextInput id="ageNum" x="202" y="165" width="138" height="50"

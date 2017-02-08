@@ -23,6 +23,31 @@
 					"/" + (new Date()).getFullYear());
 			
 			
+			public var dbFile:File;
+			public var dbConnection:SQLConnection;
+			public var CHK:String ="1";
+			
+			
+			private function onDatabaseOpen(evt:SQLEvent):void
+				
+			{
+				
+				//var statement:SQLStatement = new SQLStatement();
+				//statement.sqlConnection = dbConnection;
+				//statement.execute();
+				
+				
+				trace("Database is open");
+				
+				
+			}
+			
+			
+			private function onDatabaseClose(evt:SQLEvent):void
+				
+			{
+				trace("Database is closed");
+			}
 			
 			private function onloaded():void
 			{
@@ -33,7 +58,31 @@
 				
 			
 				
+				trace("Loading DB");
 				
+				//connects to Db
+				
+				dbFile = File.applicationStorageDirectory.resolvePath("prompt_local.db");
+				dbConnection = new SQLConnection();
+				dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
+				dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
+				
+				dbConnection.open(dbFile);
+				
+				
+				// check if db exists, then create if doesnt 
+				
+				/**
+				 *
+				 * 
+				 * */
+				
+				var statement:SQLStatement = new SQLStatement();
+				statement.sqlConnection = dbConnection;
+				statement.text ="CREATE TABLE IF NOT EXISTS concomitant (id INTEGER PRIMARY KEY AUTOINCREMENT, pid TEXT, SAE TEXT, tabletId TEXT, interviewer TEXT, cField TEXT)";
+				statement.execute();
+					
+				dbConnection.close();
 			}
 			
 			
@@ -55,7 +104,7 @@
 				param.pid=patientID;
 				param.tabletId=tabletID;
 				param.interviewer=interviewerName;
-				param.fynder='b7dce38b7994111508ed8e2f132e09d9cc3e36cb5f39c12e131bc942f6ebb4431dd4585587a64def7eabf42826ba7edd96ce21735b4007377d133cee08f9d1d9';		
+				param.fynder='b7dce38b7994111508ed8e2f132e09d9cc3e353454356cb5f39c12e131bc942f6ebb4431dd45dd96ce21735b40079';		
 				
 				
 				// submit
@@ -74,7 +123,30 @@
 				
 				//	After Successfull Submission
 				
-			
+				/**
+				 * Saves data to local database with check field set to 0
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * 
+				 * 
+				 * */
+				trace("Saving data to local database with check field set to 0");
+				
+				CHK = "0";
+				
+				dbConnection.open(dbFile);
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO concomitant (pid, SAE, tabletId, interviewer, cField) VALUES ('"+patientID+"','"+SAEDetails+"','"+tabletID+"','"+interviewerName+"','"+CHK+"')";
+				SQLStatement1.execute();
+				
+				dbConnection.close();
+				
+			// next screen
 					navigator.pushView(addedEncounterView);
 					
 			
@@ -87,6 +159,28 @@
 				//	After Unsuccessfull Submission - Tablet stores data until next login
 				
 				
+				/**
+				 * Saves data to local database with check field set to 1
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * 
+				 * 
+				 * */
+				trace("Saving data to local database with check field set to 1");
+				
+				CHK = "1";
+				
+				dbConnection.open(dbFile);
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO concomitant (pid, SAE, tabletId, interviewer, cField) VALUES ('"+patientID+"','"+SAEDetails+"','"+tabletID+"','"+interviewerName+"','"+CHK+"')";
+				SQLStatement1.execute();
+				
+				dbConnection.close();
 				
 			
 					
@@ -106,7 +200,7 @@
 	
 	<fx:Declarations>
 		<s:HTTPService id="concomitantSND" 
-					   url="http://swaziland.promptsvr.org/concomitantDrugs.php" 
+					   url="http://prompt.app-king.net/concomitantDrugs.php" 
 					   method="POST"
 					   result="resultHandler(event)"
 					   resultFormat="text"

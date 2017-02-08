@@ -6,41 +6,6 @@
 	<fx:Script>
 		<![CDATA[
 			
-			public var dbFile:File;
-			public var dbConnection:SQLConnection;
-						
-			protected function createdbbutton_clickHandler(event:MouseEvent):void
-			{
-				 dbFile = File.applicationStorageDirectory.resolvePath("prompt1.db");
-				 dbConnection = new SQLConnection();
-				 dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
-				 dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
-				 
-				 dbConnection.openAsync(dbFile);
-						
-			}
-			
-			
-			private function onDatabaseOpen(evt:SQLEvent):void
-				
-			{
-				trace("Database is open");
-				var statement:SQLStatement = new SQLStatement();
-				statement.sqlConnection = dbConnection;
-				statement.text ="CREATE TABLE IF NOT EXISTS patients (id INTEGER PRIMARY KEY AUTOINCREMENT, dateAdded TEXT, healthFacility TEXT, familyName TEXT, fname TEXT, nationality TEXT, nationalityOther TEXT, countryOfResidence TEXT, age TEXT, ageType TEXT, sex TEXT, mobile1 TEXT, mobile2 TEXT, pregnant TEXT, weight TEXT, q11 TEXT, q12 TEXT, q13 TEXT, q13Other TEXT, q14 TEXT, q15DailyDose TEXT, q15DailyDoseOther TEXT, q15Days TEXT, q15DaysOther TEXT, tabletId TEXT, interviewer TEXT, dateModified TEXT, patientid TEXT)";
-				statement.execute();
-				
-			
-				
-			}
-			
-			
-			private function onDatabaseClose(evt:SQLEvent):void
-				
-			{
-				trace("Database is closed");
-			}
-			
 			
 		
 			
@@ -52,15 +17,15 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:Label top="92" color="#007EFF" fontSize="55" fontWeight="bold" horizontalCenter="-9"
+	<s:Label top="40" color="#007EFF" fontSize="55" fontWeight="bold" horizontalCenter="-9"
 			 text="Manual Sync"/>
-	<s:Button id="backButton" width="795" height="150" label="Login Screen"
+	<s:Button id="backButton" width="795" height="150" label="OK"
 			  click="navigator.pushView(DashboardView)" fontSize="70" horizontalCenter="0"
 			  verticalCenter="607"/>
 	<s:Label y="571" width="721" height="108" fontSize="33" fontWeight="bold" horizontalCenter="0"
-			 text="You have successfully sent local forms to the local server." textAlign="center"
+			 text="All forms sent to local server." textAlign="center"
 			 verticalAlign="middle"/>
 	<s:Label y="663" width="721" height="108" color="#9A1C1C" fontSize="28" fontWeight="normal"
-			 horizontalCenter="0" text="Remember to do this at the end of every end of day."
+			 horizontalCenter="0" text="Remember to do this at the end of every day."
 			 textAlign="center" verticalAlign="middle"/>
 </s:View>

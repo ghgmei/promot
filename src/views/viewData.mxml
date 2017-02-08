@@ -9,7 +9,7 @@
 <fx:Script>
 	<![CDATA[
 		
-		
+		//listDepLocalVisits.mxml
 		
 		
 	]]>
@@ -24,17 +24,25 @@
 			  click="navigator.pushView(listLocalPatients)" enabled="true" fontSize="50"
 			  horizontalCenter="7" verticalCenter="-358"/>
 	<s:Button id="supportButton2" width="795" height="90" label="Patient Visits"
-			  click="navigator.pushView(listLocalPatients)" enabled="true" fontSize="50"
-			  horizontalCenter="7" verticalCenter="-253"/>
+			  click="navigator.pushView(listLocalVisits)" enabled="true" fontSize="50"
+			  horizontalCenter="7" verticalCenter="-145"/>
+	
+	
+	<s:Button id="supportButton222" width="795" height="90" label="Deprecated Patient Visits"
+			  click="navigator.pushView(listDepLocalVisits)" color="#828282" enabled="true"
+			  fontSize="50" horizontalCenter="7" verticalCenter="-254"/>
+	
+	
+	
 	<s:Button id="supportButton3" width="795" height="90" label="Adverse Events"
-			  click="navigator.pushView(listLocalPatients)" enabled="true" fontSize="50"
-			  horizontalCenter="7" verticalCenter="-147"/>
+			  click="navigator.pushView(listLocalEvents)" enabled="true" fontSize="50"
+			  horizontalCenter="7" verticalCenter="-39"/>
 	<s:Button id="supportButton4" width="795" height="90" label="Other Drugs"
-			  click="navigator.pushView(listLocalPatients)" enabled="true" fontSize="50"
-			  horizontalCenter="7" verticalCenter="-43"/>
+			  click="navigator.pushView(listLocalDrugs)" enabled="true" fontSize="50"
+			  horizontalCenter="7" verticalCenter="65"/>
 	<s:Button id="supportButton5" width="795" height="90" label="Extra Dose"
-			  click="navigator.pushView(listLocalPatients)" enabled="true" fontSize="50"
-			  horizontalCenter="8" verticalCenter="60"/>
+			  click="navigator.pushView(listLocalDose)" enabled="true" fontSize="50"
+			  horizontalCenter="8" verticalCenter="168"/>
 	<s:Label top="40" width="780" height="69" color="#007EFF" fontSize="60" fontWeight="bold"
 			 horizontalCenter="0" text="View Local Data" textAlign="center"/>
 	

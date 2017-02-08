@@ -28,7 +28,7 @@
 			
 		//connects to Db
 			
-			dbFile = File.applicationStorageDirectory.resolvePath("prompt_local.db");
+			dbFile = File.applicationStorageDirectory.resolvePath("prompt1.db");
 			dbConnection = new SQLConnection();
 			dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
 			dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
@@ -46,7 +46,7 @@
 			trace("Database is open");
 			selectQuery = new SQLStatement();
 			selectQuery.sqlConnection = dbConnection;
-			selectQuery.text ="SELECT * FROM eligibility ORDER BY id ASC";
+			selectQuery.text ="SELECT * FROM patient_encounters ORDER BY id ASC";
 			selectQuery.addEventListener(SQLEvent.RESULT, onQueryResult);
 			
 			selectQuery.execute();
@@ -104,5 +104,5 @@
 	
 	</s:List>
 	<s:Label y="39" color="#9C0C09" fontSize="65" fontWeight="bold" horizontalCenter="0"
-			 text="Eligibility"/>
+			 text="Patient Visits"/>
 </s:View>

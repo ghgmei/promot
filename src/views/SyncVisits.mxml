@@ -49,8 +49,8 @@
 				//close db connection
 				dbConnection.close();
 				
-				// push to patientSync view
-				navigator.pushView(SyncPatients);
+				// push to AESync view
+				navigator.pushView(SyncAEs);
 			}
 			
 
@@ -83,13 +83,12 @@
 			// open database
 			dbConnection.open(dbFile);
 			
-			// check if db exists, then create if doesnt 
+			
 			
 			var statement:SQLStatement = new SQLStatement();
 			statement.sqlConnection = dbConnection;
-			statement.text ="CREATE TABLE IF NOT EXISTS eligibility (id INTEGER PRIMARY KEY AUTOINCREMENT, q1 TEXT, age TEXT, ageType TEXT, guardian TEXT, q2 TEXT, q3 TEXT, q4 TEXT, q5 TEXT, q6 TEXT, q7 TEXT, q8 TEXT, gender TEXT, childbearing_age TEXT, breast_feeding TEXT, q10 TEXT, q10_isTested TEXT, q10_pregnant TEXT,  q11 TEXT, q11a TEXT, no_2 TEXT, no_4 TEXT, hemoglobin TEXT, tabletId TEXT, interviewer TEXT, dateModified TEXT, cField TEXT)";
+			statement.text ="CREATE TABLE IF NOT EXISTS patient_encounters (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, q2 TEXT, q3 TEXT, q4 TEXT, q5 TEXT, q6 TEXT, q7 TEXT, q8 TEXT, q8_details TEXT, tabletId TEXT, interviewer TEXT, cField TEXT, patientid TEXT)";
 			statement.execute();
-			
 			
 			trace("Searching eligibility");
 			
@@ -105,7 +104,7 @@
 			
 			selectQuery = new SQLStatement();
 			selectQuery.sqlConnection = dbConnection;
-			selectQuery.text ="SELECT * FROM eligibility WHERE cField = 1 ORDER BY id ASC";
+			selectQuery.text ="SELECT * FROM patient_encounters WHERE cField = 1 ORDER BY id ASC";
 			selectQuery.addEventListener(SQLEvent.RESULT, onQueryResult);
 			
 			selectQuery.execute();
@@ -126,7 +125,7 @@
 			
 			updateQuery = new SQLStatement();
 			updateQuery.sqlConnection = dbConnection;
-			updateQuery.text ="UPDATE eligibility SET cField = 2 WHERE id = '"+eList.selectedItem.id+"'";
+			updateQuery.text ="UPDATE patient_encounters SET cField = 2 WHERE id = '"+eList.selectedItem.id+"'";
 			//.addEventListener(SQLEvent.RESULT, onQueryResult2);
 			
 			updateQuery.execute();
@@ -134,8 +133,8 @@
 			// close db connection
 			dbConnection.close();
 			
-			// push to sync view to see if more records are on list
-			navigator.pushView(SyncView);	
+			// push to same view to see if more records are on list
+			navigator.pushView(SyncVisits);	
 				
 			
 			
@@ -165,39 +164,28 @@
 				backButton.enabled = false;
 				
 				
-				trace("q1 = "+eList.selectedItem.q1+"");
+				trace("patient id is = "+eList.selectedItem.patientid+"");
 				
 				var param:Object = new Object;
-				param.q1=eList.selectedItem.q1;
-				param.age=eList.selectedItem.age;
-				param.ageType=eList.selectedItem.ageType;
-				param.guardian=eList.selectedItem.guardian;
-				param.q2=eList.selectedItem.q2;
+		
+				param.qn2=eList.selectedItem.q2;
 				param.q3=eList.selectedItem.q3;
 				param.q4=eList.selectedItem.q4;
 				param.q5=eList.selectedItem.q5;
 				param.q6=eList.selectedItem.q6;
 				param.q7=eList.selectedItem.q7;
 				param.q8=eList.selectedItem.q8;
-				param.gender=eList.selectedItem.gender;
-				param.childbearing_age=eList.selectedItem.childbearing_age;
-				param.breast_feeding=eList.selectedItem.breast_feeding;
-				param.q10=eList.selectedItem.q10;
-				param.q10_isTested=eList.selectedItem.q10_isTested;
-				param.q10_pregnant=eList.selectedItem.q10_pregnant;
-				param.q11=eList.selectedItem.q11;
-				param.q11a=eList.selectedItem.q11a;
-				param.no_2=eList.selectedItem.no_2;
-				param.no_4=eList.selectedItem.no_4;
-				param.hemoglobin=eList.selectedItem.hemoglobin;
+				param.q82=eList.selectedItem.q8_details;
+				param.pid=eList.selectedItem.patientid;
 				param.tabletId=eList.selectedItem.tabletId;
 				param.interviewer=eList.selectedItem.interviewer;
-				param.fynder='2fbf1c14e1cacf8b441ea490f3e6178cdaa3440576d3158774711aefdbd98a7cf51b90e5b9cef11d5401950eb448a285f7122446c3ae2fbe59aefc40020898fc';		
+				param.fynder='b7dce38b7994111508ed8e2f132e09d9cc3e36cb5f39c12e131bc942f6ebb4431dd4585587a64def7eabf42826ba7edd96ce21735b4007377d133cee08f9d1d9';		
+				
 				
 				
 				// submit
 				trace("sending data");
-				eligibilitySend.send(param);	
+				dataSenda.send(param);	
 				
 				
 				
@@ -216,8 +204,8 @@
 	
 	<fx:Declarations>
 
-		<s:HTTPService id="eligibilitySend" 
-					   url="http://prompt.app-king.net/new1.php" 
+		<s:HTTPService id="dataSenda" 
+					   url="http://prompt.app-king.net/visit1.php" 
 					   method="POST"
 					  result="resultHandler1(event)"
 					   resultFormat="text"
@@ -233,7 +221,7 @@
 	</fx:Declarations>
 	
 	<s:Label y="121" color="#232323" fontSize="30" fontWeight="normal" horizontalCenter="0"
-			 text="Submit eligibility data to local study server." textAlign="center"/>
+			 text="Submit patient visit data to local study server." textAlign="center"/>
 	<s:Label id="status" y="454" color="#232323" fontSize="30" fontWeight="bold"
 			 horizontalCenter="0" text="Loading forms..."
 			 textAlign="center" verticalAlign="middle"/>
@@ -249,7 +237,7 @@
 		<s:itemRenderer>
 			<fx:Component>
 				<s:IconItemRenderer
-					label="Eligibility Form #{data.id}"
+					label="Patient Visit Form #{data.id}"
 					messageField="patientid"/>
 			</fx:Component>
 		</s:itemRenderer>

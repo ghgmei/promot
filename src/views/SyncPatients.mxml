@@ -50,7 +50,7 @@
 				dbConnection.close();
 				
 				// push to patientSync view
-				navigator.pushView(SyncPatients);
+				navigator.pushView(SyncVisits);
 			}
 			
 
@@ -83,15 +83,14 @@
 			// open database
 			dbConnection.open(dbFile);
 			
-			// check if db exists, then create if doesnt 
-			
 			var statement:SQLStatement = new SQLStatement();
 			statement.sqlConnection = dbConnection;
-			statement.text ="CREATE TABLE IF NOT EXISTS eligibility (id INTEGER PRIMARY KEY AUTOINCREMENT, q1 TEXT, age TEXT, ageType TEXT, guardian TEXT, q2 TEXT, q3 TEXT, q4 TEXT, q5 TEXT, q6 TEXT, q7 TEXT, q8 TEXT, gender TEXT, childbearing_age TEXT, breast_feeding TEXT, q10 TEXT, q10_isTested TEXT, q10_pregnant TEXT,  q11 TEXT, q11a TEXT, no_2 TEXT, no_4 TEXT, hemoglobin TEXT, tabletId TEXT, interviewer TEXT, dateModified TEXT, cField TEXT)";
+			statement.text ="CREATE TABLE IF NOT EXISTS patient_data (id INTEGER PRIMARY KEY AUTOINCREMENT, patientid TEXT, dateAdded TEXT, hemoglobin TEXT, hf TEXT, familyName TEXT, fname TEXT, nationality TEXT, nationalityOther TEXT, country TEXT, age TEXT, ageType TEXT, sex TEXT, mobile1 TEXT, mobile2 TEXT, pregnant TEXT, weight TEXT, q12 TEXT, q12a TEXT, q12a_other TEXT, q13 TEXT, q14 TEXT, q15 TEXT, q16 TEXT, q16_other TEXT, q17 TEXT, q17_other TEXT, q17a TEXT, q17a_other TEXT, q17b TEXT, q17c TEXT, q17c_other TEXT, q17d TEXT, q17d_other TEXT, q18a TEXT, q18a_other TEXT, q18b TEXT, q18b_other TEXT, q18c TEXT, g6pd TEXT, g6pdtp TEXT, g6pdrt TEXT, bst TEXT, guardian TEXT, tabletId TEXT, interviewer TEXT, day7 TEXT, cField TEXT)";
+			
 			statement.execute();
 			
 			
-			trace("Searching eligibility");
+			trace("Searching patient_data");
 			
 			/**
 			 * Loads data from local database with check field set to 1
@@ -105,7 +104,7 @@
 			
 			selectQuery = new SQLStatement();
 			selectQuery.sqlConnection = dbConnection;
-			selectQuery.text ="SELECT * FROM eligibility WHERE cField = 1 ORDER BY id ASC";
+			selectQuery.text ="SELECT * FROM patient_data WHERE cField = 1 ORDER BY id ASC";
 			selectQuery.addEventListener(SQLEvent.RESULT, onQueryResult);
 			
 			selectQuery.execute();
@@ -126,7 +125,7 @@
 			
 			updateQuery = new SQLStatement();
 			updateQuery.sqlConnection = dbConnection;
-			updateQuery.text ="UPDATE eligibility SET cField = 2 WHERE id = '"+eList.selectedItem.id+"'";
+			updateQuery.text ="UPDATE patient_data SET cField = 2 WHERE id = '"+eList.selectedItem.id+"'";
 			//.addEventListener(SQLEvent.RESULT, onQueryResult2);
 			
 			updateQuery.execute();
@@ -134,14 +133,9 @@
 			// close db connection
 			dbConnection.close();
 			
-			// push to sync view to see if more records are on list
-			navigator.pushView(SyncView);	
+			// push to same view to see if more records are on list
+			navigator.pushView(SyncPatients);	
 				
-			
-			
-	
-	
-			
 			
 		
 		}
@@ -165,39 +159,62 @@
 				backButton.enabled = false;
 				
 				
-				trace("q1 = "+eList.selectedItem.q1+"");
+				trace("patient id = "+eList.selectedItem.patientid+"");
 				
 				var param:Object = new Object;
-				param.q1=eList.selectedItem.q1;
+							
+				param.patientid=eList.selectedItem.patientid;
+				param.dateAdded = eList.selectedItem.dateAdded;
+				param.hemoglobin=eList.selectedItem.hemoglobin;
+				param.hf=eList.selectedItem.hf;
+				param.ewqr3=eList.selectedItem.familyName;
+				param.dfverg=eList.selectedItem.fname;
+				param.nationality=eList.selectedItem.nationality;
+				param.nationalityOther=eList.selectedItem.nationalityOther;
+				param.country=eList.selectedItem.country;
 				param.age=eList.selectedItem.age;
 				param.ageType=eList.selectedItem.ageType;
+				param.sex=eList.selectedItem.sex;
+				param.mobile1=eList.selectedItem.mobile1;
+				param.mobile2=eList.selectedItem.mobile2;
+				param.pregnant=eList.selectedItem.pregnant;
+				param.weight=eList.selectedItem.weight;
+				param.q12=eList.selectedItem.q12;
+				param.q12a=eList.selectedItem.q12a;
+				param.q12a_other=eList.selectedItem.q12a_other;
+				param.q13=eList.selectedItem.q13;
+				param.q14=eList.selectedItem.q14;
+				param.q15=eList.selectedItem.q15;
+				param.q16=eList.selectedItem.q16;
+				param.q16_other=eList.selectedItem.q16_other;
+				param.q17=eList.selectedItem.q17;
+				param.q17_other=eList.selectedItem.q17_other;
+				param.q17a=eList.selectedItem.q17a;
+				param.q17a_other=eList.selectedItem.q17a_other;
+				param.q17b=eList.selectedItem.q17b;
+				param.q17c=eList.selectedItem.aq17c;
+				param.q17c_other=eList.selectedItem.q17c_other;
+				param.q17d=eList.selectedItem.q17d;
+				param.q17d_other=eList.selectedItem.q17d_other;
+				param.q18a=eList.selectedItem.q18a;
+				param.q18a_other=eList.selectedItem.q18a_other;
+				param.q18b=eList.selectedItem.q18b;
+				param.q18b_other=eList.selectedItem.q18b_other;
+				param.q18c=eList.selectedItem.q18c;
+				param.g6pd=eList.selectedItem.g6pd;
+				param.g6pdtp=eList.selectedItem.g6pdtp;
+				param.g6pdrt=eList.selectedItem.g6pdrt;
+				param.bst=eList.selectedItem.bst;
 				param.guardian=eList.selectedItem.guardian;
-				param.q2=eList.selectedItem.q2;
-				param.q3=eList.selectedItem.q3;
-				param.q4=eList.selectedItem.q4;
-				param.q5=eList.selectedItem.q5;
-				param.q6=eList.selectedItem.q6;
-				param.q7=eList.selectedItem.q7;
-				param.q8=eList.selectedItem.q8;
-				param.gender=eList.selectedItem.gender;
-				param.childbearing_age=eList.selectedItem.childbearing_age;
-				param.breast_feeding=eList.selectedItem.breast_feeding;
-				param.q10=eList.selectedItem.q10;
-				param.q10_isTested=eList.selectedItem.q10_isTested;
-				param.q10_pregnant=eList.selectedItem.q10_pregnant;
-				param.q11=eList.selectedItem.q11;
-				param.q11a=eList.selectedItem.q11a;
-				param.no_2=eList.selectedItem.no_2;
-				param.no_4=eList.selectedItem.no_4;
-				param.hemoglobin=eList.selectedItem.hemoglobin;
 				param.tabletId=eList.selectedItem.tabletId;
 				param.interviewer=eList.selectedItem.interviewer;
-				param.fynder='2fbf1c14e1cacf8b441ea490f3e6178cdaa3440576d3158774711aefdbd98a7cf51b90e5b9cef11d5401950eb448a285f7122446c3ae2fbe59aefc40020898fc';		
+				param.day7=eList.selectedItem.day7;
+				param.fynder='e5e67619fd6399281c9381bd0e13dbe0add3c04fddc55f5aafd287148781f350a96aa8f5bab7af6d705eb5421b4d6861b8b6ba3b57a21f0491686e25404ec302';		
 				
-				
+								
 				// submit
 				trace("sending data");
-				eligibilitySend.send(param);	
+				dataSend.send(param);	
 				
 				
 				
@@ -216,8 +233,8 @@
 	
 	<fx:Declarations>
 
-		<s:HTTPService id="eligibilitySend" 
-					   url="http://prompt.app-king.net/new1.php" 
+		<s:HTTPService id="dataSend" 
+					   url="http://prompt.app-king.net/new2.php" 
 					   method="POST"
 					  result="resultHandler1(event)"
 					   resultFormat="text"
@@ -233,7 +250,7 @@
 	</fx:Declarations>
 	
 	<s:Label y="121" color="#232323" fontSize="30" fontWeight="normal" horizontalCenter="0"
-			 text="Submit eligibility data to local study server." textAlign="center"/>
+			 text="Submit patient data to local study server." textAlign="center"/>
 	<s:Label id="status" y="454" color="#232323" fontSize="30" fontWeight="bold"
 			 horizontalCenter="0" text="Loading forms..."
 			 textAlign="center" verticalAlign="middle"/>
@@ -249,7 +266,7 @@
 		<s:itemRenderer>
 			<fx:Component>
 				<s:IconItemRenderer
-					label="Eligibility Form #{data.id}"
+					label="Patient form for {data.fname} {data.familyName}"
 					messageField="patientid"/>
 			</fx:Component>
 		</s:itemRenderer>

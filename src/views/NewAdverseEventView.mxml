@@ -26,10 +26,40 @@
 			public var isALrelated:String;
 			public var outcome:String;
 			public var serious:String;
+			public var gradeurine:String;
+			
 			public var space:String="/";
 			public var date1:String = ((new Date()).getDate()) +
 				"/" + ((new Date().getMonth()+ 1) +            
 					"/" + (new Date()).getFullYear());
+			
+			
+			public var dbFile:File;
+			public var dbConnection:SQLConnection;
+			public var CHK:String ="1";
+			
+			
+			private function onDatabaseOpen(evt:SQLEvent):void
+				
+			{
+				
+				//var statement:SQLStatement = new SQLStatement();
+				//statement.sqlConnection = dbConnection;
+				//statement.execute();
+				
+				
+				trace("Database is open");
+				
+				
+			}
+			
+			
+			private function onDatabaseClose(evt:SQLEvent):void
+				
+			{
+				trace("Database is closed");
+			}
+			
 			
 			
 			
@@ -60,6 +90,37 @@
 				gradeofurine8.visible=false;
 				gradeofurine9.visible=false;
 				gradeofurine10.visible=false;
+				
+				
+				
+				
+				trace("Loading DB");
+				
+				//connects to Db
+				
+				dbFile = File.applicationStorageDirectory.resolvePath("prompt_local.db");
+				dbConnection = new SQLConnection();
+				dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
+				dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
+				
+				dbConnection.open(dbFile);
+				
+				
+				// check if db exists, then create if doesnt 
+				
+				/**
+				 * 
+				 *  
+				 * 
+				 * */
+				
+				var statement:SQLStatement = new SQLStatement();
+				statement.sqlConnection = dbConnection;
+				statement.text ="CREATE TABLE IF NOT EXISTS adverse (id INTEGER PRIMARY KEY AUTOINCREMENT, pid TEXT, type TEXT, type_other TEXT, gradeurine TEXT, onset TEXT, resolved TEXT, severity TEXT, actions TEXT, actionsOther TEXT, isrelated TEXT, isalrelated TEXT, outcome TEXT, serious TEXT, tabletId TEXT, interviewer TEXT, cField TEXT)";
+				statement.execute();
+				
+				dbConnection.close();
+				
 				
 			}
 				
@@ -157,6 +218,64 @@
 					type="7";
 				} 
 				
+				
+				// grade of urine
+				
+				if (gradeofurine1.selected) 
+				{
+					gradeurine="1";
+				} 
+				
+				if (gradeofurine2.selected) 
+				{
+					gradeurine="2";
+				} 
+				
+				if (gradeofurine3.selected) 
+				{
+					gradeurine="3";
+				} 
+				
+				if (gradeofurine4.selected) 
+				{
+					gradeurine="4";
+				} 
+				
+				if (gradeofurine5.selected) 
+				{
+					gradeurine="5";
+				} 
+				
+				if (gradeofurine6.selected) 
+				{
+					gradeurine="6";
+				} 
+				
+				if (gradeofurine7.selected) 
+				{
+					gradeurine="7";
+				} 
+				
+				if (gradeofurine8.selected) 
+				{
+					gradeurine="8";
+				} 
+				
+				if (gradeofurine9.selected) 
+				{
+					gradeurine="9";
+				} 
+				
+				if (gradeofurine10.selected) 
+				{
+					gradeurine="10";
+				} 
+				
+				
+				
+				
+				
+				
 				// q2
 				
 				onset= qn2_d.text+space+qn2_m.text+space+qn2_y.text;
@@ -214,6 +333,15 @@
 				{
 					actions="5";
 				} 
+				
+				
+				if (qn4_6.selected) 
+				{
+					actions="6";
+				} 
+				
+				
+				
 				
 				// q5
 				
@@ -330,14 +458,15 @@
 				var param:Object = new Object;
 				param.type=type;
 				param.type_other=type_other.text;
+				param.gradeurine=gradeurine;
 				param.onset=onset;
 				param.resolved=resolved;
 				param.severity=severity;
 				param.actions=actions;
 				param.actionsOther=actionsTaken_other.text;
 				param.isrelated=isrelated;
-				param.outcome=outcome;
 				param.isalrelated=isALrelated;
+				param.outcome=outcome;
 				param.serious=serious;
 				param.pid=patientID;
 				param.tabletId=tabletID;
@@ -365,8 +494,38 @@
 				//	After Successfull Submission
 				
 				
+				/**
+				 * Saves data to local database with check field set to 0
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * 
+				 * 
+				 * */
+				trace("Saving data to local database with check field set to 0");
+				
+				CHK = "0";
+				
+				dbConnection.open(dbFile);
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO adverse (pid, type, type_other, gradeurine, onset, resolved, severity, actions, actionsOther, isrelated, isalrelated, outcome, serious, tabletId, interviewer, cField) VALUES ('"+patientID+"','"+type+"','"+type_other.text+"','"+gradeurine+"','"+onset+"','"+resolved+"','"+severity+"','"+actions+"','"+actionsTaken_other.text+"','"+isrelated+"','"+isALrelated+"','"+outcome+"','"+serious+"','"+tabletID+"','"+interviewerName+"','"+CHK+"')";
+				
+				SQLStatement1.execute();
 				
 				
+				dbConnection.close();
+				
+				
+				
+				// to next screen
+				
+				
+				
+				// concomitant drugs push
 				if (qn8_yes.selected) {
 					userClass.getInstance().concomitant = "Y";
 					
@@ -376,11 +535,7 @@
 					
 				}
 				
-				
-				
-				
-				
-				
+				// other drugs push
 				if (moreEvents.selected) {
 					
 					navigator.pushView(NewAdverseEventView);
@@ -408,8 +563,45 @@
 				
 				//	After Unsuccessfull Submission - Tablet stores data until next login
 				
+				/**
+				 * Saves data to local database with check field set to 1
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * */
+				trace("Saving data to local database with check field set to 1");
+				
+				CHK = "1";
+				
+				dbConnection.open(dbFile);
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO adverse (pid, type, type_other, gradeurine, onset, resolved, severity, actions, actionsOther, isrelated, isalrelated, outcome, serious, tabletId, interviewer, cField) VALUES ('"+patientID+"','"+type+"','"+type_other.text+"','"+gradeurine+"','"+onset+"','"+resolved+"','"+severity+"','"+actions+"','"+actionsTaken_other.text+"','"+isrelated+"','"+isALrelated+"','"+outcome+"','"+serious+"','"+tabletID+"','"+interviewerName+"','"+CHK+"')";
+				
+				SQLStatement1.execute();
 				
 				
+				dbConnection.close();
+				
+				
+				// to next screen
+				
+				
+				
+				// concomitant drugs push
+				if (qn8_yes.selected) {
+					userClass.getInstance().concomitant = "Y";
+					
+				} else {
+					
+					userClass.getInstance().concomitant = "N";
+					
+				}
+				
+				// other drugs push
 				if (moreEvents.selected) {
 					
 					navigator.pushView(NewAdverseEventView);
@@ -426,7 +618,6 @@
 						
 					}
 				}
-				
 				
 				
 			}
@@ -483,7 +674,7 @@
 				
 				
 				
-				if(!qn4_1.selected && !qn4_2.selected && !qn4_3.selected && !qn4_4.selected && !qn4_5.selected)
+				if(!qn4_1.selected && !qn4_2.selected && !qn4_3.selected && !qn4_4.selected && !qn4_5.selected && !qn4_6.selected)
 					
 				{
 					
@@ -632,10 +823,12 @@
 		<s:RadioButtonGroup id="last1"/>
 		<s:RadioButtonGroup id="gradeofurine_group"/>
 		
+		<s:RadioButtonGroup id="al_group"/>
+		
 		
 
 	</fx:Declarations>
-	<s:Scroller width="894" height="3500"><s:Group fontSize="20">
+	<s:Scroller width="894" height="1500"><s:Group fontSize="20">
 	
 	
 	
@@ -649,8 +842,8 @@
 	<s:Label x="50" y="869" color="#232323" fontSize="23" fontWeight="bold"
 			 text="5.1. Is Adverse Event Related To PQ?"/>
 	<s:Label x="50" y="497" color="#232323" fontSize="23" fontWeight="bold" text="3. Severity Grade:"/>
-	<s:Button id="saveBtn" x="103" y="1806" width="770" height="102" label="Proceed"
-			  click="saveBtn_clickHandler(event)" fontSize="60"/>
+	<s:Button id="saveBtn" y="1806" width="770" height="102" label="Proceed"
+			  click="saveBtn_clickHandler(event)" fontSize="60" horizontalCenter="0"/>
 	<s:Label top="12" color="#0599E6" fontSize="55" fontWeight="bold" horizontalCenter="0"
 			 text="Adverse Event"/>
 	<s:Label x="50" y="398" color="#232323" fontSize="23" fontWeight="bold" text="2. Onset Date:"/>
@@ -690,13 +883,13 @@
 				   fontSize="23" groupName="qn4_group"/>
 	<s:Label x="50" y="1276" color="#232323" fontSize="23" fontWeight="bold"
 			 text="7. Outcome of Adverse Event:"/>
-	<s:RadioButton id="q7_1" x="66" y="1301" label="Recovered/resolved" fontSize="23"
+	<s:RadioButton id="q7_1" x="80" y="1301" label="Recovered/resolved" fontSize="23"
 				   groupName="qn7_group"/>
 	<s:RadioButton id="q7_2" x="391" y="1305" label=" Recovered/resolved with sequelae" fontSize="23"
 				   groupName="qn7_group"/>
-	<s:RadioButton id="q7_5" x="67" y="1412" label="Fatal" click="radiobutton1_clickHandler(event)"
+	<s:RadioButton id="q7_5" x="80" y="1412" label="Fatal" click="radiobutton1_clickHandler(event)"
 				   fontSize="23" groupName="qn7_group"/>
-	<s:RadioButton id="q7_3" x="66" y="1356" label="Recovering/resolving" fontSize="23"
+	<s:RadioButton id="q7_3" x="80" y="1356" label="Recovering/resolving" fontSize="23"
 				   groupName="qn7_group"/>
 	<s:RadioButton id="q7_4" x="392" y="1357" label="Not recovered/not resolved" fontSize="23"
 				   groupName="qn7_group"/>
@@ -715,11 +908,11 @@
 	<s:Label x="467" y="870" color="#CCCACA" fontSize="20" text="Check one"/>
 											  <s:Label x="50" y="1031" color="#232323" fontSize="23" fontWeight="bold"
 													   text="5.2. Is Adverse Event Related To AL?"/>
-											  <s:RadioButton id="al_4" x="80" y="1114" label="Probable" fontSize="23" groupName="qn5_group"/>
-											  <s:RadioButton id="al_3" x="432" y="1059" label="Possible" fontSize="23" groupName="qn5_group"/>
-											  <s:RadioButton id="al_5" x="269" y="1115" label="Definite" fontSize="23" groupName="qn5_group"/>
-											  <s:RadioButton id="al_1" x="80" y="1059" label="Unrelated" fontSize="23" groupName="qn5_group"/>
-											  <s:RadioButton id="al_2" x="266" y="1059" label="Unlikely" fontSize="23" groupName="qn5_group"/>
+											  <s:RadioButton id="al_4" x="80" y="1114" label="Probable" fontSize="23" groupName="al_group"/>
+											  <s:RadioButton id="al_3" x="432" y="1059" label="Possible" fontSize="23" groupName="al_group"/>
+											  <s:RadioButton id="al_5" x="269" y="1115" label="Definite" fontSize="23" groupName="al_group"/>
+											  <s:RadioButton id="al_1" x="80" y="1059" label="Unrelated" fontSize="23" groupName="al_group"/>
+											  <s:RadioButton id="al_2" x="266" y="1059" label="Unlikely" fontSize="23" groupName="al_group"/>
 											  <s:Label x="463" y="1031" color="#CCCACA" fontSize="20" text="Check one"/>
 	<s:Label x="386" y="1277" color="#CCCACA" fontSize="20" text="Check one"/>
 	<s:Label id="seriousAE" x="53" y="1542" width="821" height="72" color="#076D97" fontSize="30"
@@ -728,9 +921,9 @@
 	<s:Label id="q4_label" x="42" y="804" width="179" height="54" color="#B62222" fontSize="23"
 			 fontWeight="bold" text="Describe other actions taken:"/>
 	<s:TextArea id="actionsTaken_other" x="219" y="802" width="519" height="49" fontSize="23"/>
-	<s:TextInput id="qn6_d" x="285" y="1190" width="83" fontSize="23" prompt="DD"/>
-	<s:TextInput id="qn6_y" x="498" y="1190" width="104" fontSize="23" prompt="YYYY"/>
-	<s:TextInput id="qn6_m" x="391" y="1190" width="83" fontSize="23" prompt="MM"/>
+	<s:TextInput id="qn6_d" x="285" y="1190" width="83" fontSize="23" prompt="DD"  skinClass="spark.skins.mobile.TextInputSkin"/>
+	<s:TextInput id="qn6_y" x="498" y="1190" width="104" fontSize="23" prompt="YYYY"  skinClass="spark.skins.mobile.TextInputSkin"/>
+	<s:TextInput id="qn6_m" x="391" y="1190" width="83" fontSize="23" prompt="MM"  skinClass="spark.skins.mobile.TextInputSkin"/>
 	<s:Label x="576" y="402" color="#CECECE" fontSize="20" fontStyle="italic" fontWeight="normal"
 			 text="DD / MM / YYYY"/>
 								  <s:Label x="628" y="1206" color="#CECECE" fontSize="20"
@@ -739,9 +932,9 @@
 	<s:TextInput id="qn2_d" x="233" y="383" width="83" fontSize="23" prompt="DD" skinClass="spark.skins.mobile.TextInputSkin"/>
 	<s:TextInput id="qn2_y" x="446" y="383" width="104" fontSize="23" prompt="YYYY" skinClass="spark.skins.mobile.TextInputSkin"/>
 	<s:TextInput id="qn2_m" x="339" y="383" width="83" fontSize="23" prompt="MM" skinClass="spark.skins.mobile.TextInputSkin"/>
-	<s:BusyIndicator id="busy" x="427" y="1810" width="95" height="95"/>
-	<s:Label id="ansall" x="272" y="1847" color="#F00E0E" fontSize="45" fontWeight="bold"
-			 text="Answer all questions!"/>
+	<s:BusyIndicator id="busy" y="1810" width="95" height="95" horizontalCenter="0"/>
+	<s:Label id="ansall" y="1847" color="#F00E0E" fontSize="45" fontWeight="bold"
+			 horizontalCenter="0" text="Answer all questions!"/>
 	
 	
 	
@@ -749,7 +942,7 @@
 				   fontSize="23" groupName="qn1_group"/>
 	<s:RadioButton id="q1_2" x="281" y="95" label="Nausea" click="q1_6_clickHandler(event)"
 				   fontSize="23" groupName="qn1_group"/>
-	<s:RadioButton id="q1_3" x="475" y="95" label="Vomitting" click="q1_6_clickHandler(event)"
+	<s:RadioButton id="q1_3" x="475" y="95" label="Vomiting" click="q1_6_clickHandler(event)"
 				   fontSize="23" groupName="qn1_group"/>
 	<s:RadioButton id="q1_4" x="80" y="154" label="Anemia" click="q1_6_clickHandler(event)"
 				   fontSize="23" groupName="qn1_group"/>
@@ -804,9 +997,9 @@
 			
 		<s:Label x="257" y="659" color="#CCCACA" fontSize="20" text="Check one"/>
 		<s:TextInput id="type_other" x="38" y="239" width="778" height="72" fontSize="19" skinClass="spark.skins.mobile.TextInputSkin"/>
-		<s:Label id="q1_label" x="38" y="210" color="#B62222" fontSize="23" fontWeight="bold"
+		<s:Label id="q1_label" x="38" y="214" color="#B62222" fontSize="23" fontWeight="bold"
 				 text="Describe other type of event:"/>
-		<s:CalloutButton x="352" y="470" width="301" height="66" label="Severity Grade Information"
+		<s:CalloutButton x="266" y="469" width="301" height="66" label="Severity Grade Information"
 						 fontSize="21">
 			<s:Image id="severity_grades0"  source="img/severity.jpg"/>
 			

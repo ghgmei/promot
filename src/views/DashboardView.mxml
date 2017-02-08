@@ -31,7 +31,7 @@
 			  horizontalCenter="-8" icon="@Embed('img/support.png')" verticalCenter="-25"/>
 	<s:Button id="supportButton0" width="795" height="188" label="Manual Sync"
 			  click="navigator.pushView(SyncView)" enabled="true" fontSize="70"
-			  horizontalCenter="-8" icon="@Embed('img/settings.png')" verticalCenter="195"/>
+			  horizontalCenter="-8" icon="@Embed('img/sync.png')" verticalCenter="195"/>
 	<s:Button id="healthFacilityButton" width="795" height="360" label="Health Facility"
 			  click="navigator.pushView(HealthFacilityView)" fontSize="80" horizontalCenter="-8"
 			  icon="@Embed('img/hf.png')" verticalCenter="-319"/>

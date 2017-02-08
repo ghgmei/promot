@@ -27,6 +27,31 @@
 					"/" + (new Date()).getFullYear());
 			
 			
+			public var dbFile:File;
+			public var dbConnection:SQLConnection;
+			public var CHK:String ="1";
+			
+			
+			private function onDatabaseOpen(evt:SQLEvent):void
+				
+			{
+				
+				//var statement:SQLStatement = new SQLStatement();
+				//statement.sqlConnection = dbConnection;
+				//statement.execute();
+				
+				
+				trace("Database is open");
+				
+				
+			}
+			
+			
+			private function onDatabaseClose(evt:SQLEvent):void
+				
+			{
+				trace("Database is closed");
+			}
 			
 			protected function formloaded():void
 			{
@@ -44,6 +69,32 @@
 					
 				}
 				
+				
+				trace("Loading DB");
+				
+				//connects to Db
+				
+				dbFile = File.applicationStorageDirectory.resolvePath("prompt_local.db");
+				dbConnection = new SQLConnection();
+				dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
+				dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
+				
+				dbConnection.open(dbFile);
+				
+				
+				// check if db exists, then create if doesnt 
+				
+				/**
+				 *
+				 * 
+				 * */
+				
+				var statement:SQLStatement = new SQLStatement();
+				statement.sqlConnection = dbConnection;
+				statement.text ="CREATE TABLE IF NOT EXISTS calls (id INTEGER PRIMARY KEY AUTOINCREMENT, pid TEXT, mob TEXT, tabletId TEXT, interviewer TEXT, cField TEXT)";
+				statement.execute();
+				
+				dbConnection.close();
 				
 
 			}
@@ -72,14 +123,7 @@
 				calllogger.send(param);	
 				
 				
-				
-				
-			
-			
-	
 			}
-			
-			
 			
 			
 			
@@ -87,6 +131,35 @@
 			{
 				
 				//	After successfull Submission
+				
+				/**
+				 * Saves data to local database with check field set to 0
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * 
+				 * 
+				 * */
+				trace("Saving data to local database with check field set to 0");
+				
+				CHK = "0";
+				
+				dbConnection.open(dbFile);
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO calls (pid, mob, tabletId, interviewer, cField) VALUES ('"+data.id+"','"+data.mobile1+"','"+tabletID+"','"+interviewerName+"','"+CHK+"')";
+				SQLStatement1.execute();
+				
+				dbConnection.close();
+				
+				
+				
+				// make the call
+				
+				
 				error.visible=false;
 				loader1.visible=false;
 				navigateToURL(new URLRequest("tel:"+data.mobile1));
@@ -99,6 +172,35 @@
 			{
 				
 				//	After successfull Submission
+				
+				
+				/**
+				 * Saves data to local database with check field set to 0
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * 
+				 * 
+				 * */
+				trace("Saving data to local database with check field set to 0");
+				
+				CHK = "0";
+				
+				dbConnection.open(dbFile);
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO calls (pid, mob, tabletId, interviewer, cField) VALUES ('"+data.id+"','"+data.mobile2+"','"+tabletID+"','"+interviewerName+"','"+CHK+"')";
+				SQLStatement1.execute();
+				
+				dbConnection.close();
+				
+				
+				
+				// make the call
+				
 				error.visible=false;
 				loader1.visible=false;
 				navigateToURL(new URLRequest("tel:"+data.mobile2));
@@ -112,10 +214,78 @@
 			private function faultHandler(event):void
 			{
 				//	After unsuccessfull Submission
-				error.visible=true;
+				
+				/**
+				 * Saves data to local database with check field set to 1
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * 
+				 * 
+				 * */
+				trace("Saving data to local database with check field set to 1");
+				
+				CHK = "1";
+				
+				dbConnection.open(dbFile);
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO calls (pid, mob, tabletId, interviewer, cField) VALUES ('"+data.id+"','"+data.mobile1+"','"+tabletID+"','"+interviewerName+"','"+CHK+"')";
+				SQLStatement1.execute();
+				
+				dbConnection.close();
+				
+				
+				
+				// make the call
+				
+				error.visible=false;
 				loader1.visible=false;
-				call1.visible=true;
-				call2.visible=true;
+				navigateToURL(new URLRequest("tel:"+data.mobile1));
+				
+				
+			}
+			
+			
+			private function faultHandler2(event):void
+			{
+				//	After unsuccessfull Submission
+				
+				/**
+				 * Saves data to local database with check field set to 1
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * 
+				 * 
+				 * */
+				trace("Saving data to local database with check field set to 1");
+				
+				CHK = "1";
+				
+				dbConnection.open(dbFile);
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO calls (pid, mob, tabletId, interviewer, cField) VALUES ('"+data.id+"','"+data.mobile2+"','"+tabletID+"','"+interviewerName+"','"+CHK+"')";
+				SQLStatement1.execute();
+				
+				dbConnection.close();
+				
+				
+				
+				// make the call
+				
+				
+				error.visible=false;
+				loader1.visible=false;
+				navigateToURL(new URLRequest("tel:"+data.mobile2));
+				
 				
 			}
 			
@@ -133,7 +303,7 @@
 				
 				// define parameters to send
 				param.pid=data.id;
-				param.mob=data.mobile1;
+				param.mob=data.mobile2;
 				param.tabletId=tabletID;
 				param.interviewer=interviewerName;
 				param.fynder='b7dce38b7994111508ed8e2f132e09d9cc3e36cb5f39c12e131bc942f6ebb4431dd4585587a64def7eabf42826ba7edd96ce21735b4007377d133cee08f9d1d9';		
@@ -151,7 +321,7 @@
 	<fx:Declarations>
 		
 		<s:HTTPService id="calllogger" 
-					   url="http://swaziland.promptsvr.org/calllog.php" 
+					   url="http://prompt.app-king.net/calllog.php" 
 					   method="POST"
 					   result="resultHandler(event)"
 					   resultFormat="text"
@@ -161,13 +331,13 @@
 		
 		
 		<s:HTTPService id="calllogger2" 
-					   url="http://swaziland.promptsvr.org/calllog.php" 
+					   url="http://prompt.app-king.net/calllog.php" 
 					   method="POST"
 					   result="resultHandler2(event)"
 					   resultFormat="text"
 					   contentType="application/x-www-form-urlencoded"
 					   requestTimeout = "10"
-					   fault="faultHandler(event)" /> 
+					   fault="faultHandler2(event)" /> 
 		
 		
 	</fx:Declarations>

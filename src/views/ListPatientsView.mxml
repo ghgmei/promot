@@ -25,11 +25,7 @@
 			  horizontalCenter="0" icon="@Embed('img/patients.png')" verticalCenter="-248"/>
 	<s:Label top="40" width="780" height="69" color="#007EFF" fontSize="60" fontWeight="bold"
 			 horizontalCenter="0" text="All Patients" textAlign="center"/>
-	
-	<s:Button id="backButton" width="795" height="184" label="Deprecated "
-			  click="navigator.pushView(DepListLocalPatientsView)" color="#767676" fontSize="70"
-			  horizontalCenter="0" icon="@Embed('img/patients.png')" verticalCenter="-35"/>
 	<s:Button id="backButton0" width="795" height="184" label="Health Facility"
 			  click="navigator.pushView(HealthFacilityView)" color="#202020" fontSize="70"
-			  horizontalCenter="0" icon="@Embed('img/hf.png')" verticalCenter="178"/>
+			  horizontalCenter="-1" icon="@Embed('img/hf.png')" verticalCenter="-40"/>
 </s:View>

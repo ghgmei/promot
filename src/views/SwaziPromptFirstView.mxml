@@ -157,7 +157,7 @@
 			{
 				
 				unauthorised.visible = true;
-				unauthorised.text = "Cannot resolve server, remember to manual sync later.";
+				unauthorised.text = "Cannot resolve server, remember to manually sync later.";
 				loginButton.visible = true;
 				busy.visible=false;
 			}
@@ -197,9 +197,11 @@
 			 text="© 2014 Global Health Group • UCSF • All Rights Reserved •  App by Asen"/>
 	<s:Label bottom="200" color="#7D7D7D" fontSize="30" horizontalCenter="0"
 			 text="swaziland.promptsvr.org"/>
-	<s:Label bottom="250" color="#000000" fontSize="40" horizontalCenter="0" text="Version 1.4.6"/>
+	<s:Label bottom="250" color="#000000" fontSize="40" horizontalCenter="0" text="Version 1.4.7.2"/>
 	<s:Label id="unauthorised" y="1116" color="#E60606" fontSize="28" fontWeight="bold"
 			 horizontalCenter="-7" text="UNAUTHORIZED USE IS STRICTLY PROHIBITED." textAlign="center"/>
+	<s:Label id="unauthorised0" y="540" color="#B38C8C" fontSize="28" fontWeight="bold"
+			 horizontalCenter="-1" text="FOR TESTING PURPOSES ONLY" textAlign="center"/>
 	<s:Label id="msg1" top="650" width="1102" height="53" fontSize="35" fontWeight="normal"
 			 horizontalCenter="0" text="ENTER PASSCODE" textAlign="center"/>
 	<s:Button id="backButton" bottom="81" width="869" height="110" label="Quit"

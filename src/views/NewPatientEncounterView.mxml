@@ -18,8 +18,9 @@
 			public var patientID:String = userClass.getInstance().patient;
 			public var tabletID:String  = userClass.getInstance().tabletId;
 			
-			
 			// Define local vars
+			public var CHK:String = "1";
+			public var aq5:String;
 			public var q6:String;
 			public var q2:String;
 			public var q7:String;
@@ -93,6 +94,9 @@
 					q8="1";
 				} 
 				
+				// q5
+				
+				aq5 = "1";
 				
 				// q6
 				
@@ -113,10 +117,9 @@
 				param.qn2=q2;
 				param.q3=qn3.text;
 				param.q4=qn4.text;
-				param.q5="1";
+				param.q5=aq5;
 				param.q6=q6;
 				param.q7=q7;
-				param.q8=q8;
 				param.q8=q8;
 				param.q82=q8_details.text;
 				param.pid=patientID;
@@ -154,12 +157,23 @@
 				
 				//connects to Db
 				
-				dbFile = File.applicationStorageDirectory.resolvePath("prompt1.db");
+				dbFile = File.applicationStorageDirectory.resolvePath("prompt_local.db");
 				dbConnection = new SQLConnection();
 				dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
 				dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
 				
-				dbConnection.openAsync(dbFile);
+				dbConnection.open(dbFile);
+				
+				
+				var statement:SQLStatement = new SQLStatement();
+				statement.sqlConnection = dbConnection;
+				statement.text ="CREATE TABLE IF NOT EXISTS patient_encounters (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, q2 TEXT, q3 TEXT, q4 TEXT, q5 TEXT, q6 TEXT, q7 TEXT, q8 TEXT, q8_details TEXT, tabletId TEXT, interviewer TEXT, cField TEXT, patientid TEXT)";
+				statement.execute();
+				
+				trace("Close DB connection");
+				dbConnection.close();
+				
+				
 			}
 			
 			
@@ -199,6 +213,38 @@
 				//	After Successfull Submission
 				
 				
+				
+				/**
+				 * 
+				 * Saves data to local database with check field set to 0
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * 
+				 * */
+				
+				trace("Saving data to local database with check field set to 0");
+				
+				CHK = "0";
+				
+				trace("Open DB connection");
+				dbConnection.open(dbFile); 
+				
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO patient_encounters (date, q2, q3, q4, q5, q6, q7, q8, q8_details, tabletId, interviewer, cField, patientid) VALUES ('"+date.text+"','"+q2+"','"+qn3.text+"','"+qn4.text+"','"+aq5+"','"+q6+"','"+q7+"','"+q8+"','"+q8_details.text+"','"+tabletID+"','"+interviewerName+"','"+CHK+"','"+patientID+"')";
+				
+				SQLStatement1.execute();
+				
+				
+				trace("Close DB connection");
+				dbConnection.close();
+				
+				
+				
 				if (q7_yes.selected) {
 					userClass.getInstance().otherDrugs = "Y";
 					
@@ -236,27 +282,73 @@
 				
 				//	After Unsuccessfull Submission - Tablet stores data until next login
 				
+				busy.visible=false;
+				conn.visible=true;
 				
-				var statement:SQLStatement = new SQLStatement();
-				statement.sqlConnection = dbConnection;
-				statement.text ="CREATE TABLE IF NOT EXISTS patient_encounters (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, q2 TEXT, q3 TEXT, q4 TEXT, q5 TEXT, q6 TEXT, q7 TEXT, q8 TEXT, q8_details TEXT, tabletId TEXT, interviewer TEXT, dateModified TEXT, patientid TEXT)";
-				statement.execute();
+				/**
+				 * 
+				 * Saves data to local database with check field set to 1
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 *  
+				 * 
+				 * */
+				
+				trace("Saving data to local database with check field set to 1");
+				
+				CHK = "1";
+				
+				trace("Open DB connection");
+				dbConnection.open(dbFile); 
 				
 				
 				// Saves to DB
 				var SQLStatement1:SQLStatement = new SQLStatement();
 				SQLStatement1.sqlConnection = dbConnection;
-				SQLStatement1.text ="INSERT INTO patient_encounters (date, q2, q3, q4, q5, q6, q7, q8, q8_details, tabletId, interviewer, dateModified, patientid) VALUES ('"+date.text+"','"+q2+"','"+qn3.text+"','"+qn4.text+"','1','"+q6+"','"+q7+"','"+q8+"','"+q8_details.text+"','"+tabletID+"','"+interviewerName+"','"+date.text+"','"+patientID+"')";
+				SQLStatement1.text ="INSERT INTO patient_encounters (date, q2, q3, q4, q5, q6, q7, q8, q8_details, tabletId, interviewer, cField, patientid) VALUES ('"+date.text+"','"+q2+"','"+qn3.text+"','"+qn4.text+"','"+aq5+"','"+q6+"','"+q7+"','"+q8+"','"+q8_details.text+"','"+tabletID+"','"+interviewerName+"','"+CHK+"','"+patientID+"')";
 				
 				SQLStatement1.execute();
 				
 				
+				trace("Close DB connection");
+				dbConnection.close();
 				
 				
 				
-				busy.visible=false;
-				conn.visible=true;
-				button1.visible=true;
+				
+				if (q7_yes.selected) {
+					userClass.getInstance().otherDrugs = "Y";
+					
+				} else {
+					
+					userClass.getInstance().otherDrugs = "N";
+					
+				}
+				
+				
+				if (qn6_yes.selected) {
+					
+					navigator.pushView(NewAdverseEventView);
+				} else
+					
+				{
+					if (userClass.getInstance().otherDrugs == "Y") {
+						
+						navigator.pushView(views.AddOtherDrugView);
+						
+					} else {
+						
+						navigator.pushView(addedEncounterView);
+						
+					}
+					
+					
+				}
+				
+				
+				
 			}
 			
 			protected function last_clickHandler(event:MouseEvent):void
@@ -465,7 +557,7 @@
 	<s:Label id="ansall" x="424" y="1371" color="#F00E0E" fontSize="35" fontWeight="bold"
 			 text="Answer all questions!"/>
 	<s:Label id="conn" x="467" y="1289" color="#F00E0E" fontSize="20" fontWeight="bold"
-			 text="Connection lost, please try again."/>
+			 text="Connection lost, saving to local."/>
 	<s:Label x="39" y="1170" color="#232323" fontSize="24" fontWeight="bold"
 			 text="Answered all questions?"/>
 	<s:RadioButton id="last" x="81" y="1200" label="Yes" click="last_clickHandler(event)"

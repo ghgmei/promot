@@ -46,7 +46,7 @@
 			trace("Database is open");
 			selectQuery = new SQLStatement();
 			selectQuery.sqlConnection = dbConnection;
-			selectQuery.text ="SELECT *FROM eligibility WHERE cField = 1 ORDER BY id ASC";
+			selectQuery.text ="SELECT * FROM patient_data ORDER BY id ASC";
 			selectQuery.addEventListener(SQLEvent.RESULT, onQueryResult);
 			
 			selectQuery.execute();
@@ -93,7 +93,7 @@
 		<s:itemRenderer>
 			<fx:Component>
 				<s:IconItemRenderer
-					label="{data.age} {data.ageType}"
+					label="{data.fname} {data.familyName}"
 					messageField="patientid"/>
 			</fx:Component>
 		</s:itemRenderer>
@@ -104,5 +104,5 @@
 	
 	</s:List>
 	<s:Label y="39" color="#9C0C09" fontSize="65" fontWeight="bold" horizontalCenter="0"
-			 text="Eligibility"/>
+			 text="Patients"/>
 </s:View>

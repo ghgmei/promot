@@ -37,7 +37,7 @@
 			public var q14:String;
 			public var q15:String;
 			public var q16:String;
-			public var q17:String;
+			public var q17:String = "";
 			public var aq17a:String;
 			public var aq17c:String;
 			public var aq17d:String;
@@ -258,36 +258,36 @@
 				//  Q17
 				if (q17_1.selected) 
 				{
-					q17= q17 + "1";
+					q17= q17 + "1 ";
 				} 
 				if (q17_2.selected) 
 				{
-					q17= q17 + ",2";
+					q17= q17 + "/ 2 ";
 				} 
 				
 				if (q17_3.selected) 
 				{
-					q17= q17 + ",3";
+					q17= q17 + "/ 3 ";
 				} 
 				
 				if (q17_4.selected) 
 				{
-					q17= q17 + ",4";
+					q17= q17 + "/ 4 ";
 				} 
 				
 				if (q17_5.selected) 
 				{
-					q17= q17 + ",5";
+					q17= q17 + "/ 5 ";
 				} 
 				
 				if (q17_6.selected) 
 				{
-					q17= q17 + ",6";
+					q17= q17 + "/ 6 ";
 				} 
 				
 				if (q17_7.selected) 
 				{
-					q17= q17 + ",7";
+					q17= q17 + "/ 7 ";
 				} 
 				
 				trace("Q17 = {"+q17+"}");
@@ -435,12 +435,12 @@
 				param.q17=q17;
 				param.q17_other=qn17_other.text;
 				param.q17a=aq17a;
-				param.q17a_other=q17a_other;
-				param.q17b=q17b;
-				param.q17c=q17;
-				param.q17c_other=q17c_other;
-				param.q17d=q17;
-				param.q17d_other=q17c_other;
+				param.q17a_other=q17a_other.text;
+				param.q17b=q17b.text;
+				param.q17c=aq17c;
+				param.q17c_other=q17c_other.text;
+				param.q17d=aq17d;
+				param.q17d_other=q17d_other.text;
 				param.q18a=q18a;
 				param.q18a_other=q18a_other.text;
 				param.q18b=q18b;
@@ -528,9 +528,16 @@
 					dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
 					dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
 					
-					dbConnection.openAsync(dbFile);
+					dbConnection.open(dbFile);
 					
 					
+					var statement:SQLStatement = new SQLStatement();
+					statement.sqlConnection = dbConnection;
+					statement.text ="CREATE TABLE IF NOT EXISTS patient_data (id INTEGER PRIMARY KEY AUTOINCREMENT, patientid TEXT, dateAdded TEXT, hemoglobin TEXT, hf TEXT, familyName TEXT, fname TEXT, nationality TEXT, nationalityOther TEXT, country TEXT, age TEXT, ageType TEXT, sex TEXT, mobile1 TEXT, mobile2 TEXT, pregnant TEXT, weight TEXT, q12 TEXT, q12a TEXT, q12a_other TEXT, q13 TEXT, q14 TEXT, q15 TEXT, q16 TEXT, q16_other TEXT, q17 TEXT, q17_other TEXT, q17a TEXT, q17a_other TEXT, q17b TEXT, q17c TEXT, q17c_other TEXT, q17d TEXT, q17d_other TEXT, q18a TEXT, q18a_other TEXT, q18b TEXT, q18b_other TEXT, q18c TEXT, g6pd TEXT, g6pdtp TEXT, g6pdrt TEXT, bst TEXT, guardian TEXT, tabletId TEXT, interviewer TEXT, day7 TEXT, cField TEXT)";
+					
+					statement.execute();
+					
+					dbConnection.close();
 			} 
 				
 				
@@ -549,6 +556,42 @@
 			{
 				
 				//	After Successfull Submission
+				
+				
+				
+				/**
+				 * 
+				 * Saves data to local database with check field set to 0
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * 
+				 * */
+				
+				trace("Saving data to local database with check field set to 0");
+				
+				CHK = "0";
+				
+				
+				trace("Open DB connection");
+				dbConnection.open(dbFile); 
+				
+	
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO patient_data (patientid, dateAdded, hemoglobin, hf, familyName, fname, nationality, nationalityOther, country, age, ageType, sex, mobile1, mobile2, pregnant, weight, q12, q12a, q12a_other, q13, q14, q15, q16, q16_other, q17, q17_other, q17a, q17a_other, q17b, q17c, q17c_other, q17d, q17d_other, q18a, q18a_other, q18b, q18b_other, q18c, g6pd, g6pdtp, g6pdrt, bst, guardian, tabletId, interviewer, day7, cField) VALUES ('"+patientID+"','"+date1+"','"+hemoglobin_measure+"','"+healthFacility+"','"+familyname.text+"','"+firstname.text+"','"+nationality+"','"+q6_specify_other.text+"','"+countryOfResidence+"','"+age2+"','"+agetype20+"','"+theGender+"','"+mobile1.text+"','"+mobile2.text+"','"+pregnancy+"','"+weight.text+"','"+q12+"','"+q12a+"','"+q12a_other.text+"','"+q13+"','"+q14+"','"+q15+"','"+q16+"','"+q16_other_specify.text+"','"+q17+"','"+qn17_other.text+"','"+aq17a+"','"+q17a_other.text+"','"+q17b.text+"','"+aq17c+"','"+q17c_other.text+"','"+aq17d+"','"+q17d_other.text+"','"+q18a+"','"+q18a_other.text+"','"+q18b+"','"+q18b_other.text+"','"+q18c_+"','"+g6pd+"','"+g6pd_test_type+"','"+g6pd_test_result+"','"+bloodspot_taken+"','"+guardian+"','"+tabletID+"','"+interviewerName+"','"+day7+"','"+CHK+"')";
+				
+				
+				
+				SQLStatement1.execute();
+				
+				
+				trace("Close DB connection");
+				dbConnection.close();
+				
 				
 				navigator.pushView(addedPatientView);
 				
@@ -570,6 +613,7 @@
 				 * 1 = saved to local with no server connection
 				 * 0 = saved to local with server connection
 				 * 2 = saved to local with manual sync 
+				 *  
 				 * 
 				 * */
 				
@@ -577,18 +621,25 @@
 				
 				CHK = "1";
 				
-				var statement:SQLStatement = new SQLStatement();
-				statement.sqlConnection = dbConnection;
-				statement.text ="CREATE TABLE IF NOT EXISTS patient_data (id INTEGER PRIMARY KEY AUTOINCREMENT, dateAdded TEXT, hemoglobin TEXT, healthFacility TEXT, familyName TEXT, fname TEXT, nationality TEXT, nationalityOther TEXT, countryOfResidence TEXT, age TEXT, ageType TEXT, sex TEXT, mobile1 TEXT, mobile2 TEXT, pregnant TEXT, weight TEXT, q12 TEXT, q12 TEXT, q13 TEXT, q13Other TEXT, q14 TEXT, q15DailyDose TEXT, q15DailyDoseOther TEXT, q15Days TEXT, q15DaysOther TEXT, tabletId TEXT, interviewer TEXT, dateModified TEXT, patientid TEXT)";
 				
-				statement.execute();
+				
+				trace("Open DB connection");
+				dbConnection.open(dbFile); 
+				
+				
 				
 				// Saves to DB
 				var SQLStatement1:SQLStatement = new SQLStatement();
 				SQLStatement1.sqlConnection = dbConnection;
-				SQLStatement1.text ="INSERT INTO patient_data (dateAdded, hemoglobin, healthFacility, familyName, fname, nationality, nationalityOther, countryOfResidence, age, ageType, sex, mobile1, mobile2, pregnant, weight, q12, q12, q13, q13Other, q14, q15DailyDose, q15DailyDoseOther, q15Days, q15DaysOther, tabletId, interviewer, dateModified, patientid) VALUES ('"+date1+"','"+hemoglobin_measure+"','"+healthFacility+"','"+familyname.text+"','"+firstname.text+"','"+nationality+"','"+q6_specify_other.text+"','"+countryOfResidence+"','"+ageType+"','"+genders.text+"','"+mobile1.text+"','"+mobile2.text+"','"+pregnancy+"','"+weight.text+"','"+q12+"','"+q12+"','"+q13+"','"+q16_other_specify.text+"','"+q14+"','"+q18a+"','"+q18a_other+"','"+q18b+"','"+q18c+"','"+tabletID+"','"+interviewerName+"','"+date1+"','"+patientID+"')";
+				SQLStatement1.text ="INSERT INTO patient_data (patientid, dateAdded, hemoglobin, hf, familyName, fname, nationality, nationalityOther, country, age, ageType, sex, mobile1, mobile2, pregnant, weight, q12, q12a, q12a_other, q13, q14, q15, q16, q16_other, q17, q17_other, q17a, q17a_other, q17b, q17c, q17c_other, q17d, q17d_other, q18a, q18a_other, q18b, q18b_other, q18c, g6pd, g6pdtp, g6pdrt, bst, guardian, tabletId, interviewer, day7, cField) VALUES ('"+patientID+"','"+date1+"','"+hemoglobin_measure+"','"+healthFacility+"','"+familyname.text+"','"+firstname.text+"','"+nationality+"','"+q6_specify_other.text+"','"+countryOfResidence+"','"+age2+"','"+agetype20+"','"+theGender+"','"+mobile1.text+"','"+mobile2.text+"','"+pregnancy+"','"+weight.text+"','"+q12+"','"+q12a+"','"+q12a_other.text+"','"+q13+"','"+q14+"','"+q15+"','"+q16+"','"+q16_other_specify.text+"','"+q17+"','"+qn17_other.text+"','"+aq17a+"','"+q17a_other.text+"','"+q17b.text+"','"+aq17c+"','"+q17c_other.text+"','"+aq17d+"','"+q17d_other.text+"','"+q18a+"','"+q18a_other.text+"','"+q18b+"','"+q18b_other.text+"','"+q18c_+"','"+g6pd+"','"+g6pd_test_type+"','"+g6pd_test_result+"','"+bloodspot_taken+"','"+guardian+"','"+tabletID+"','"+interviewerName+"','"+day7+"','"+CHK+"')";
+				
+				
 				
 				SQLStatement1.execute();
+				
+				
+				trace("Close DB connection");
+				dbConnection.close();
 				
 				navigator.pushView(addedPatientView);
 		
@@ -647,13 +698,6 @@
 					warningtext2.visible=true;
 					radiobutton1.selected=false;
 					
-				}else 
-				{
-					
-					
-				
-					nextButton.visible=true;
-					warningtext2.visible=false;
 					
 				}
 				
@@ -666,14 +710,6 @@
 					radiobutton1.selected=false;
 				
 					
-				}else 
-				{
-					
-					
-					
-					nextButton.visible=true;
-					warningtext2.visible=false;
-					
 				}
 				
 				// Health facility
@@ -683,17 +719,111 @@
 				{
 					
 					warningtext2.visible=true;
+					selecthf.visible=true;
 					radiobutton1.selected=false;
 					
-				}else 
+				}
+				
+				
+				// weight
+				
+				if(weight.text == '')
+					
 				{
 					
+					warningtext2.visible=true;
+					radiobutton1.selected=false;
 					
+				
+				}
+				
+				
+				// mobile number 
+				
+				if(mobile1.text == '+268')
 					
-					nextButton.visible=true;
-					warningtext2.visible=false;
+				{
+					
+					warningtext2.visible=true;
+					radiobutton1.selected=false;
 					
 				}
+				
+				
+				// q15
+				if(!q15_1.selected && !q15_2.selected && !q15_3.selected  )
+					
+					
+				{
+					
+					warningtext2.visible=true;
+					radiobutton1.selected=false;
+					
+				}
+				
+				// country //    
+				
+				
+				if(!q6_swaziland.selected && !q6_mozambique.selected && !q6_other.selected   && !q6_sa.selected  )
+					
+					
+				{
+					
+					warningtext2.visible=true;
+					radiobutton1.selected=false;
+					
+				}
+				
+				
+				// q13
+				if(!q13_1.selected && !q13_2.selected && !q13_3.selected  )
+					
+					
+				{
+					
+					warningtext2.visible=true;
+					radiobutton1.selected=false;
+					
+				}
+				
+				
+				// q12
+				if(!q12y.selected && !q12n.selected && !q12u.selected  )
+					
+					
+				{
+					
+					warningtext2.visible=true;
+					radiobutton1.selected=false;
+					
+				}
+				
+				// q14
+				if(!q14_1.selected && !q14_2.selected  )
+					
+					
+				{
+					
+					warningtext2.visible=true;
+					radiobutton1.selected=false;
+					
+				}
+				
+				
+				
+				
+				// q16
+				if(!q16_pf.selected && !q16_pv.selected && !q16_mixed.selected && !q16_other.selected  )
+					
+					
+				{
+					
+					warningtext2.visible=true;
+					radiobutton1.selected=false;
+					
+				}
+				
+				
 				
 				
 				
@@ -702,6 +832,14 @@
 					
 					nextButton.visible=false;
 					warningtext2.visible=true;	
+					
+				}else 
+				{
+					
+					
+					
+					nextButton.visible=true;
+					warningtext2.visible=false;
 					
 				}
 				
@@ -843,14 +981,14 @@
 			 horizontalCenter="4"
 			 text="Complete this form for all cases of confirmed, uncomplicated P. falciparum malaria that have been treated with PQ."
 			 textAlign="center"/>
-	<s:Label x="24" y="341" fontSize="22" fontWeight="normal" text="Family Name:"/>
-								  <s:Label x="26" y="242" fontSize="22" fontWeight="normal" text="Health Facility:"/>
+	<s:Label x="24" y="341" fontSize="22" fontWeight="bold" text="Family Name:"/>
+								  <s:Label x="26" y="242" fontSize="22" fontWeight="bold" text="Health Facility:"/>
 	<s:Label id="dateLabel" x="110" y="135" color="#1C1C1C" fontSize="28"/>
 								  <s:Label id="dateLabel0" x="24" y="135" color="#000000"
 										   fontSize="28" fontStyle="normal" fontWeight="bold"
 										   text="Date :"/>
 	<s:Label x="24" y="172" fontSize="28" fontWeight="bold" text="Hemoglobin:"/>
-	<s:Label x="273" y="171" fontSize="28" fontWeight="normal" text="g/dL"/>
+	<s:Label x="298" y="171" fontSize="28" fontWeight="normal" text="g/dL"/>
 	<s:Label id="hemoglobin_read" x="202" y="172" color="#575555" fontSize="28" text="..."/>
 	<s:Label x="24" y="104" color="#000000" fontSize="28" fontWeight="bold" text="Patient ID:"/>
 	<s:Label id="patientid_read" x="170" y="104" color="#C91313" fontSize="28" text="..."/>
@@ -866,17 +1004,17 @@
 	<s:TextInput id="familyname" x="24" y="371" width="826" height="50"
 				 change="familyname_changeHandler(event)" fontSize="22" prompt="Last Name"
 				 skinClass="spark.skins.mobile.TextInputSkin"/>
-	<s:Label x="24" y="435" fontSize="22" fontWeight="normal" text="First (Given) Name:"/>
+	<s:Label x="24" y="435" fontSize="22" fontWeight="bold" text="First (Given) Name:"/>
 	<s:TextInput id="firstname" x="24" y="467" width="825" height="50" fontSize="22"
 				 prompt="First Name" skinClass="spark.skins.mobile.TextInputSkin"/>
-	<s:Label x="29" y="854" fontSize="22" fontWeight="normal" text="10. Mobile No. 1 :"/>
-	<s:Label x="22" y="1061" width="825" height="32" fontSize="22" fontWeight="normal"
+	<s:Label x="29" y="854" fontSize="22" fontWeight="bold" text="10. Mobile No. 1 :"/>
+	<s:Label x="22" y="1061" width="825" height="32" fontSize="22" fontWeight="bold"
 			 text="12. Does this patient have a family history of hemolysis (severe anemia)? "/>
 	<s:Label id="q12alabel" x="22" y="1178" width="419" height="22" fontSize="22" fontWeight="normal"
 			 text="12a. If yes, was it in response to?"/>
-	<s:Label x="25" y="1544" width="577" height="32" color="#000000" fontSize="22" fontWeight="normal"
+	<s:Label x="25" y="1544" width="577" height="32" color="#000000" fontSize="22" fontWeight="bold"
 			 text="15. Diagnostic test type :"/>
-	<s:Label x="20" y="1340" width="730" height="39" color="#000000" fontSize="22" fontWeight="normal"
+	<s:Label x="20" y="1340" width="730" height="39" color="#000000" fontSize="22" fontWeight="bold"
 			 text="13. Does this patient have a family history of G6PD deficiency? "/>
 	<s:TextInput id="mobile1" x="221" y="837" width="526" height="47"
 				 change="mobile0_changeHandler(event)" fontSize="22"
@@ -889,14 +1027,14 @@
 											   prompt="Include country code +268"
 											   skinClass="spark.skins.mobile.TextInputSkin"
 											   text="+268"/>
-	<s:Label x="537" y="754" fontSize="22" fontWeight="normal" text="Weight (Kg) :"/>
+	<s:Label x="537" y="754" fontSize="22" fontWeight="bold" text="Weight (Kg) :"/>
 	<s:TextInput id="weight" x="686" y="739" width="164" height="50" fontSize="22" prompt="Number*"
 				 skinClass="spark.skins.mobile.TextInputSkin"/>
-	<s:Label x="29" y="1010" fontSize="22" fontWeight="normal" text="11. Mobile No. 2 :"/>
+	<s:Label x="29" y="1010" fontSize="22" fontWeight="bold" text="11. Mobile No. 2 :"/>
 	<s:TextInput id="mobile2" x="221" y="992" width="526" height="47"
 				 change="mobile2_changeHandler(event)" fontSize="22"
 				 skinClass="spark.skins.mobile.TextInputSkin" text="+268"/>
-	<s:Label x="26" y="535" fontSize="22" fontWeight="normal" text="6. Nationality:" />
+	<s:Label x="26" y="535" fontSize="22" fontWeight="bold" text="6. Nationality:" />
 								  <s:Label id="verifymobile1" x="184" y="899" color="#ED0B0B"
 										   fontSize="24" fontWeight="bold"
 										   text="These two numbers must be identical!"/>
@@ -914,42 +1052,42 @@
 				   fontSize="22"  groupName="q4_0"/>
 	<s:TextInput id="q6_specify_other" x="38" y="621" width="811" height="58" fontSize="22"
 				 prompt="Specify other nationality" skinClass="spark.skins.mobile.TextInputSkin"/>
-	<s:TextInput id="q16_other_specify" x="46" y="1742" width="478" height="50" fontSize="22"
+	<s:TextInput id="q16_other_specify" x="71" y="1742" width="478" height="50" fontSize="22"
 				 prompt="Specify other diagnosis" skinClass="spark.skins.mobile.TextInputSkin"/>
 	 <s:TextInput id="qn25" x="38" y="2869" width="478" height="56" enabled="false" fontSize="22" text="CareStart" skinClass="spark.skins.mobile.TextInputSkin" />
 	<s:Label top="21" color="#1264B8" fontSize="45" fontWeight="bold" horizontalCenter="6"
 			 text="New Patient: Data Collection Form"/>
 	<s:RadioButton id="q12y" x="53" y="1101" label="Yes" click="q12y_clickHandler(event)"
 				   fontSize="22" groupName="q12_1"/>
-	<s:RadioButton id="q12n" x="171" y="1101" label="No" click="q13_2_clickHandler(event)"
+	<s:RadioButton id="q12n" x="183" y="1101" label="No" click="q13_2_clickHandler(event)"
 				   fontSize="22" groupName="q12_1"/>
-	<s:Label x="24" y="703" width="725" height="30" fontSize="22" fontWeight="normal"
+	<s:Label x="24" y="703" width="725" height="30" fontSize="22" fontWeight="bold"
 			 text="7. Is Swaziland your country of residence?"/>
-	<s:RadioButton id="countryofresidence_yes" x="25" y="739" label="Yes" fontSize="22"
+	<s:RadioButton id="countryofresidence_yes" x="53" y="741" label="Yes" fontSize="22"
 				   groupName="q4_1"/>
-	<s:RadioButton id="countryofresidence_no" x="171" y="739" label="No" fontSize="22"
+	<s:RadioButton id="countryofresidence_no" x="200" y="741" label="No" fontSize="22"
 				   groupName="q4_1"/>
-	<s:RadioButton id="q12u" x="287" y="1101" label="Uncertain" click="q13_2_clickHandler(event)"
+	<s:RadioButton id="q12u" x="309" y="1101" label="Uncertain" click="q13_2_clickHandler(event)"
 				   fontSize="22" groupName="q12_1"/>
-	<s:RadioButton id="q13_1" x="29" y="1375" label="Yes" fontSize="22" groupName="q13_"/>
-	<s:RadioButton id="q13_2" x="154" y="1375" label="No"
+	<s:RadioButton id="q13_1" x="53" y="1366" label="Yes" fontSize="22" groupName="q13_"/>
+	<s:RadioButton id="q13_2" x="183" y="1366" label="No"
 				   fontSize="22" groupName="q13_"/>
-	<s:Label x="24" y="1442" width="624" height="39" color="#000000" fontSize="22" fontWeight="normal"
+	<s:Label x="24" y="1442" width="624" height="39" color="#000000" fontSize="22" fontWeight="bold"
 			 text="14. Has this patient ever had a blood transfusion? "/>
 								  <s:Label x="324" y="1806" width="213" height="39" color="#000000"
 										   fontSize="18" fontWeight="normal"
 										   text="(Check all that apply)" verticalAlign="middle"/>
-	<s:RadioButton id="q14_1" x="38" y="1469" label="Yes" fontSize="22" groupName="q12_"/>
-	<s:RadioButton id="q14_2" x="171" y="1469" label="No" fontSize="22" groupName="q12_"/>
-								  <s:Label x="21" y="2741" width="624" height="39" color="#000000" fontSize="22" fontWeight="normal"
+	<s:RadioButton id="q14_1" x="53" y="1469" label="Yes" fontSize="22" groupName="q12_"/>
+	<s:RadioButton id="q14_2" x="183" y="1469" label="No" fontSize="22" groupName="q12_"/>
+								  <s:Label x="21" y="2741" width="624" height="39" color="#000000" fontSize="22" fontWeight="bold"
 										   text="24. G6PD Test performed?"/>
 								  <s:Label x="20" y="2838" width="624" height="39" color="#000000" fontSize="22" fontWeight="normal"
 										   text="25. G6PD test type:"/>
-								  <s:RadioButton id="g6pd_yes" x="35" y="2768" label="Yes" fontSize="22" groupName="q16_group"/>
-								  <s:RadioButton id="g6pd_no" x="168" y="2768" label="No" fontSize="22" groupName="q16_group"/>
+								  <s:RadioButton id="g6pd_yes" x="45" y="2768" label="Yes" fontSize="22" groupName="q16_group"/>
+								  <s:RadioButton id="g6pd_no" x="189" y="2768" label="No" fontSize="22" groupName="q16_group"/>
 								  <s:Label x="24" y="2350" width="624" height="39" color="#000000" fontSize="22" fontWeight="bold"
 										   text="18. Total primaquine dose prescribed and # of days"/>
-								  <s:Label x="23" y="2460" width="624" height="39" color="#000000" fontSize="22" fontWeight="normal"
+								  <s:Label x="23" y="2460" width="624" height="39" color="#000000" fontSize="22" fontWeight="bold"
 										   text="18b. Number of PQ tablets taken per day"/>
 								  <s:Label x="24" y="2396" width="174" height="39" color="#000000" fontSize="22" fontWeight="normal"
 										   text="18a. Daily Dose:"/>
@@ -957,16 +1095,16 @@
 										   color="#000000" fontSize="22" fontWeight="normal"
 										   text="mg/dose"/>
 								  <s:Label x="24" y="2045" width="174" height="39" color="#000000"
-										   fontSize="22" fontWeight="normal" text="17a.  Dose:"
+										   fontSize="22" fontWeight="bold" text="17a.  Dose:"
 										   verticalAlign="middle"/>
-								  <s:Label x="22" y="2198" width="309" height="39" color="#000000"
-										   fontSize="22" fontWeight="normal" text="17c. Number of doses per day:"
+								  <s:Label x="22" y="2189" width="309" height="66" color="#000000"
+										   fontSize="22" fontWeight="bold" text="17c. Number of doses per day:"
 										   verticalAlign="middle"/>
 								  <s:Label id="q17ctext" x="801" y="2203" width="60" height="39"
 										   color="#000000" fontSize="22" fontWeight="normal"
 										   text="doses"/>
-								  <s:Label x="24" y="2278" width="222" height="39" color="#000000"
-										   fontSize="22" fontWeight="normal" text="17d. Number of days:"
+								  <s:Label x="24" y="2278" width="269" height="39" color="#000000"
+										   fontSize="22" fontWeight="bold" text="17d. Number of days:"
 										   verticalAlign="middle"/>
 								  <s:Label id="q17dtext" x="748" y="2283" width="93" height="39"
 										   color="#000000" fontSize="22" fontWeight="normal"
@@ -986,10 +1124,10 @@
 											   horizontalCenter="260" prompt="Specify other"
 											   skinClass="spark.skins.mobile.TextInputSkin"/>
 								  <s:Label x="23" y="2120" width="389" height="39" color="#000000"
-										   fontSize="22" fontWeight="normal"
+										   fontSize="22" fontStyle="normal" fontWeight="bold"
 										   text="17b. Number of tablets per dose:"
 										   verticalAlign="middle"/>
-								  <s:Label x="478" y="2129" width="93" height="39" color="#000000" fontSize="22" fontWeight="normal"
+								  <s:Label x="490" y="2129" width="93" height="39" color="#000000" fontSize="22" fontWeight="normal"
 										   text="tablets."/>
 								  <s:RadioButton id="q17a_1" x="149" y="2039" label="20mg/120mg" fontSize="22" groupName="q17a_group"/>
 								  <s:RadioButton id="q17a_2" x="378" y="2039" label="Other"
@@ -999,9 +1137,9 @@
 											   horizontalCenter="244" prompt="Specify dose and units"
 											   skinClass="spark.skins.mobile.TextInputSkin"/>
 								  <s:TextInput id="q17b" y="2112" width="113" fontSize="22"
-											   horizontalCenter="-29" prompt="Number"
+											   horizontalCenter="-19" prompt="Number"
 											   skinClass="spark.skins.mobile.TextInputSkin"/>
-								  <s:Label x="23" y="2636" width="326" height="39" color="#000000" fontSize="22" fontWeight="normal"
+								  <s:Label x="23" y="2636" width="326" height="39" color="#000000" fontSize="22" fontWeight="bold"
 										   text="18c. For how many days?"/>
 								  <s:RadioButton id="q18a_1" x="223" y="2386" label="7.5mg" fontSize="22" groupName="q18a_group"/>
 								  <s:RadioButton id="q18a_2" x="385" y="2386" label="Other"
@@ -1017,10 +1155,11 @@
 								  <s:RadioButton id="q18b_5" x="45" y="2559" label="Other"
 												 click="q18b_5_clickHandler(event)" fontSize="22"
 												 groupName="q18b_group"/>
-								  <s:RadioButton id="q18c" x="44" y="2666" label="1 Day" fontSize="22" groupName="q18c1"/>
-								  <s:RadioButton id="q13_3" x="288" y="1375" label="Uncertain" fontSize="22" groupName="q13_"/>
+								  <s:RadioButton id="q18c" x="45" y="2666" label="1 Day"
+												 fontSize="22" groupName="q18c1" selected="false"/>
+								  <s:RadioButton id="q13_3" x="309" y="1366" label="Uncertain" fontSize="22" groupName="q13_"/>
 								  <s:Label x="21" y="2941" width="730" height="35" color="#000000"
-										   fontSize="22" fontWeight="normal"
+										   fontSize="22" fontWeight="bold"
 										   text="26. G6PD Test result: " verticalAlign="middle"/>
 								  <s:Label x="19" y="3044" width="730" height="35" color="#000000"
 										   fontSize="24" fontWeight="bold"
@@ -1028,47 +1167,47 @@
 								  <s:RadioButton id="q26_1" x="29" y="2978" label="Normal" fontSize="22" groupName="q26_group"/>
 								  <s:RadioButton id="q26_2" x="192" y="2979" label="Deficient " fontSize="22" groupName="q26_group"/>
 								  <s:RadioButton id="q26_3" x="371" y="2979" label="Invalid" fontSize="22" groupName="q26_group"/>
-	<s:RadioButton id="q15_2" x="174" y="1577" label="Microscopy" fontSize="22"
+	<s:RadioButton id="q15_2" x="183" y="1577" label="Microscopy" fontSize="22"
 				   groupName="q15a_group"/>	
-	<s:RadioButton id="q15_1" x="46" y="1577" label="RDT" fontSize="22"  groupName="q15a_group"/>
+	<s:RadioButton id="q15_1" x="53" y="1577" label="RDT" fontSize="22"  groupName="q15a_group"/>
 								  
-								  <s:RadioButton id="q15_3" x="370" y="1576" label="Other" fontSize="22"  groupName="q15a_group"/>
+								  <s:RadioButton id="q15_3" x="381" y="1576" label="Both" fontSize="22"  groupName="q15a_group"/>
 	
 	<s:RadioButton id="rf_memorial" x="23" y="273" label="RFM"
 				   click="rf_memorial_clickHandler(event)" enabled="true" fontSize="22"
 				   groupName="hf"/>
 	<s:RadioButton id="good_shepherd" x="173" y="273" width="237" label="Good Shepherd"
 				   click="good_shepherd_clickHandler(event)" fontSize="22" groupName="hf"/>
-	<s:Label x="25" y="1647" fontSize="22" fontWeight="normal" text="16. Diagnosis :"/>
+	<s:Label x="25" y="1647" fontSize="22" fontWeight="bold" text="16. Diagnosis :"/>
 	<s:Label x="24" y="1813" fontSize="22" fontWeight="bold" text="17. Antimalarial prescribed :"/>
 	
-	<s:RadioButton id="q16_pf" x="47" y="1683" width="94" label="Pf" fontSize="22" groupName="q16diag_group"/>
-	<s:RadioButton id="q16_pv" x="149" y="1683" label="Pv" fontSize="22" groupName="q16diag_group"/>
-	<s:RadioButton id="q16_mixed" x="257" y="1683" label="Mixed" fontSize="22"  groupName="q16diag_group"/>
-	<s:RadioButton id="q16_other" x="406" y="1683" label="Other"
+	<s:RadioButton id="q16_pf" x="53" y="1683" width="94" label="Pf" fontSize="22" groupName="q16diag_group"/>
+	<s:RadioButton id="q16_pv" x="208" y="1681" label="Pv" fontSize="22" groupName="q16diag_group"/>
+	<s:RadioButton id="q16_mixed" x="381" y="1683" label="Mixed" fontSize="22"  groupName="q16diag_group"/>
+	<s:RadioButton id="q16_other" x="557" y="1683" label="Other"
 				   click="q16_other_clickHandler(event)" fontSize="22" groupName="q16diag_group"/>
 
-	<s:CheckBox id="q17_1" x="41" y="1853" label="AL" click="q17_1_clickHandler(event)" fontSize="22"/>
-	<s:CheckBox id="q17_2" x="179" y="1853" label="Oral QN   " click="q17_1_clickHandler(event)"
+	<s:CheckBox id="q17_1" x="49" y="1853" label="AL" click="q17_1_clickHandler(event)" fontSize="22"/>
+	<s:CheckBox id="q17_2" x="187" y="1853" label="Oral QN   " click="q17_1_clickHandler(event)"
 				fontSize="22"/>
-	<s:CheckBox id="q17_3" x="360" y="1854" label="IM QN" click="q17_1_clickHandler(event)"
+	<s:CheckBox id="q17_3" x="368" y="1854" label="IM QN" click="q17_1_clickHandler(event)"
 				enabled="false" fontSize="22"/>
-	<s:CheckBox id="q17_4" x="538" y="1854" label="SP/Fandisar" click="q17_1_clickHandler(event)"
+	<s:CheckBox id="q17_4" x="546" y="1854" label="SP/Fandisar" click="q17_1_clickHandler(event)"
 				enabled="false" fontSize="22"/>
-	<s:CheckBox id="q17_5" x="41" y="1913" label="CQ   " click="q17_1_clickHandler(event)"
+	<s:CheckBox id="q17_5" x="49" y="1913" label="CQ   " click="q17_1_clickHandler(event)"
 				enabled="false" fontSize="22"/>
-	<s:CheckBox id="q17_6" x="179" y="1914" label="Other" click="q17_6_clickHandler(event)"
+	<s:CheckBox id="q17_6" x="187" y="1914" label="Other" click="q17_6_clickHandler(event)"
 				fontSize="22"/>
-	<s:CheckBox id="q17_7" x="360" y="1913" label="Unknown" click="q17_1_clickHandler(event)"
+	<s:CheckBox id="q17_7" x="368" y="1913" label="Unknown" click="q17_1_clickHandler(event)"
 				enabled="true" fontSize="22" />
-	<s:RadioButton id="q12a_1" x="21" y="1207" label="Medication" fontSize="22" fontWeight="normal" groupName="q12a_group"/>
-	<s:RadioButton id="q12a_2" x="216" y="1207" label="Food" fontSize="22" fontWeight="normal" groupName="q12a_group"/>
-	<s:RadioButton id="q12a_3" x="349" y="1207" label="Infection" fontSize="22" fontWeight="normal" groupName="q12a_group"/>
-	<s:RadioButton id="q12a_4" x="525" y="1207" label="Other (describe)"
+	<s:RadioButton id="q12a_1" x="53" y="1208" label="Medication" fontSize="22" fontWeight="normal" groupName="q12a_group"/>
+	<s:RadioButton id="q12a_2" x="248" y="1208" label="Food" fontSize="22" fontWeight="normal" groupName="q12a_group"/>
+	<s:RadioButton id="q12a_3" x="381" y="1208" label="Infection" fontSize="22" fontWeight="normal" groupName="q12a_group"/>
+	<s:RadioButton id="q12a_4" x="557" y="1208" label="Other (describe)"
 				click="q12a_4_clickHandler(event)" fontSize="22" fontWeight="normal" groupName="q12a_group"/>
-								  <s:TextInput id="q12a_other" x="47" y="1271" width="478"
+								  <s:TextInput id="q12a_other" x="99" y="1263" width="602"
 											   fontSize="22" prompt="Describe other" skinClass="spark.skins.mobile.TextInputSkin"/>
-								  <s:TextInput id="qn17_other" y="1968" width="809" height="48"
+								  <s:TextInput id="qn17_other" y="1968" width="685" height="48"
 											   fontSize="22" horizontalCenter="-4"
 											   prompt="Specify other"
 											   skinClass="spark.skins.mobile.TextInputSkin"/>

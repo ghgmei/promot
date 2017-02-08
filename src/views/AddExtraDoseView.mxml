@@ -22,6 +22,31 @@
 				"/" + ((new Date().getMonth()+ 1) +            
 					"/" + (new Date()).getFullYear());
 			
+			public var dbFile:File;
+			public var dbConnection:SQLConnection;
+			public var CHK:String ="1";
+			
+			
+			private function onDatabaseOpen(evt:SQLEvent):void
+				
+			{
+				
+				//var statement:SQLStatement = new SQLStatement();
+				//statement.sqlConnection = dbConnection;
+				//statement.execute();
+				
+				
+				trace("Database is open");
+				
+				
+			}
+			
+			
+			private function onDatabaseClose(evt:SQLEvent):void
+				
+			{
+				trace("Database is closed");
+			}
 			
 			
 			private function onloaded():void
@@ -34,7 +59,30 @@
 				specifyLabel.visible=false;
 				specify.visible=false;
 				
+				trace("Loading DB");
 				
+				//connects to Db
+				
+				dbFile = File.applicationStorageDirectory.resolvePath("prompt_local.db");
+				dbConnection = new SQLConnection();
+				dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
+				dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
+				
+				dbConnection.open(dbFile);
+				
+				
+				// check if db exists, then create if doesnt 
+				
+				/**
+				 *
+				 * */
+				
+				var statement:SQLStatement = new SQLStatement();
+				statement.sqlConnection = dbConnection;
+				statement.text ="CREATE TABLE IF NOT EXISTS doses (id INTEGER PRIMARY KEY AUTOINCREMENT, pid TEXT, q2O TEXT, q1 TEXT, q2 TEXT, q3 TEXT, tabletId TEXT, interviewer TEXT, cField TEXT)";
+				statement.execute();
+				
+				dbConnection.close();
 				
 			}
 			
@@ -107,6 +155,33 @@
 				
 				//	After Successfull Submission
 				
+				
+				/**
+				 * Saves data to local database with check field set to 0
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * 
+				 * 
+				 * */
+				trace("Saving data to local database with check field set to 0");
+				
+				CHK = "0";
+				
+				dbConnection.open(dbFile);
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO doses (pid, q2O, q1, q2, q3, tabletId, interviewer, cField) VALUES ('"+patientID+"','"+specify.text+"','"+q1+"','"+q2+"','"+q3+"','"+tabletID+"','"+interviewerName+"','"+CHK+"')";
+				SQLStatement1.execute();
+				
+				dbConnection.close();
+				
+				
+				
+				// to next screen
 			
 					navigator.pushView(addedExtraDoseView);
 					
@@ -120,7 +195,32 @@
 				//	After Unsuccessfull Submission - Tablet stores data until next login
 				
 				
+				/**
+				 * Saves data to local database with check field set to 1
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * 
+				 * 
+				 * */
+				trace("Saving data to local database with check field set to 0");
 				
+				CHK = "1";
+				
+				dbConnection.open(dbFile);
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO doses (pid, q2O, q1, q2, q3, tabletId, interviewer, cField) VALUES ('"+patientID+"','"+specify.text+"','"+q1+"','"+q2+"','"+q3+"','"+tabletID+"','"+interviewerName+"','"+CHK+"')";
+				SQLStatement1.execute();
+				
+				dbConnection.close();
+				
+				
+				
+				// to next screen
 			
 					
 					navigator.pushView(addedExtraDoseView);
@@ -146,7 +246,7 @@
 	
 	<fx:Declarations>
 		<s:HTTPService id="extradose" 
-					   url="http://swaziland.promptsvr.org/dose2.php" 
+					   url="http://prompt.app-king.net/dose2.php" 
 					   method="POST"
 					   result="resultHandler(event)"
 					   resultFormat="text"

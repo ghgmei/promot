@@ -18,10 +18,41 @@
 			public var dateEnded:String;
 			public var unit:String;
 			public var route:String;
+			public var tabsbd:String;
+			
 			public var space:String="/";
 			public var date1:String = ((new Date()).getDate()) +
 				"/" + ((new Date().getMonth()+ 1) +            
 					"/" + (new Date()).getFullYear());
+			
+			public var dbFile:File;
+			public var dbConnection:SQLConnection;
+			public var CHK:String ="1";
+			
+			
+			private function onDatabaseOpen(evt:SQLEvent):void
+				
+			{
+				
+				//var statement:SQLStatement = new SQLStatement();
+				//statement.sqlConnection = dbConnection;
+				//statement.execute();
+				
+				
+				trace("Database is open");
+				
+				
+			}
+			
+			
+			private function onDatabaseClose(evt:SQLEvent):void
+				
+			{
+				trace("Database is closed");
+			}
+			
+			
+			
 			
 			
 			
@@ -36,6 +67,36 @@
 				routeOther.visible=false;
 				fin_btn.visible=false;
 				ansall.visible=true;
+				tabsbdLabel.visible=false;
+				tabs1.visible=false;
+				
+				
+				trace("Loading DB");
+				
+				//connects to Db
+				
+				dbFile = File.applicationStorageDirectory.resolvePath("prompt_local.db");
+				dbConnection = new SQLConnection();
+				dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
+				dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
+				
+				dbConnection.open(dbFile);
+				
+				
+				// check if db exists, then create if doesnt 
+				
+				/**
+				 *
+				 * 
+				 * */
+				
+				var statement:SQLStatement = new SQLStatement();
+				statement.sqlConnection = dbConnection;
+				statement.text ="CREATE TABLE IF NOT EXISTS drugs (id INTEGER PRIMARY KEY AUTOINCREMENT, pid TEXT, name TEXT, altabsbd TEXT, dose TEXT, freq TEXT, unit TEXT, unitOther TEXT, route TEXT, routeOther TEXT, dateEnded TEXT, dateStarted TEXT, ind TEXT, tabletId TEXT, interviewer TEXT, cField TEXT)";
+				statement.execute();
+				
+				dbConnection.close();
+				
 				
 				
 			}
@@ -140,11 +201,42 @@
 				if (route7.selected) 
 				{
 					route="7";
-				} 				
+				} 
+				
+				// tabs bd
+				
+				if (tabsbd1.selected) 
+				{
+					tabsbd="1";
+				} 
+				
+				
+				if (tabsbd2.selected) 
+				{
+					tabsbd="2";
+				} 
+				
+				if (tabsbd3.selected) 
+				{
+					tabsbd="3";
+				} 
+				
+				
+				if (tabsbd4.selected) 
+				{
+					tabsbd="4";
+				} 
+				
+				
+				
+				
+				
+				
 				// prepares data to send to server
 				
 				var param:Object = new Object;
 				param.name=nameOfDrug.text;
+				param.altabsbd=tabsbd;
 				param.dose=dose.text;
 				param.freq=freq.text;
 				param.unitOther=unitOther.text;
@@ -154,7 +246,6 @@
 				param.dateStarted=dateStarted;
 				param.route=route;
 				param.ind=indication.text;
-				param.tabsbd=tabsbd.text
 				param.pid=patientID;
 				param.tabletId=tabletID;
 				param.interviewer=interviewerName;
@@ -176,6 +267,34 @@
 			{
 				
 				//	After Successfull Submission
+				
+				
+				/**
+				 * Saves data to local database with check field set to 0
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * 
+				 * 
+				 * */
+				trace("Saving data to local database with check field set to 0");
+				
+				CHK = "0";
+				
+				dbConnection.open(dbFile);
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO drugs (pid, name, altabsbd, dose, freq, unit, unitOther, route, routeOther, dateEnded, dateStarted, ind, tabletId, interviewer, cField) VALUES ('"+patientID+"','"+nameOfDrug.text+"','"+tabsbd+"','"+dose.text+"','"+freq.text+"','"+unit+"','"+unitOther.text+"','"+route+"','"+routeOther.text+"','"+dateEnded+"','"+dateStarted+"','"+indication.text+"','"+tabletID+"','"+interviewerName+"','"+CHK+"')";
+				SQLStatement1.execute();
+				
+				dbConnection.close();
+				
+				
+				
+				// to next screen
 				
 				
 				
@@ -210,6 +329,31 @@
 				//	After Unsuccessfull Submission - Tablet stores data until next login
 				
 				
+				/**
+				 * Saves data to local database with check field set to 1
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * */
+				trace("Saving data to local database with check field set to 1");
+				
+				CHK = "1";
+				
+				dbConnection.open(dbFile);
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO drugs (pid, name, altabsbd, dose, freq, unit, unitOther, route, routeOther, dateEnded, dateStarted, ind, tabletId, interviewer, cField) VALUES ('"+patientID+"','"+nameOfDrug.text+"','"+tabsbd+"','"+dose.text+"','"+freq.text+"','"+unit+"','"+unitOther.text+"','"+route+"','"+routeOther.text+"','"+dateEnded+"','"+dateStarted+"','"+indication.text+"','"+tabletID+"','"+interviewerName+"','"+CHK+"')";
+				SQLStatement1.execute();
+					
+				
+				dbConnection.close();
+				
+				
+				// to next screen
+				
 				
 				if (moreDrugs.selected) {
 					
@@ -217,7 +361,19 @@
 					
 				} else {
 					
-					navigator.pushView(addedEncounterView);
+					
+					
+					
+					if (userClass.getInstance().concomitant == "Y") {
+						
+						navigator.pushView(views.AddConcomitantDrugsView);
+						
+					} else {
+						
+						navigator.pushView(addedEncounterView);
+						
+					}
+					
 					
 				}
 				
@@ -242,7 +398,7 @@
 			{
 			
 				
-				if(!unit1.selected && !unit2.selected && !unit3.selected && !unit4.selected && !unit5.selected && !unit6.selected && !unit7.selected && !unit8.selected&& !unit9.selected)
+				if(!unit1.selected && !unit2.selected && !unit3.selected && !unit4.selected && !unit5.selected && !unit6.selected && !unit7.selected && !unit8.selected&& !unit9.selected && !tabsbd1.selected && !tabsbd2.selected && !tabsbd3.selected && !tabsbd4.selected)
 					
 				{
 					
@@ -309,7 +465,7 @@
 				unit2.visible=false;
 				unit3.visible=false;
 				unit4.visible=false;
-				unit5.visible=true;
+				unit5.visible=false;
 				unit6.visible=false;
 				unit7.visible=false;
 				unit8.visible=false;
@@ -318,7 +474,7 @@
 				nameOfDrug.text="AL";
 				nameOfDrug.enabled=false;
 				tabsbdLabel.visible=true;
-				tabsbd.visible=true;
+				tabs1.visible=true;
 				doseLabel.visible=false;
 				dose.visible=false;
 			}
@@ -352,7 +508,7 @@
 				nameOfDrug.text="";
 				nameOfDrug.enabled=true;
 				tabsbdLabel.visible=false;
-				tabsbd.visible=false;
+				tabs1.visible=false;
 				doseLabel.visible=true;
 				dose.visible=true;
 				
@@ -374,6 +530,7 @@
 					   fault="faultHandler(event)" /> 
 		<s:RadioButtonGroup id="routeop"/>
 		<s:RadioButtonGroup id="unitop"/>
+		<s:RadioButtonGroup id="tabs"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
@@ -419,9 +576,8 @@
 	<s:TextInput id="freq" x="157" y="668" width="218" height="50" fontSize="20" prompt="Frequency"/>
 	<s:TextInput id="routeOther" x="157" y="807" width="218" height="50" fontSize="20"/>
 	<s:TextInput id="unitOther" x="162" y="483" width="218" height="50" fontSize="20"/>
-	<s:TextInput id="tabsbd" x="312" y="342" width="218" height="50" fontSize="20"/>
-	<s:Label id="tabsbdLabel" x="59" y="357" fontSize="23" fontWeight="bold"
-			 text="Number of tabs (bd) :"/>
+	<s:Label id="tabsbdLabel" x="59" y="364" fontSize="23" fontWeight="bold"
+			 text="Dose:"/>
 	<s:Label id="unitOtherLabel" x="162" y="453" color="#F30A0A" text="Specify other unit:"/>
 	<s:CheckBox id="moreDrugs" x="568" y="1253" label="Add another drug?"
 				 fontSize="30"/>
@@ -432,6 +588,13 @@
 	<s:RadioButton id="unit3" x="399" y="482" label="drops" groupName="unitop"/>
 	<s:RadioButton id="unit4" x="399" y="536" label="tsp" groupName="unitop"/>
 	<s:RadioButton id="unit5" x="399" y="591" label="tablet/capsule" groupName="unitop"/>
+	<s:Group id="tabs1" width="797">
+		
+		<s:RadioButton id="tabsbd1" x="72" y="411" label="1 tab bd" groupName="tabs"/>
+		<s:RadioButton id="tabsbd2" x="244" y="411" label="2 tabs bd" groupName="tabs"/>
+		<s:RadioButton id="tabsbd3" x="432" y="411" label="3 tabs bd" groupName="tabs"/>
+		<s:RadioButton id="tabsbd4" x="606" y="411" label="4 tabs bd" groupName="tabs"/>
+	</s:Group>
 	<s:RadioButton id="unit8" x="575" y="482" label="Other" groupName="unitop" click="unit_clickHandler(event)"/>
 	<s:RadioButton id="unit9" x="575" y="536" label="Don't know" groupName="unitop"/>
 	<s:RadioButton id="route3" x="404" y="809" label="IV" groupName="routeop"/>

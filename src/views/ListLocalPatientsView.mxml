@@ -98,7 +98,7 @@
 		<s:itemRenderer>
 			<fx:Component>
 				<s:IconItemRenderer
-					label="{data.fname} {data.sirname}"
+					label="{data.fname} {data.familyName}"
 					messageField="patientid"/>
 			</fx:Component>
 		</s:itemRenderer>
