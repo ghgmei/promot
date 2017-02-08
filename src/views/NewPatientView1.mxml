@@ -1,0 +1,1293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		actionBarVisible="false" fontWeight="normal" overlayControls="false" tabBarVisible="false"
+		title="New Patient" creationComplete="formloaded()">
+	
+	<fx:Script>
+		<![CDATA[
+			
+			
+			import mx.validators.Validator;
+			
+			
+			// Get global vars
+			public var tabletID:String  = userClass.getInstance().tabletId;
+			public var interviewerName:String  = userClass.getInstance().interviewer;
+			public var patientID:String = userClass.getInstance().patient;
+			
+			// Define local vars
+			public var aq10:String = "0";
+			public var q11:String = "0";
+			public var q11a:String = "0";
+			public var q12:String;	
+			public var q9:String = "0";
+			public var aq8:String = "0";
+			public var q10_isTested:String;
+			public var q10_pregnant:String;			
+			public var gender:String;
+			public var CHK:String = "1";
+			public var thegenders:String;
+			public var date1:String = ((new Date()).getDate()) +
+				"/" + ((new Date().getMonth()+ 1) +            
+					"/" + (new Date()).getFullYear());
+			public var aq1:String = "0";
+			public var aq2:String = "0";
+			public var aq3:String = "0";
+			public var aq4:String = "0";
+			public var aq5:String = "0";
+			public var aq6:String = "0";
+			public var aq7:String = "0";
+			public var q191:String;
+			public var q192:String;
+			public var ageTypes:String;
+			
+
+			
+			public var dbFile:File;
+			public var dbConnection:SQLConnection;
+			
+			private function onDatabaseOpen(evt:SQLEvent):void
+				
+			{
+				
+				//var statement:SQLStatement = new SQLStatement();
+				//statement.sqlConnection = dbConnection;
+				//statement.execute();
+				
+				
+				
+			}
+			
+			
+			private function onDatabaseClose(evt:SQLEvent):void
+				
+			{
+				trace("Database is closed");
+			}
+			
+			
+			private function nextButton_clickHandler(event:MouseEvent):void
+			{
+				
+				
+				// warns of data submission process
+			
+					indicator.visible=true;	
+					nextButton.visible = false;
+				
+					
+					
+					
+				// Assigns radio buttons to variables
+				
+					
+										
+					
+					if (q1.selected) 
+					{
+						aq1="1";
+					} 
+					
+					// sends ageType and Guardian name to patient data
+					
+					if(month1.selected)
+					{
+						userClass.getInstance().agetype3 = "M";
+						ageTypes="M";
+						trace("Age type is month and is set to M");
+					} 
+					
+					
+				   if(year1.selected)
+					{
+						userClass.getInstance().agetype3 = "Y";
+						ageTypes="Y";
+						trace("Age type is year and is set to Y");
+					}
+					
+				   if (ageNum.text < '19') {
+					   userClass.getInstance().guardian20 = guardian_name.text;
+					   trace("Patient is younger than 18 years so guardian is set to "+guardian_name.text+"");
+				   } else
+				   {
+					   userClass.getInstance().guardian20 = "N/A";
+					   trace("Patient is older than 18 years so guardian is set to N/A");
+				   }
+				   
+					
+				   
+				   
+					
+					// sends age to patient data
+									
+					userClass.getInstance().age1 = ageNum.text;
+					
+					
+					
+					if (q2.selected) 
+					{
+						aq2="1";
+					} 
+					
+					
+					if (q3.selected) 
+					{
+						aq3="1";
+					} 
+					
+					
+					if (q4.selected) 
+					{
+						aq4="1";
+					} 
+					
+					
+					if (q5.selected) 
+					{
+						aq5="1";
+					} 
+					
+					
+					if (q6.selected) 
+					{
+						aq6="1";
+					} 
+					
+					
+					if (q7.selected) 
+					{
+						aq7="1";
+					} 
+					
+					if (q8.selected) 
+					{
+						aq8="1";
+					} 
+					
+					
+					// q1.9.1
+					
+					if (q191y.selected) 
+					{
+						q191="1";
+					} 
+					
+					if (q191n.selected) 
+					{
+						q191="0";
+					} 
+					
+					
+					
+					// q1.9.2
+					
+					if (q192y.selected) 
+					{
+						q192="1";
+					} 
+					
+					if (q192n.selected) 
+					{
+						q192="0";
+					} 
+					
+					
+					
+					
+					
+				//q10 pregnancy
+				
+				if (q10_yes.selected) 
+				{
+					aq10="1";
+				} 
+				
+				if (q10_no.selected) 
+				{
+					aq10="2";
+				}
+				if (q10_uncertain.selected) 
+				{
+					aq10="3";
+				}
+				if (q10_na.selected) 
+				{
+					aq10="4";
+				}
+				
+				if (q10_tested.selected) 
+				{
+					q10_isTested="1";
+				}
+				if (q10_nottested.selected) 
+				{
+					q10_isTested="2";
+				}
+				
+				
+				if (q10_pregnant_yes.selected) 
+				{
+					q10_pregnant="1";
+				}
+				if (q10_pregnant_no.selected) 
+				{
+					q10_pregnant="2";
+				}
+				
+				
+				
+				
+				//q11
+								
+				if (q11_yes.selected) 
+				{
+					q11="1";
+				} 
+				
+				
+				if (q11_no.selected) 
+				{
+				q11="2";
+				} 
+				
+				//q11a
+						
+				if (q11aYes.selected) 
+				{
+					q11a="1";
+				} 
+				
+				
+				if (q11aNo.selected) 
+				{
+					q11a="2";
+				} 
+				
+				
+				// assign and forward pregnancy, age & gender
+				
+				if(male.selected)
+				{
+				userClass.getInstance().gender1 = "M";
+				thegenders="M";
+				trace("Gender is Male and set to M");
+				}
+				
+				if(female.selected)
+				{
+					userClass.getInstance().gender1 = "F";
+					thegenders="F";
+					trace("Gender is Female and set to F");
+				}	
+				userClass.getInstance().pregnant_el = q10_pregnant;
+				
+				// hemoglobin measure
+				
+				userClass.getInstance().hemoglobin_m = hemoglobin_measure.text
+				
+				// define parameters to send
+				
+				var param:Object = new Object;
+				param.q1=aq1;
+				param.age=ageNum.text;
+				param.ageType=ageTypes;
+				param.guardian=guardian_name.text
+				param.q2=aq2;
+				param.q3=aq3;
+				param.q4=aq4;
+				param.q5=aq5;
+				param.q6=aq6;
+				param.q7=aq7;
+				param.q8=aq8;
+				param.gender=thegenders;
+				param.childbearing_age=q191;
+				param.breast_feeding=q192;
+				param.q10=aq10;
+				param.q10_isTested=q10_isTested;
+				param.q10_pregnant=q10_pregnant;
+				param.q11=q11;
+				param.q11a=q11a;
+				param.no_2=no_2.text;
+				param.no_4=no_4.text;
+				param.hemoglobin=hemoglobin_measure.text;
+				param.tabletId=tabletID;
+				param.interviewer=interviewerName;
+				param.fynder='2fbf1c14e1cacf8b441ea490f3e6178cdaa3440576d3158774711aefdbd98a7cf51b90e5b9cef11d5401950eb448a285f7122446c3ae2fbe59aefc40020898fc';		
+				
+				
+				// submit
+				
+				newpatient.send(param);	
+				
+			
+			}
+		
+			protected function q11aYes_clickHandler(event:MouseEvent):void
+			{
+					
+					
+					
+					 if (!q1.selected) 
+					{
+						q1w.visible=true;	
+						nextButton.visible=false;
+						q11aYes.selected=false;
+						
+					}else 
+					{
+					
+					
+					no_1.visible=false;
+					no_2.visible=false;
+					no_3.visible=false;
+					no_4.visible=false;
+					q1w.visible=false;	
+					q2w.visible=false;
+					q3w.visible=false;
+					q4w.visible=false;
+					q5w.visible=false;
+					q7w.visible=false;
+					q8w.visible=false;
+					q9w.visible=false;
+					
+					q11w.visible=false;
+					warningtext2.visible=false;
+					nextButton.visible=true;
+					nextButton.label="Proceed"
+					warningtext.visible=false;
+					
+					}
+					 
+					 
+					 if (!q2.selected) 
+					 {
+						 q2w.visible=true;	
+						 nextButton.visible=false;
+						 q11aYes.selected=false;
+						 
+					 }else 
+					 {
+						 
+						 
+						 no_1.visible=false;
+						 no_2.visible=false;
+						 no_3.visible=false;
+						 no_4.visible=false;
+						 q1w.visible=false;	
+						 q2w.visible=false;
+						 q3w.visible=false;
+						 q4w.visible=false;
+						 q5w.visible=false;
+						 q7w.visible=false;
+						 q8w.visible=false;
+						 q9w.visible=false;
+						
+						 q11w.visible=false;
+						 warningtext2.visible=false;
+						 nextButton.visible=true;
+						 nextButton.label="Proceed"
+						 warningtext.visible=false;
+						 
+					 }
+					 
+					 
+					 if (!q3.selected) 
+					 {
+						 q3w.visible=true;	
+						 nextButton.visible=false;
+						 q11aYes.selected=false;
+						 
+					 }else 
+					 {
+						 
+						 
+						 no_1.visible=false;
+						 no_2.visible=false;
+						 no_3.visible=false;
+						 no_4.visible=false;
+						 q1w.visible=false;	
+						 q2w.visible=false;
+						 q3w.visible=false;
+						 q4w.visible=false;
+						 q5w.visible=false;
+						 q7w.visible=false;
+						 q8w.visible=false;
+						 q9w.visible=false;
+						 
+						 q11w.visible=false;
+						 warningtext2.visible=false;
+						 nextButton.visible=true;
+						 nextButton.label="Proceed"
+						 warningtext.visible=false;
+						 
+					 }
+					 
+					 if (!q4.selected) 
+					 {
+						 q4w.visible=true;	
+						 nextButton.visible=false;
+						 q11aYes.selected=false;
+						 
+					 }else 
+					 {
+						 
+						 
+						 no_1.visible=false;
+						 no_2.visible=false;
+						 no_3.visible=false;
+						 no_4.visible=false;
+						 q1w.visible=false;	
+						 q2w.visible=false;
+						 q3w.visible=false;
+						 q4w.visible=false;
+						 q5w.visible=false;
+						 q7w.visible=false;
+						 q8w.visible=false;
+						 q9w.visible=false;
+						
+						 q11w.visible=false;
+						 warningtext2.visible=false;
+						 nextButton.visible=true;
+						 nextButton.label="Proceed"
+						 warningtext.visible=false;
+						 
+					 }
+					 
+					 if (!q5.selected) 
+					 {
+						 q5w.visible=true;	
+						 nextButton.visible=false;
+						 q11aYes.selected=false;
+						 
+					 }else 
+					 {
+						 
+						 
+						 no_1.visible=false;
+						 no_2.visible=false;
+						 no_3.visible=false;
+						 no_4.visible=false;
+						 q1w.visible=false;	
+						 q2w.visible=false;
+						 q3w.visible=false;
+						 q4w.visible=false;
+						 q5w.visible=false;
+						 q7w.visible=false;
+						 q8w.visible=false;
+						 q9w.visible=false;
+						
+						 q11w.visible=false;
+						 warningtext2.visible=false;
+						 nextButton.visible=true;
+						 nextButton.label="Proceed"
+						 warningtext.visible=false;
+						 
+					 }
+					 
+					 if (hemoglobin_measure.text == "") 
+					 {
+						 warningtext.visible=true;	
+						 nextButton.visible=false;
+						 q11aYes.selected=false;
+						 
+					 } else 
+					 {
+						 
+						 
+						 no_1.visible=false;
+						 no_2.visible=false;
+						 no_3.visible=false;
+						 no_4.visible=false;
+						 q1w.visible=false;	
+						 q2w.visible=false;
+						 q3w.visible=false;
+						 q4w.visible=false;
+						 q5w.visible=false;
+						 q7w.visible=false;
+						 q8w.visible=false;
+						 q9w.visible=false;
+						 
+						 q11w.visible=false;
+						 warningtext2.visible=false;
+						 nextButton.visible=true;
+						 nextButton.label="Proceed"
+						 warningtext.visible=false;
+						 
+					 }
+					 
+					 
+					 
+					 if (!q7.selected) 
+					 {
+						 q7w.visible=true;	
+						 nextButton.visible=false;
+						 q11aYes.selected=false;
+						 
+					 }else 
+					 {
+						 
+						 
+						 no_1.visible=false;
+						 no_2.visible=false;
+						 no_3.visible=false;
+						 no_4.visible=false;
+						 q1w.visible=false;	
+						 q2w.visible=false;
+						 q3w.visible=false;
+						 q4w.visible=false;
+						 q5w.visible=false;
+						 q7w.visible=false;
+						 q8w.visible=false;
+						 q9w.visible=false;
+						
+						 q11w.visible=false;
+						 warningtext2.visible=false;
+						 nextButton.visible=true;
+						 nextButton.label="Proceed"
+						 warningtext.visible=false;
+						 
+					 }
+					 
+					 if (!q8.selected) 
+					 {
+						 q8w.visible=true;	
+						 nextButton.visible=false;
+						 q11aYes.selected=false;
+						 
+					 }else 
+					 {
+						 
+						 
+						 no_1.visible=false;
+						 no_2.visible=false;
+						 no_3.visible=false;
+						 no_4.visible=false;
+						 q1w.visible=false;	
+						 q2w.visible=false;
+						 q3w.visible=false;
+						 q4w.visible=false;
+						 q5w.visible=false;
+						 q7w.visible=false;
+						 q8w.visible=false;
+						 q9w.visible=false;
+						
+						 q11w.visible=false;
+						 warningtext2.visible=false;
+						 nextButton.visible=true;
+						 nextButton.label="Proceed"
+						 warningtext.visible=false;
+						 
+					 }
+					 
+					 
+					 if(!male.selected && !female.selected)
+						 
+					 {
+						 q9w.visible=true;	
+						 nextButton.visible=false;
+						 q11aYes.selected=false;
+						 
+					 }else 
+					 {
+						 
+						 
+						 no_1.visible=false;
+						 no_2.visible=false;
+						 no_3.visible=false;
+						 no_4.visible=false;
+						 q1w.visible=false;	
+						 q2w.visible=false;
+						 q3w.visible=false;
+						 q4w.visible=false;
+						 q5w.visible=false;
+						 q7w.visible=false;
+						 q8w.visible=false;
+						 q9w.visible=false;
+						
+						 q11w.visible=false;
+						 warningtext2.visible=false;
+						 nextButton.visible=true;
+						 nextButton.label="Proceed"
+						 warningtext.visible=false;
+						 
+					 }
+					 
+					 
+					 
+					 
+					 if(!q191y.selected && !q191n.selected)
+						 
+					 {
+						 q91w.visible=true;	
+						 nextButton.visible=false;
+						 q11aYes.selected=false;
+						 
+					 }
+					
+					 
+					 if(!q192y.selected && !q192n.selected)
+						 
+					 {
+						 q92w.visible=true;	
+						 nextButton.visible=false;
+						 q11aYes.selected=false;
+						 
+					 }
+				
+					 
+					 
+					 
+					 if (!q11_yes.selected && !q11_no.selected) 
+					 {
+						 q11w.visible=true;	
+						 nextButton.visible=false;
+						 q11aYes.selected=false;
+						 
+					 }else 
+					 {
+						 
+						 
+						 no_1.visible=false;
+						 no_2.visible=false;
+						 no_3.visible=false;
+						 no_4.visible=false;
+						 q1w.visible=false;	
+						 q2w.visible=false;
+						 q3w.visible=false;
+						 q4w.visible=false;
+						 q5w.visible=false;
+						 q7w.visible=false;
+						 q8w.visible=false;
+						 q9w.visible=false;
+						 warningtext2.visible=false;
+						 q11w.visible=false;
+						 
+						 nextButton.visible=true;
+						 nextButton.label="Proceed"
+						 warningtext.visible=false;
+						 
+					 }
+					 
+					 
+					 if (!q11aYes.selected) {
+						 
+											 
+						 nextButton.visible=false;
+						 warningtext2.visible=true;	
+						 
+					 }
+					 
+					 
+					
+					 
+					 
+			}
+				
+				
+		
+			
+			protected function formloaded():void
+			{
+				nextButton.visible = false;
+				no_1.visible=false;
+				no_2.visible=false;
+				no_3.visible=false;
+				no_4.visible=false;
+				hemoglobin_measure.visible=false;
+				hemo.visible=false;
+				warningtext.visible=false;	
+				q1w.visible=false;
+				q2w.visible=false;
+				q3w.visible=false;
+				q4w.visible=false;
+				q5w.visible=false;
+				q7w.visible=false;
+				q8w.visible=false;
+				q9w.visible=false;
+				q91w.visible=false;
+				q92w.visible=false;
+				q11w.visible=false;
+				
+				
+				guardian_name.visible=false;
+				guardian_nameLabel.visible=false;
+				
+				
+				q10_pregnant_yes.visible=false;
+				q10_pregnant_no.visible=false;
+				q10_pregnant_text.visible=false;
+				q10_tested.visible=false;
+				q10_nottested.visible=false;
+				q10_tested_text.visible=false;	
+				indicator.visible=false;	
+					
+					trace("Begin DB connection");
+					
+					//connects to Db
+					
+					dbFile = File.applicationStorageDirectory.resolvePath("prompt_local.db");
+					dbConnection = new SQLConnection();
+					dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
+					dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
+					
+					dbConnection.openAsync(dbFile);
+					
+					
+					// check if db exists, then create if doesnt 
+					
+					var statement:SQLStatement = new SQLStatement();
+					statement.sqlConnection = dbConnection;
+					statement.text ="CREATE TABLE IF NOT EXISTS eligibility (id INTEGER PRIMARY KEY AUTOINCREMENT, q1 TEXT, age TEXT, ageType TEXT, guardian TEXT, q2 TEXT, q3 TEXT, q4 TEXT, q5 TEXT, q6 TEXT, q7 TEXT, q8 TEXT, gender TEXT, childbearing_age TEXT, breast_feeding TEXT, q10 TEXT, q10_isTested TEXT, q10_pregnant TEXT,  q11 TEXT, q11a TEXT, no_2 TEXT, no_4 TEXT, hemoglobin TEXT, tabletId TEXT, interviewer TEXT, dateModified TEXT, cField TEXT)";
+					statement.execute();
+					
+			} 
+			
+			private function maleselected():void
+			{
+				q10_yes.enabled=false;
+				q10_yes.selected=false;
+				
+				q10_no.enabled=false;
+				q10_no.selected=false;
+				
+				q10_na.enabled=true;
+				q10_na.selected=true;
+				
+				q10_uncertain.enabled=false;
+				q10_uncertain.selected=false;
+				
+				q191n.selected=true;
+				q191y.selected=false;
+				q191y.enabled=false;
+				q191n.enabled=true;
+			
+				q192n.selected=true;
+				q192y.selected=false;
+				q192y.enabled=false;
+				q192n.enabled=true;
+				
+			}
+			
+			
+			private function femaleselected():void
+			{
+				q10_yes.enabled=true;
+				q10_no.enabled=true;
+				q10_na.enabled=false;
+				q10_na.selected=false;
+				q10_uncertain.enabled=true;
+				
+				q191n.selected=false;
+				q191y.selected=false;
+				q191y.enabled=true;
+				q191n.enabled=true;
+				
+				q192n.selected=false;
+				q192y.selected=false;
+				q192y.enabled=true;
+				q192n.enabled=true;
+				
+			}
+			
+			
+				private function wasshestested():void
+				{
+					q10_tested.visible=true;
+					q10_nottested.visible=true;
+					q10_tested_text.visible=true;
+				}
+				
+			
+			private function nwasshestested():void
+			{
+				q10_tested.visible=false;
+				q10_nottested.visible=false;
+				q10_tested_text.visible=false;
+				q10_pregnant_yes.visible=false;
+				q10_pregnant_no.visible=false;
+				q10_pregnant_text.visible=false;
+			}
+			
+			private function testresult():void
+			{
+				q10_pregnant_yes.visible=true;
+				q10_pregnant_no.visible=true;
+				q10_pregnant_text.visible=true;
+			}
+			
+			private function ntestresult():void
+			{
+				q10_pregnant_yes.visible=false;
+				q10_pregnant_no.visible=false;
+				q10_pregnant_text.visible=false;
+			}
+			
+	
+		
+			
+			
+			protected function q11aNo_clickHandler(event:MouseEvent):void
+			{
+			
+				
+				
+				if (!q11_yes.selected && !q11_no.selected) 
+				{
+					
+					q11w.visible=true;	
+					nextButton.visible=false;
+					q11aYes.selected=false;
+					
+				}
+				else{
+									
+					no_1.visible=true;
+					no_2.visible=true;
+					no_3.visible=true;
+					no_4.visible=true;
+					q1w.visible=false;	
+					q2w.visible=false;
+					q3w.visible=false;
+					q4w.visible=false;
+					q5w.visible=false;
+					q7w.visible=false;
+					q8w.visible=false;
+					q9w.visible=false;
+					
+					q11w.visible=false;
+					
+					nextButton.visible=true;
+					nextButton.label="Save"
+					warningtext.visible=false;
+					warningtext2.visible=false;
+					
+				}
+				
+				
+					
+			
+				
+			}
+			
+			protected function q5_clickHandler(event:MouseEvent):void
+			{
+				hemoglobin_measure.visible=true;
+				hemo.visible=true;
+				
+			}
+			
+			protected function q5_no_clickHandler(event:MouseEvent):void
+			{
+				hemoglobin_measure.visible=false;
+				hemo.visible=false;
+			}
+			
+			
+			private function resultHandler(event):void
+			{
+				
+			//	After Successfull Submission
+				
+				
+				/**
+				 * Saves data to local database with check field set to 0
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * */
+				trace("Saving data to local database with check field set to 0");
+				
+				CHK = "0";
+			
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO eligibility (q1, age, ageType, guardian, q2, q3, q4, q5, q6, q7, q8, gender, childbearing_age, breast_feeding, q10, q10_isTested, q10_pregnant, q11, q11a, no_2, no_4, hemoglobin, tabletId, interviewer, dateModified, cField) VALUES ('"+aq1+"','"+ageNum.text+"','"+ageTypes+"','"+guardian_name.text+"','"+aq2+"','"+aq3+"','"+aq4+"','"+aq5+"','"+aq6+"','"+aq7+"','"+aq8+"','"+thegenders+"','"+q191+"','"+q192+"','"+aq10+"','"+q10_isTested+"','"+q10_pregnant+"','"+q11+"','"+q11a+"','"+no_2.text+"','"+no_4.text+"','"+hemoglobin_measure.text+"','"+tabletID+"','"+interviewerName+"','"+date1+"','"+CHK+"')";
+				
+				SQLStatement1.execute();
+				
+				
+				// proceed to next screen
+				
+				if (q11aYes.selected) 
+				{
+					navigator.pushView(NewPatientView2);
+					
+					
+				}
+				if (q11aNo.selected) 
+				{
+					navigator.pushView(NotAllowedPatientView);
+				}
+				
+			}
+			
+			 
+			private function faultHandler(event):void
+			{
+				
+				
+				//	After Unsuccessfull Submission - Tablet stores data until next login
+				//	unauthorised.visible = true;
+				//unauthorised.text = event.fault.faultString;
+				
+				trace("Saving data to local database with check field set to 1");
+				
+				/**
+				 * Saves data to local database with check field set to 1
+				 * ______________________________________________________
+				 * 1 = saved to local with no server connection
+				 * 0 = saved to local with server connection
+				 * 2 = saved to local with manual sync 
+				 * */
+				
+				
+				
+				CHK = "1";
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO eligibility (q1, age, ageType, guardian, q2, q3, q4, q5, q6, q7, q8, gender, childbearing_age, breast_feeding, q10, q10_isTested, q10_pregnant, q11, q11a, no_2, no_4, hemoglobin, tabletId, interviewer, dateModified, cField) VALUES ('"+aq1+"','"+ageNum.text+"','"+ageTypes+"','"+guardian_name.text+"','"+aq2+"','"+aq3+"','"+aq4+"','"+aq5+"','"+aq6+"','"+aq7+"','"+aq8+"','"+thegenders+"','"+q191+"','"+q192+"','"+aq10+"','"+q10_isTested+"','"+q10_pregnant+"','"+q11+"','"+q11a+"','"+no_2.text+"','"+no_4.text+"','"+hemoglobin_measure.text+"','"+tabletID+"','"+interviewerName+"','"+date1+"','"+CHK+"')";
+				
+				SQLStatement1.execute();
+				
+				
+				// proceed to next screen
+								
+				if (q11aYes.selected) 
+				{
+					navigator.pushView(NewPatientView2);
+					
+				}
+				if (q11aNo.selected) 
+				{
+					navigator.pushView(NotAllowedPatientView);
+				}
+				
+				
+			}
+			
+		
+			
+			protected function month1_clickHandler(event:MouseEvent):void
+			{
+				guardian_name.visible=true;
+				guardian_nameLabel.visible=true;
+				year1.selected=false;
+				
+			}
+			
+			protected function year1_clickHandler(event:MouseEvent):void
+			{
+				month1.selected=false;
+				
+				if (ageNum.text < '18') {
+				guardian_name.visible=true;
+				guardian_nameLabel.visible=true;
+				} else
+				{
+					guardian_name.visible=false;
+					guardian_nameLabel.visible=false;
+				}
+				
+			}
+			
+			protected function q191n_clickHandler(event:MouseEvent):void
+			{
+				// if patient is not of child bearing age, they shouldn't have to answer if they are breast feeding or not.
+				
+				q192y.enabled = false;
+				q192y.selected = false;
+				q192n.enabled = false;
+				q192n.selected = false;
+				
+			}
+			
+			protected function q191y_clickHandler(event:MouseEvent):void
+			{
+				// enable 1.9.2 options if 1.9.1 no was selected then 1.9.1 yes selected afer
+				
+				q192y.enabled = true;
+				q192n.enabled = true;
+				
+			}
+			
+			protected function q10_pregnant_yes_clickHandler(event:MouseEvent):void
+			{
+				// if positive pregnancy forbid from study
+				
+				q11aNo.selected = true;
+				q11_no.selected = true;
+				q11aYes.selected = false;
+				q11_yes.selected= false;
+				q11aYes.enabled = false;
+				q11_yes.enabled= false;
+				
+				
+								
+					
+					no_1.visible=true;
+					no_2.visible=true;
+					no_3.visible=true;
+					no_4.visible=true;
+									
+					nextButton.visible=true;
+					nextButton.label="Save"
+					warningtext2.visible=false;
+					
+			
+				
+				
+				
+			}
+			
+			protected function q10_pregnant_no_clickHandler(event:MouseEvent):void
+			{
+				// if goes back on selection
+				
+				q11aNo.selected = false;
+				q11_no.selected = false;
+				q11aYes.selected = false;
+				q11_yes.selected= false;
+				q11aYes.enabled = true;
+				q11_yes.enabled= true;
+				
+				
+				no_1.visible=false;
+				no_2.visible=false;
+				no_3.visible=false;
+				no_4.visible=false;
+				
+				nextButton.visible=false;
+				nextButton.label="Proceed"
+				warningtext2.visible=true;
+				
+			}
+			
+			protected function q2_clickHandler(event:MouseEvent):void
+			{
+				// check for guardian
+				
+				if (ageNum.text < '18') {
+					guardian_name.visible=true;
+					guardian_nameLabel.visible=true;
+				} else
+				{
+					guardian_name.visible=false;
+					guardian_nameLabel.visible=false;
+				}
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	<fx:Declarations>
+		
+		<s:HTTPService id="newpatient" 
+					   url="http://prompt.app-king.net/new1.php" 
+					   method="POST"
+					   result="resultHandler(event)"
+					   resultFormat="text"
+					   contentType="application/x-www-form-urlencoded"
+					   requestTimeout = "10"
+					   fault="faultHandler(event)" > 
+			
+			
+		</s:HTTPService>
+
+		<s:RadioButtonGroup id="invluded"/>
+		<s:RadioButtonGroup id="invluded2"/>
+		<s:RadioButtonGroup id="options_q1"/>
+		<s:RadioButtonGroup id="options_q1_1"/>
+		<s:RadioButtonGroup id="agex1"/>
+		<s:RadioButtonGroup id="options_q2"/>
+		<s:RadioButtonGroup id="options_q3"/>
+		<s:RadioButtonGroup id="options_q4"/>
+		<s:RadioButtonGroup id="options_q5"/>
+		<s:RadioButtonGroup id="options_q6"/>
+		<s:RadioButtonGroup id="options_q7"/>
+		<s:RadioButtonGroup id="options_q8"/>
+		<s:RadioButtonGroup id="options_q1_9_1"/>
+		<s:RadioButtonGroup id="options_q1_9_2"/>
+		<s:RadioButtonGroup id="options_mf"/>
+		<s:RadioButtonGroup id="options_test"/>
+		<s:RadioButtonGroup id="options_preg"/>
+		
+		
+	</fx:Declarations>
+	<s:Scroller width="896" height="1500"><s:Group>
+	<s:Button id="nextButton" x="357" y="1981" width="495" height="90" label="Proceed"
+			  click="nextButton_clickHandler(event)" fontSize="50"/>
+	<s:Label top="60" width="782" height="27" color="#000000" fontSize="18" fontWeight="normal"
+			 horizontalCenter="1" text="Complete this form for all eligibile study patients."
+			 textAlign="center" verticalAlign="middle"/>
+	
+	<s:Button id="backButton" x="21" y="1981" width="300" height="90" label="&lt; Back"
+			  click="navigator.popView()" color="#000000" fontSize="50"/>
+	<s:Label top="14" color="#1772D0" fontSize="45" fontWeight="bold" horizontalCenter="6"
+			 text="New Patient: Eligibility Form"/>
+	<s:RadioButton id="q3" x="70" y="385" label="Yes" fontSize="22" fontWeight="normal" groupName="options_q2"/>
+	<s:RadioButton id="q4" x="70" y="497" label="Yes" fontSize="22" fontWeight="normal" groupName="options_q3"/>
+	<s:RadioButton id="q5" x="70" y="581" label="Yes" fontSize="22" fontWeight="normal" groupName="options_q4"/>
+	<s:RadioButton id="q7" x="70" y="852" label="Yes" fontSize="22" fontWeight="normal" groupName="options_q6"/>
+	<s:RadioButton id="q8" x="70" y="952" label="Yes" fontSize="22" fontWeight="normal" groupName="options_q7"/>
+	<s:RadioButton id="q6" x="70" y="679" label="Yes"
+				   click="q5_clickHandler(event)" fontSize="22" fontWeight="normal" groupName="options_q5"/>
+	<s:Label id="no_1" x="29" y="1780" width="748" fontSize="22" fontWeight="normal"
+			 text="1.12 If the individual has not been included in the study, give the reason: "/>
+	<s:Label id="no_3" x="140" y="1900" width="286" fontSize="20" fontWeight="normal"
+			 text="Participant’s Study ID Number :"/>
+	<s:Label x="32" y="1672" width="748" fontSize="22" fontWeight="normal"
+			 text="1.11a Has the individual been included in the study? "/>
+	<s:TextArea id="no_2" x="40" y="1810" width="796" height="70" fontSize="22" skinClass="spark.skins.mobile.TextInputSkin"/>
+
+	<s:RadioButton id="q11aNo" x="241" y="1701" label="No" click="q11aNo_clickHandler(event)"
+				   fontSize="22" groupName="invluded2"/>
+	<s:Label x="33" y="1575" width="726" fontSize="22" fontWeight="normal"
+			 text="1.11 Has the individual met all the eligibility criteria for the study?"/>
+	<s:RadioButton id="q11_no" x="241" y="1606" label="No" fontSize="22" groupName="invluded"/>
+	<s:RadioButton id="q11_yes" x="70" y="1606" width="155" label="Yes" fontSize="22"
+				   groupName="invluded"/>
+	<s:RadioButton id="q11aYes" x="70" y="1700" width="155" label="Yes"
+				   click="q11aYes_clickHandler(event)" fontSize="22" groupName="invluded2"/>
+	<s:TextInput id="no_4" x="433" y="1885" width="401" height="49" fontSize="22"
+				 prompt="Participant’s Study ID Number" skinClass="spark.skins.mobile.TextInputSkin"/>
+	<s:TextInput id="hemoglobin_measure" x="593" y="673" width="153" height="54" fontSize="22"
+				 prompt="Enter value" skinClass="spark.skins.mobile.TextInputSkin"/>
+	<s:Label id="hemo" x="755" y="692" fontSize="22" text="g/dL"/>
+	<s:RadioButton x="191" y="110" label="No" fontSize="22" groupName="options_q1"/>
+	<s:RadioButton x="191" y="386" label="No" fontSize="22" groupName="options_q2"/>
+	<s:RadioButton id="q1" x="70" y="110" label="Yes" fontSize="22" fontWeight="normal" groupName="options_q1"/>
+	<s:Label x="29" y="83" fontSize="22" fontWeight="normal" text="1.1 Age &gt;1 year"
+			 textAlign="left" verticalAlign="middle"/>
+	<s:RadioButton id="q1_1_no" x="191" y="301" label="No" fontSize="22" groupName="options_q1_1"/>
+	<s:RadioButton id="q2" x="70" y="301" label="Yes" click="q2_clickHandler(event)" fontSize="22"
+				   fontWeight="normal" groupName="options_q1_1"/>
+	<s:Label x="29" y="278" fontSize="22" fontWeight="normal" text="1.2 Confirmed malaria diagnosis?"
+			 textAlign="left" verticalAlign="middle"/>
+	<s:Label x="32" y="361" fontSize="22" fontWeight="normal"
+			 text="1.3 Agrees to follow-up phone calls and/or visits" textAlign="left"
+			 verticalAlign="middle"/>
+	<s:RadioButton x="190" y="494" label="No" fontSize="22" groupName="options_q3"/>
+	<s:Label x="33" y="444" width="834" height="45" fontSize="21" fontWeight="normal"
+			 text="1.4 No intention to move (leave Swaziland) during the follow-up period of 14 days at minimum."
+			 textAlign="left" verticalAlign="top"/>
+	<s:RadioButton x="182" y="581" label="No" fontSize="22" groupName="options_q4"/>
+	<s:Label x="33" y="556" width="607" height="26" fontSize="22" fontWeight="normal"
+			 text="1.5 Has provided written, informed consent " textAlign="left" verticalAlign="top"/>
+	<s:RadioButton id="q5_no" x="184" y="676" label="No" click="q5_no_clickHandler(event)"
+				   fontSize="22" groupName="options_q5"/>
+	<s:RadioButton x="188" y="952" label="No" fontSize="22" groupName="options_q7"/>
+	<s:RadioButton id="male" x="70" y="1042" label="M" click="maleselected()" fontSize="22"
+				   fontWeight="normal" groupName="options_mf"/>
+	<s:RadioButton id="female" x="188" y="1042" label="F" click="femaleselected()" fontSize="22"
+				   groupName="options_mf"/>
+	<s:Label x="33" y="919" width="797" height="27" fontSize="22" fontWeight="normal"
+			 text="1.8 Absence of known allergies to study medications (PQ)" textAlign="left"
+			 verticalAlign="top"/>
+	<s:Label x="33" y="1017" width="394" height="21" fontSize="22" fontWeight="normal"
+			 text="1.9 Is this patient male or female? " textAlign="left" verticalAlign="top"/>
+	<s:RadioButton id="q10_tested" x="174" y="1416" label="Yes" click="testresult()" fontSize="22"
+				   fontWeight="normal" groupName="options_test"/>
+	<s:RadioButton id="q10_nottested" x="282" y="1416" label="No" click="ntestresult()" fontSize="22"
+				   groupName="options_test"/>
+	<s:Label id="q10_tested_text" x="157" y="1393" width="382" height="27" fontSize="22"
+			 fontWeight="normal" text="Has she agreed to a pregnancy test?" textAlign="left"
+			 verticalAlign="top"/>
+	<s:Label x="33" y="650" width="569" height="27" fontSize="22" fontWeight="normal"
+			 text="1.6 Hemoglobin &gt; = 8 g/dL or  Hematocrit &gt; 25%" textAlign="left"
+			 verticalAlign="top"/>
+	<s:RadioButton x="184" y="852" label="No" fontSize="22" groupName="options_q6"/>
+	<s:Label x="33" y="745" width="842" height="57" fontSize="22" fontStyle="normal"
+			 fontWeight="normal"
+			 text="1.7 Absence of severe malaria, defined as the presence of suspect (clinical) symptomatic malaria with one or two of the following clinical manifestations:"
+			 textAlign="left" verticalAlign="top"/>
+								  <s:Label x="29" y="800" width="832" height="63" color="#757575"
+										   fontSize="20" fontStyle="normal" fontWeight="normal"
+										   text="prostration, impaired consciousness, respiratory distress, multiple convulsions, circulatory collapse, pulmonary oedema, abnormal bleeding, jaundice, and hemoglobinuria"
+										   textAlign="left" verticalAlign="top"/>
+	<s:Label id="pregnant_text" x="35" y="1305" fontSize="22" fontWeight="normal"
+			 text="1.10 Is the patient pregnant?"/>
+	<s:RadioButton id="q10_uncertain" x="300" y="1328" label="Uncertain" click="wasshestested()"
+				   fontSize="22" groupName="options_q8"/>
+	<s:RadioButton id="q10_yes" x="70" y="1328" label="Yes" click="nwasshestested()" fontSize="22"
+				   groupName="options_q8"/>
+	<s:RadioButton id="q10_no" x="189" y="1328" label="No" click="wasshestested()" fontSize="22"
+				   groupName="options_q8"/>
+	<s:RadioButton id="q10_na" x="476" y="1328" label="N/A" fontSize="22" groupName="options_q8"/>
+	<s:RadioButton id="q10_pregnant_yes" x="174" y="1505" label="Yes"
+				   click="q10_pregnant_yes_clickHandler(event)" fontSize="22" fontWeight="normal"
+				   groupName="options_preg"/>
+	<s:RadioButton id="q10_pregnant_no" x="282" y="1505" label="No"
+				   click="q10_pregnant_no_clickHandler(event)" fontSize="22"
+				   groupName="options_preg"/>
+	<s:Label id="q10_pregnant_text" x="157" y="1482" width="524" height="27" fontSize="22"
+			 fontWeight="normal" text="Was the test positive for pregnancy?" textAlign="left"
+			 verticalAlign="top"/>
+	<s:Label id="warningtext" x="289" y="691" color="#C01111" fontSize="20" fontWeight="bold"
+			 text="You must enter hemoglobin!"/>
+	<s:Label id="q9w" x="302" y="1057" color="#C01111" fontSize="22" fontWeight="bold"
+			 text="This is required!"/>
+								  <s:Label id="q91w" x="327" y="1159" color="#C01111" fontSize="22" fontWeight="bold"
+										   text="This is required!"/>
+								  <s:Label id="q92w" x="334" y="1263" color="#C01111" fontSize="22" fontWeight="bold"
+										   text="This is required!"/>
+	<s:Label id="q11w" x="393" y="1621" color="#C01111" fontSize="22" fontWeight="bold"
+			 text="This is required!"/>
+	<s:Label id="q8w" x="304" y="969" color="#C01111" fontSize="22" fontWeight="bold"
+			 text="This is required!"/>
+	<s:Label id="q7w" x="302" y="870" color="#C01111" fontSize="22" fontWeight="bold"
+			 text="This is required!"/>
+	<s:BusyIndicator id="indicator" x="567" y="2003" width="62" height="62"/>
+	<s:Label id="q5w" x="309" y="598" color="#C01111" fontSize="22" fontWeight="bold"
+			 text="This is required!"/>
+	<s:Label id="q4w" x="317" y="513" color="#C01111" fontSize="22" fontWeight="bold"
+			 text="This is required!"/>
+	<s:Label id="q3w" x="318" y="404" color="#C01111" fontSize="22" fontWeight="bold"
+			 text="This is required!"/>
+	<s:Label id="q2w" x="318" y="312" color="#C01111" fontSize="22" fontWeight="bold"
+			 text="This is required!"/>
+								  <s:RadioButton id="q191n" x="182" y="1142" label="No"
+												 click="q191n_clickHandler(event)" fontSize="22"
+												 groupName="options_q1_9_1"/>
+								  <s:RadioButton id="q191y" x="70" y="1142" label="Yes"
+												 click="q191y_clickHandler(event)" fontSize="22"
+												 fontWeight="normal" groupName="options_q1_9_1"/>
+								  <s:Label x="33" y="1116" fontSize="22" fontWeight="normal"
+										   text="1.9.1 Is this patient of childbearing age [15 – 49 years]?"
+										   textAlign="left" verticalAlign="middle"/>
+								  <s:RadioButton id="q192n" x="182" y="1237" label="No" fontSize="22"
+												 groupName="options_q1_9_2"/>
+								  <s:RadioButton id="q192y" x="70" y="1237" label="Yes" fontSize="22" fontWeight="normal" groupName="options_q1_9_2"/>
+								  <s:Label x="33" y="1211" fontSize="22" fontWeight="normal"
+										   text="1.9.2 Is the patient currently breast-feeding?"
+										   textAlign="left" verticalAlign="middle"/>
+	<s:Label id="q1w" x="319" y="126" color="#C01111" fontSize="20" fontWeight="bold"
+			 text="This is required!"/>
+	<s:Label id="warningtext2" x="224" y="1941" color="#EA0C0C" fontSize="35" fontWeight="bold"
+			 text="Answer all questions!"/>
+								  <s:Label x="84" y="180" fontSize="22" fontWeight="normal" text="Enter Age:"/>
+								  <s:TextInput id="ageNum" x="202" y="165" width="138" height="50"
+											   fontSize="22" prompt="Number*"
+											   skinClass="spark.skins.mobile.TextInputSkin"/>
+								  <s:RadioButton id="month1" x="357" y="165" label="Months"
+												 click="month1_clickHandler(event)" enabled="true"
+												 fontSize="22" groupName="agex1"/>
+								  <s:RadioButton id="year1" x="518" y="166" label="Years"
+												 click="year1_clickHandler(event)" fontSize="22"
+												 groupName="agex1"/>
+								  <s:Label id="guardian_nameLabel" x="20" y="234" color="#323232"
+										   fontSize="22" fontWeight="bold" text="Guardian Name :"/>
+								  <s:TextInput id="guardian_name" x="202" y="221" width="603"
+											   fontSize="22" prompt="This patient is under 18"
+											   skinClass="spark.skins.mobile.TextInputSkin"/>
+							  </s:Group>
+		
+		
+	</s:Scroller>
+</s:View>

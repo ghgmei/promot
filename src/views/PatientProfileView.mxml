@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" textAlign="center"
+		title="Dashboard">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+
+	
+	<fx:Script>
+
+		
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			public var dbFile:File;
+			public var dbConnection:SQLConnection;
+			public var selectQuery:SQLStatement;
+			
+			
+			private function connectDB():void
+			{
+				
+				
+				//connects to Db
+				
+				dbFile = File.applicationStorageDirectory.resolvePath("prompt1.db");
+				dbConnection = new SQLConnection();
+				dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
+				dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
+				
+				dbConnection.openAsync(dbFile);
+				
+				
+				// Query DB
+				//var SQLStatement1:SQLStatement = new SQLStatement();
+				//SQLStatement1.sqlConnection = dbConnection;
+				//SQLStatement1.text ="INSERT INTO patients (dateAdded, healthFacility, familyName, fname, nationality, nationalityOther, countryOfResidence, age, ageType, sex, mobile1, mobile2, pregnant, weight, q11, q12, q13, q13Other, q14, q15DailyDose, q15DailyDoseOther, q15Days, q15DaysOther, tabletId, interviewer, patientid) VALUES ('"+dateLabel.text+"','"+healthFacility+"','"+familyname.text+"','"+firstname.text+"','"+nationality+"','"+qn4_specify_other.text+"','"+countryOfResidence+"','"+qn5_age.text+"','"+ageType+"','"+sex+"','"+mobile1.text+"','"+mobile2.text+"','"+pregnant+"','"+weight.text+"','"+q11+"','"+q12+"','"+q13+"','"+qn13_other_specify.text+"','"+q14+"','"+q15DailyDose+"','"+q15DailyDoseOther+"','"+q15Days+"','"+q15DaysOther+"','"+tabletId+"','"+interviewer+"','"+patientid+"')";
+				
+				//SQLStatement1.execute();
+				
+				//navigator.pushView(addedPatientView);
+			}
+			
+			private function onDatabaseOpen(evt:SQLEvent):void
+				
+			{
+				
+				
+				trace("Database is open");
+				selectQuery = new SQLStatement();
+				selectQuery.sqlConnection = dbConnection;
+				selectQuery.text ="SELECT * FROM patients ORDER BY id ASC";
+				selectQuery.addEventListener(SQLEvent.RESULT, onQueryResult);
+				
+				selectQuery.execute();
+				
+			}
+			
+			private function onQueryResult(evt:SQLEvent):void
+			{
+				//EncountersList.dataProvider = new ArrayCollection(selectQuery.getResult().data);
+			}
+			
+			private function onDatabaseClose(evt:SQLEvent):void
+				
+			{
+				trace("Database is closed");
+			}
+			
+			
+			
+			
+		
+				protected function spelaSaga():void{ 
+					var dataObj:Object=
+						{fname:data.fname, mobile1:data.mobile1, mobile2:data.mobile2, familyName:data.familyName, nationalityOther:data.nationalityOther, age:data.age, weight:data.weight, qn13_other_specify:data.qn13_other_specify, healthFacility:data.healthFacility };  
+					navigator.pushView(views.EditPatientView1, dataObj);
+				}  
+				
+			protected function sendToEncountersView():void{ 
+				var dataObj1:Object=
+					{healthFacility:data.healthFacility, mobile1:data.mobile1, fname:data.fname, patientid:data.patientid};  
+				navigator.pushView(views.PatientEncountersView, dataObj1);
+			}  
+			
+			
+			protected function sendToAdverseEvents():void{ 
+				var dataObj2:Object=
+					{healthFacility:data.healthFacility, mobile1:data.mobile1, fname:data.fname, patientid:data.patientid};  
+				navigator.pushView(views.AdverseEventsView, dataObj2);
+			}  
+			
+			protected function sendToCalls():void{ 
+				var dataObj2:Object=
+					{mobile2:data.mobile2, mobile1:data.mobile1, calls:data.calls, name:data.fname, id:data.patientid};  
+				navigator.pushView(views.CallPatientView, dataObj2);
+			}  
+					
+			protected function sendToDrugs():void{ 
+				var dataObj3:Object=
+					{healthFacility:data.healthFacility, mobile1:data.mobile1, fname:data.fname, id:data.patientid};  
+				navigator.pushView(views.otherDrugsView, dataObj3);
+			}  
+			
+		
+			
+			protected function patientEncountersBtn_clickHandler(event:MouseEvent):void
+			{
+				userClass.getInstance().patient = data.patientid;
+				navigator.pushView(NewPatientEncounterView);
+				
+			}
+			
+		]]>
+		
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Button id="otherDrugs" x="52" y="1019" width="795" height="140" label="Other Drugs"
+			  click="sendToDrugs()" enabled="false" fontSize="70" icon="@Embed('img/drugs.png')"/>
+	<s:Button id="adverseEventsBtn" x="52" y="856" width="795" height="140" label="Adverse Events"
+			  click="sendToAdverseEvents()" enabled="false" fontSize="70" icon="@Embed('img/ae.png')"/>
+	<s:Button id="patientEncountersBtn" x="52" y="684" width="795" height="140"
+			  label="Add Patient Visit" click="patientEncountersBtn_clickHandler(event)"
+			  enabled="true" fontSize="70" icon="@Embed('img/walking.png')"/>
+	<s:Button id="callPatientBtn" x="50" y="514" width="795" height="145" label="Call Patient"
+			  click="sendToCalls()" fontSize="70" icon="@Embed('img/phone.png')"/>
+	<s:Button id="editPatient" x="50" y="342" width="795" height="150" label="Edit Patient"
+			  click="spelaSaga()" color="#000000" enabled="false" fontSize="70"
+			  icon="@Embed('img/edit.png')"/>
+	
+	<s:Button id="backButton" x="53" y="1178" width="795" height="140" label="&lt; Go Back"
+			  click="navigator.popView()" color="#000000" fontSize="70"/>
+	<s:Label x="370" y="100" fontSize="50" fontWeight="bold" text="{data.fname}"/>
+	<s:Label x="370" y="157" fontSize="40" fontWeight="normal" text="{data.mobile1}"/>
+	<s:Label x="370" y="205" fontSize="40" fontWeight="normal" text="{data.healthFacility}"/>
+	<s:Label x="370" y="256" fontSize="20" fontWeight="normal" text="Day 7 Follow Up Date:"/>
+	<s:Label x="579" y="256" color="#000000" fontSize="20" fontWeight="bold" text="{data.day7}"/>
+	<s:Label top="29" width="470" color="#174573" fontSize="65" fontWeight="bold"
+			 horizontalCenter="0" text="Patient Profile"/>
+	<s:Image x="53" y="63" width="292" height="251" scaleMode="letterbox" source="assets/fb_user.jpg"/>
+	<s:Label x="50" y="1408" fontSize="22" fontWeight="normal" text="Date Added:"/>
+	<s:Label x="178" y="1408" fontSize="22" fontWeight="normal" text="{data.dateAdded}"/>
+	<s:Label x="50" y="1439" fontSize="22" fontWeight="normal" text="Date Modified:"/>
+	<s:Label x="201" y="1439" fontSize="22" fontWeight="normal" text="{data.dateModified}"/>
+	<s:Label x="482" y="1439" fontSize="22" fontWeight="normal" text="Patient ID:"/>
+	<s:Label x="599" y="1437" fontSize="22" fontWeight="bold" text="{data.patientid}"/>
+</s:View>

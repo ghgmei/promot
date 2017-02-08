@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard">
+
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Button width="795" height="250" label="Dashboard" click="navigator.pushView(DashboardView)"
+			  fontSize="70" horizontalCenter="0" icon="@Embed('img/dashboard.png')" verticalCenter="233"/>
+	<s:Button width="795" height="250" label="Quit"
+			  click="NativeApplication.nativeApplication.exit();" fontSize="70"
+			  horizontalCenter="-1" icon="@Embed('img/quit.png')" verticalCenter="507"/>
+	<s:Button width="795" height="250" label="All Patients"
+			  click="navigator.pushView(ListPatientsView)" fontSize="70" horizontalCenter="0"
+			  icon="@Embed('img/patients.png')" verticalCenter="-315"/>
+	<s:Label top="165" color="#086617" fontSize="55" fontWeight="bold" horizontalCenter="-15"
+			 text="Patient added successfully"/>
+	<s:Label top="21" color="#174573" fontSize="50" fontWeight="bold" horizontalCenter="6"
+			 text="New Patient: Data Collection Form"/>
+	<s:Button width="795" height="250" label="Health Facility"
+			  click="navigator.pushView(HealthFacilityView)" fontSize="70" horizontalCenter="0"
+			  icon="@Embed('img/hf.png')" verticalCenter="-41"/>
+</s:View>

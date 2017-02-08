@@ -1,0 +1,13 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+
+
+global
+{
+	color: #000000;
+
+	font-family: Arial;
+	font-size: 18;
+	
+}
+	

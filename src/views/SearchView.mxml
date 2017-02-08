@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Laboratory">
+	
+	<fx:Script>
+		
+	</fx:Script>
+	
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Label x="212" y="121" color="#232323" fontSize="30" fontWeight="normal"
+			 text="Enter patient barcode ID to proceed"/>
+	<s:Button id="backButton" y="1290" left="30" right="30" height="150" label="&lt; Back"
+			  click="navigator.popView()" color="#747373" fontSize="70"/>
+	<s:Button x="544" y="201" width="328" height="150" label="Search" fontSize="70"/>
+	<s:Label x="306" y="42" color="#174573" fontSize="55" fontWeight="bold" text="Laboratory"/>
+	<s:TextInput x="33" y="204" width="503" height="150" fontSize="80"/>
+	<s:List x="30" y="392" width="842" height="864"></s:List>
+
+</s:View>

@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:supportClasses="spark.skins.mobile.supportClasses.*"
+		actionBarVisible="false" creationComplete="formloaded()" fontWeight="normal"
+		overlayControls="false" tabBarVisible="false" title="New Patient" interactionMode="touch">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+		
+						
+			// Define local vars
+			public var healthFacility:String;
+			public var nationality:String;
+			public var countryOfResidence:String;
+			public var ageType:String;
+			public var sex:String;
+			public var pregnant:String;
+			public var q11:String;	
+			public var q12:String;
+			public var q13:String;
+			public var q14:String;
+			public var q15DailyDose:String;
+			public var q15DailyDoseOther:String = "q15DailyDoseOther";
+			public var q15DaysOther:String = "q15DaysOther";
+			public var q15Days:String;
+			public var dateModified:String;
+			public var theGender:String;
+			
+			
+			import spark.formatters.DateTimeFormatter;
+			
+			
+			public var dbFile:File;
+			public var dbConnection:SQLConnection;
+			
+			
+			
+			
+			protected function formloaded():void
+			{
+				
+				
+				// set selected items
+				
+				if (data.sex = "M") 
+				{
+					male.selected=true;
+				} 
+				
+				if (data.sex ="F") 
+				{
+					female.selected=true;
+				} 
+				
+				
+				
+				
+				
+				// get proper date format dd/mm/yyyy
+				
+				dateModified = ((new Date()).getDate() + 1) +
+					"/" + ((new Date()).getMonth() +            
+						"/" + (new Date()).getFullYear());
+				
+				
+				
+				
+				
+				
+				// Hide options
+				qn4_specify_other.visible=false;
+				qn13_other_specify.visible=false;
+				
+				
+				
+				trace("Begin DB connection");
+				
+				//connects to Db
+				
+				dbFile = File.applicationStorageDirectory.resolvePath("prompt1.db");
+				dbConnection = new SQLConnection();
+				dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
+				dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
+				
+				dbConnection.openAsync(dbFile);
+				
+				
+				
+				
+			} 
+			
+			
+			
+			
+			private function onDatabaseOpen(evt:SQLEvent):void
+				
+			{
+				
+				//var statement:SQLStatement = new SQLStatement();
+				//statement.sqlConnection = dbConnection;
+				//statement.execute();
+				
+				
+				
+			}
+			
+			
+			private function onDatabaseClose(evt:SQLEvent):void
+				
+			{
+				trace("Database is closed");
+			}
+			
+			
+			private function nextButton_clickHandler(event:MouseEvent):void
+			{
+			
+				
+				
+				
+				// Assigns radio buttons to variables
+				
+				
+				// Health Facility			
+				if (rf_memorial.selected) 
+				{
+					healthFacility="RFM";
+				}
+				if (good_shepherd.selected) 
+				{
+					healthFacility="Good Shepherd";
+				}
+				
+				// Nationality
+				if (qn4_swaziland.selected) 
+				{
+					nationality="1";
+				}
+				
+				if (qn4_mozambique.selected) 
+				{
+					nationality="2";
+				}
+				
+				if (qn4_sa.selected) 
+				{
+					nationality="3";
+				}
+				
+				if (qn4_other.selected) 
+				{
+					nationality="4";
+				}
+				
+				// Country of residence
+				
+				if (countryofresidence_yes.selected) 
+				{
+					countryOfResidence="1";
+				} else {
+					
+					countryOfResidence = "0";
+				}
+				
+				
+				// Age type (months or years)
+				if (qn5_months.selected) 
+				{
+					ageType="M";
+				} else {
+					
+					ageType = "Y";
+				}
+				
+				
+			
+				
+				// 	Q11
+				if (q11y.selected) 
+				{
+					q11="1";
+				} 
+				
+				if (q11n.selected) 
+				{
+					q11="2";
+				} 
+				
+				
+				if (q11u.selected) 
+				{
+					q11="3";
+				} 
+				
+			
+				
+				// 	Q12
+				if (q12_1.selected) 
+				{
+					q12="1";
+				} 
+				
+				if (q12_2.selected) 
+				{
+					q12="2";
+				} 
+				
+				
+				if (q12_2.selected && q12_1.selected) 
+				{
+					q12="3";
+				} 
+				
+				
+				
+				//  Q13
+				if (qn13_pf.selected) 
+				{
+					q13="1";
+				} 
+				
+				if (qn13_pv.selected) 
+				{
+					q13="2";
+				} 
+				
+				if (qn13_mixed.selected) 
+				{
+					q13="3";
+				} 
+				
+				
+				if (qn13_other.selected) 
+				{
+					q13="4";
+				} 
+						
+				
+				//  Q14
+				if (q14_1.selected) 
+				{
+					q14="1";
+				} 
+				if (q14_2.selected) 
+				{
+					q14="2";
+				} 
+				
+				if (q14_3.selected) 
+				{
+					q14="3";
+				} 
+				
+				if (q14_4.selected) 
+				{
+					q14="4";
+				} 
+				
+				if (q14_5.selected) 
+				{
+					q14="5";
+				} 
+				
+				if (q14_6.selected) 
+				{
+					q14="6";
+				} 
+				
+				if (q14_7.selected) 
+				{
+					q14="7";
+				} 
+				
+				//  Q15
+				
+				// Daily Dose
+				if (q15dose_1.selected) 
+				{
+					q15DailyDose="1";
+				} 
+				
+				if (q15dose_2.selected) 
+				{
+					q15DailyDose="2";
+				} 
+				
+				if (q15dose_3.selected) 
+				{
+					q15DailyDose="3";
+				} 
+				
+				
+				// Days
+				
+				
+				if (q15days_1.selected) 
+				{
+					q15Days="1";
+				} 
+				
+				
+				if (q15days_2.selected) 
+				{
+					q15Days="2";
+				} 
+				
+				
+				if (q15days_3.selected) 
+				{
+					q15Days="3";
+				} 
+				
+				if (q15days_1.selected) 
+				{
+					q15Days="1";
+				} 
+				
+				
+				if (male.selected) 
+				{
+					theGender="M";
+				} 
+				
+				
+				if (female.selected) 
+				{
+					theGender="F";
+				} 	
+				
+				
+				
+				
+				
+				
+				// Updates DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="UPDATE patients SET dateAdded='"+dateLabel.text+"', hemoglobin='"+data.hemoglobin+"', healthFacility='"+healthFacility+"', familyName='"+familyname.text+"', fname='"+firstname.text+"', nationality='"+nationality+"', nationalityOther='"+qn4_specify_other.text+"', countryOfResidence='"+countryOfResidence+"', age='"+qn5_age.text+"', ageType='"+ageType+"', sex='"+theGender+"', mobile1='"+mobile1.text+"', mobile2='"+mobile2.text+"', pregnant='"+data.pregnant+"', weight='"+weight.text+"', q11='"+q11+"', q12='"+q12+"', q13='"+q13+"', q13Other='"+qn13_other_specify.text+"', q14='"+q14+"', q15DailyDose='"+q15DailyDose+"', q15DailyDoseOther='"+q15DailyDoseOther+"', q15Days='"+q15Days+"', q15DaysOther='"+q15DaysOther+"', tabletId='"+data.tabletId+"', interviewer='"+data.interviewer+"', dateModified='"+dateModified+"', patientid='"+data.patientid+"' WHERE id='"+data.id+"'";
+				
+				SQLStatement1.execute();
+				
+				navigator.popView;
+			}
+			
+			
+			
+		
+			
+			
+			
+			protected function qn4_other_clickHandler(event:MouseEvent):void
+			{
+				if (qn4_other.selected=true) 
+				{
+					qn4_specify_other.visible=true;
+					qn4_swaziland.visible=false;
+					qn4_mozambique.visible=false;
+					qn4_sa.visible=false;
+				}
+				
+				
+				if (qn4_other.selected=false) 
+				{
+					qn4_specify_other.visible=false;
+					qn4_swaziland.visible=true;
+					qn4_mozambique.visible=true;
+					qn4_sa.visible=true;
+				}
+				
+				
+			}
+			
+		
+			
+				
+				
+				
+			protected function qn13_other_clickHandler(event:MouseEvent):void
+			{
+							
+				if (qn13_other.selected) 
+				{
+					qn13_other_specify.visible=true;
+					qn13_mixed.visible=false;
+					qn13_pv.visible=false;
+					qn13_pf.visible=false;
+				}
+				
+			}
+			
+		
+			
+			
+		]]>
+	</fx:Script>
+	
+	
+	<fx:Declarations>
+	
+		<s:RadioButtonGroup id="q15_"/>
+		<s:RadioButtonGroup id="q15dose"/>
+		<s:RadioButtonGroup id="q13_"/>
+		<s:RadioButtonGroup id="q12_"/>
+		<s:RadioButtonGroup id="q14_"/>
+		<s:RadioButtonGroup id="q11_"/>
+		<s:RadioButtonGroup id="q11b"/>
+		<s:RadioButtonGroup id="q11_1"/>
+		<s:RadioButtonGroup id="q4_1"/>
+		<s:RadioButtonGroup id="q4_0"/>
+		<s:RadioButtonGroup id="age"/>
+		<s:RadioButtonGroup id="hf"/>
+	</fx:Declarations>
+	
+	<s:Scroller height="1500"><s:Group >
+							
+		
+
+	<s:Button id="nextButton" x="366" y="2069" width="495" height="90" label="Update Data"
+			  click="nextButton_clickHandler(event)" fontSize="50"/>
+	<s:Label top="63" width="882" height="25" color="#174573" fontSize="16" fontWeight="normal"
+			 horizontalCenter="4"
+			 text="Complete this form for all cases of confirmed, uncomplicated P. falciparum malaria that have been treated with PQ."
+			 textAlign="center"/>
+	<s:Label x="24" y="223" fontSize="22" fontWeight="normal" text="Family Name:"/>
+	<s:Label id="dateLabel" x="106" y="135" color="#1C1C1C" fontSize="25" text="{data.dateAdded}"/>
+								  <s:Label id="dateLabel0" x="24" y="135" color="#000000"
+										   fontSize="25" fontStyle="normal" fontWeight="bold"
+										   text="Date :"/>
+	<s:Label x="24" y="172" fontSize="25" fontWeight="bold" text="Hemoglobin:"/>
+	<s:Label x="290" y="172" fontSize="25" fontWeight="bold" text="g/dL"/>
+								  <s:Label x="294" y="220" fontSize="25" fontWeight="bold" text="{data.sex}"/>
+	<s:Label id="hemoglobin_read" x="186" y="172" color="#575555" fontSize="25" text="{data.hemoglobin_measure}"/>
+	<s:Label x="24" y="104" color="#000000" fontSize="25" fontWeight="bold" text="Patient ID:"/>
+	<s:Label id="patientid_read" x="156" y="104" color="#C91313" fontSize="25" text="{data.patientid}"/>
+	<s:TextInput id="familyname" x="24" y="259" width="826" height="50" fontSize="22"
+				 text="{data.familyName}"/>
+	<s:Label x="24" y="340" fontSize="22" fontWeight="normal" text="First (Given) Name:"/>
+	<s:TextInput id="firstname" x="24" y="377" width="825" height="50" fontSize="22"
+				 text="{data.fname}"/>
+	<s:Label x="24" y="776" fontSize="22" fontWeight="normal" text="7. Mobile No. 1 :"/>
+	<s:Label x="22" y="906" width="825" height="32" fontSize="22" fontWeight="normal"
+			 text="11. Does this patient have a family history of hemolysis? "/>
+	<s:Label x="22" y="1036" width="419" height="22" fontSize="22" fontWeight="normal"
+			 text="11a. If yes, was it in response to?"/>
+	<s:Label x="25" y="1392" width="577" height="32" color="#000000" fontSize="22" fontWeight="normal"
+			 text="12. Diagnostic test type :"/>
+	<s:Label x="20" y="1157" width="730" height="39" color="#000000" fontSize="22" fontWeight="normal"
+			 text="11b. Does this patient have a family history of G6PD deficiency? "/>
+	<s:TextInput id="mobile1" x="252" y="759" width="490" height="47" fontSize="22"
+				 text="{data.mobile1}"/>
+	<s:Label x="589" y="702" fontSize="22" fontWeight="normal" text="6. Weight (Kg) :"/>
+	<s:TextInput id="weight" x="754" y="687" width="107" height="50" fontSize="22"
+				 text="{data.weight}"/>
+	<s:Label x="24" y="846" fontSize="22" fontWeight="normal" text="8. Mobile No. 2 :"/>
+	<s:TextInput id="mobile2" x="252" y="828" width="490" height="47" fontSize="22"
+				 text="{data.mobile2}"/>
+	<s:Label x="26" y="458" fontSize="22" fontWeight="normal" text="4. Nationality:"/>
+	<s:Label x="24" y="702" fontSize="22" fontWeight="normal" text="5. Age:"/>
+	<s:TextInput id="qn5_age" x="100" y="687" width="138" height="50" fontSize="22"
+				 text="{data.age}"/>
+	
+	<s:Button id="backButton" x="41" y="2069" width="300" height="90" label="&lt; Back"
+			  click="navigator.popView()" color="#747373" fontSize="50"/>
+								  <s:RadioButton id="qn5_months" x="276" y="687" label="Months" fontSize="22"
+												 groupName="age"/>
+								  <s:RadioButton id="qn5_year" x="437" y="688" label="Years" fontSize="22"
+												 groupName="age"/>
+								  
+								  <s:RadioButton id="qn4_swaziland" x="24" y="500" height="56" label="Swaziland" fontSize="22" 	   groupName="q4_0"/>
+								  
+								  <s:RadioButton id="qn4_mozambique" x="209" y="500" label="Mozambique" fontSize="22"
+												 groupName="q4_0"/>
+								  <s:RadioButton id="qn4_sa" x="412" y="500" width="200" label="South Africa" fontSize="22"  groupName="q4_0"/>
+								  <s:RadioButton id="qn4_other" x="630" y="500" label="Other" click="qn4_other_clickHandler(event)"
+												 fontSize="22"  groupName="q4_0"/>
+	<s:TextInput id="qn4_specify_other" x="24" y="487" width="578" height="71" fontSize="22"
+				 text="{data.nationalityOther"/>
+	<s:TextInput id="qn13_other_specify" x="46" y="1570" width="348" height="50" fontSize="22"
+				 prompt="Specify other diagnosis"/>
+	<s:Label top="21" color="#174573" fontSize="45" fontWeight="bold" horizontalCenter="6"
+			 text="Edit Patient: Data Collection Form"/>
+								  <s:RadioButton id="q11y" x="53" y="946" label="Yes" fontSize="22" groupName="q11_1"/>
+								  <s:RadioButton id="q11n" x="171" y="946" label="No" fontSize="22" groupName="q11_1"/>
+	<s:Label x="25" y="584" width="725" height="30" fontSize="22" fontWeight="normal"
+			 text="4.1. Is Swaziland your country of residence?"/>
+								  <s:RadioButton id="countryofresidence_yes" x="25" y="621" label="Yes" fontSize="22"
+												 groupName="q4_1"/>
+								  <s:RadioButton id="countryofresidence_no" x="129" y="621" label="No" fontSize="22"
+												 groupName="q4_1"/>
+								  <s:RadioButton id="q11u" x="287" y="946" label="Uncertain" fontSize="22" groupName="q11_1"/>
+								  <s:RadioButton id="q0" x="29" y="1192" label="Yes" fontSize="22" groupName="q11b_"/>
+								  <s:RadioButton id="q1" x="154" y="1192" label="No" fontSize="22" groupName="q11b_"/>
+								  <s:Label x="24" y="1278" width="624" height="39" color="#000000" fontSize="22" fontWeight="normal"
+										   text="11c. Has this patient ever had a blood transfusion? "/>
+								  <s:RadioButton id="q3" x="38" y="1305" label="Yes" fontSize="22" groupName="q11_"/>
+								  <s:RadioButton id="q4" x="171" y="1305" label="No" fontSize="22" groupName="q11_"/>
+								  <s:RadioButton id="q2" x="288" y="1192" label="Uncertain" fontSize="22" groupName="q11b_"/>
+	<s:CheckBox id="q12_2" x="162" y="1431" label="Microscopy" fontSize="22"
+				   />
+	<s:CheckBox id="q12_1" x="46" y="1431" label="RDT" fontSize="22" />
+	
+								  <s:RadioButton id="rf_memorial" x="447" y="115" label="RFM" enabled="true" fontSize="20" groupName="hf"/>
+								  <s:RadioButton id="good_shepherd" x="597" y="115" width="237" label="Good Shepherd" fontSize="20"  groupName="hf"/>
+	<s:Label x="24" y="1520" fontSize="22" fontWeight="normal" text="13. Diagnosis :"/>
+	<s:Label x="24" y="1652" fontSize="22" fontWeight="normal" text="14. Antimalarial prescribed (check all given) : "/>
+	
+	<s:CheckBox id="qn13_pf" x="47" y="1566" width="94" label="Pf" fontSize="22" />
+	<s:CheckBox id="qn13_pv" x="149" y="1566" label="Pv" fontSize="22" />
+	<s:CheckBox id="qn13_mixed" x="270" y="1566" label="Mixed" fontSize="22" />
+	<s:CheckBox id="qn13_other" x="406" y="1566" label="Other"
+				   click="qn13_other_clickHandler(event)" fontSize="22" />
+
+	<s:CheckBox id="q14_1" x="41" y="1692" label="AL" fontSize="22"/>
+	<s:CheckBox id="q14_2" x="179" y="1692" label="Oral QN   " fontSize="22"/>
+	<s:CheckBox id="q14_3" x="340" y="1693" label="IM QN" enabled="false" fontSize="22"/>
+	<s:CheckBox id="q14_4" x="494" y="1693" label="SP/Fandisar   " enabled="false" fontSize="22"/>
+	<s:CheckBox id="q14_5" x="41" y="1752" label="CQ   " enabled="false" fontSize="22"/>
+	<s:CheckBox id="q14_6" x="179" y="1753" label="Other" fontSize="22"/>
+	<s:CheckBox id="q14_7" x="340" y="1752" label="Unknown" enabled="false" fontSize="22"/>
+	
+
+	<s:Label x="52" y="1869" fontSize="22" fontStyle="normal" fontWeight="normal" text="Daily Dose: "/>
+								  <s:RadioButton id="q15dose_1" x="173" y="1854" label="15mg" enabled="false" fontSize="22"
+												 fontWeight="normal" selected="true" groupName="q15dose"/>
+								  <s:RadioButton id="q15dose_2" x="313" y="1854" label="45mg" enabled="false" fontSize="22"
+												 fontWeight="normal" groupName="q15dose"/>
+								  <s:RadioButton id="q15dose_3" x="457" y="1854" label="Other" enabled="false" fontSize="22"
+												 fontWeight="normal"  groupName="q15dose"/>
+								  
+								  <s:RadioButton id="q15days_1" x="66" y="1948" label="1 Day" enabled="false" fontSize="22"
+												 fontWeight="normal" selected="true"  groupName="q15"/>
+								  <s:RadioButton id="q15days_2" x="209" y="1947" label="14 Days" enabled="false" fontSize="22"
+												 fontWeight="normal"  groupName="q15_"/>
+								  <s:RadioButton id="q15days_4" x="676" y="1947" label="Other" enabled="false" fontSize="22"
+												 fontWeight="normal" selected="false"  groupName="q15_"/>
+								  <s:RadioButton id="q15days_3" x="379" y="1947" label="1x weekly for 8 weeks" enabled="false"
+												 fontSize="22" fontWeight="normal" selected="false" groupName="q15_"/>
+		<s:Label x="52" y="1919" fontSize="22" fontStyle="normal" fontWeight="normal"
+				 text="For how many days?"/>
+		<s:Label x="24" y="1831" fontSize="22" fontWeight="normal" text="15. Primaquine dose prescribed and # of days :"/>
+	<s:CheckBox x="21" y="1064" label="Medication" fontSize="22" fontWeight="normal"/>
+	<s:CheckBox x="195" y="1065" label="Food" fontSize="22" fontWeight="normal"/>
+	<s:CheckBox x="326" y="1064" label="Infection" fontSize="22" fontWeight="normal"/>
+	<s:CheckBox x="480" y="1065" label="Other (describe)" fontSize="22" fontWeight="normal"/>
+								  <s:RadioButton id="male" x="447" y="190" label="Male" fontSize="22"/>
+								  <s:RadioButton id="female" x="600" y="190" label="Female" fontSize="22"/>
+		
+									  
+								 </s:Group>
+		
+			
+		</s:Scroller>
+
+</s:View>

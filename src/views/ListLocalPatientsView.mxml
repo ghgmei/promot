@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		xmlns:list1="services.list1.*"
+		xmlns:follow1="services.follow1.*"
+		xmlns:kml_list1="services.kml_list1.*"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard" creationComplete="connectDB()">
+	
+
+	
+	<fx:Script>
+	
+	
+		
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+		
+			public var dbFile:File;
+			public var dbConnection:SQLConnection;
+			public var selectQuery:SQLStatement;
+		
+			
+		private function connectDB():void
+		{
+		//creationComplete="connectDB()"
+			
+		//connects to Db
+			
+			dbFile = File.applicationStorageDirectory.resolvePath("prompt_local.db");
+			dbConnection = new SQLConnection();
+			dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
+			dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
+			
+			dbConnection.openAsync(dbFile);
+					
+					
+		}
+		
+			 private function onDatabaseOpen(evt:SQLEvent):void
+			
+		{
+			
+			
+			trace("Database is open");
+			selectQuery = new SQLStatement();
+			selectQuery.sqlConnection = dbConnection;
+			selectQuery.text ="SELECT * FROM patient_data ORDER BY id ASC";
+			selectQuery.addEventListener(SQLEvent.RESULT, onQueryResult);
+			
+			selectQuery.execute();
+			
+		}
+		
+		private function onQueryResult(evt:SQLEvent):void
+		{
+			PatientList.dataProvider = new ArrayCollection(selectQuery.getResult().data);
+		}
+		
+		private function onDatabaseClose(evt:SQLEvent):void
+			
+		{
+			trace("Database is closed");
+		}
+		
+		
+		
+		
+			
+			
+		]]>
+		
+	</fx:Script>
+	<fx:Declarations>
+	
+		
+		
+		
+		
+	</fx:Declarations>
+	
+	
+	
+	<s:Button id="backButton" y="1274" left="20" width="420" height="183" label="Back"
+			  click="navigator.popView()" color="#000000" fontSize="40"
+			  icon="@Embed('img/patients.png')"/>
+	<s:Button id="backButton0" y="1274" right="20" width="420" height="185" label="Add Patient"
+			  click="navigator.pushView(NewPatientView1)" color="#000000" fontSize="40"
+			  icon="@Embed('img/patient.png')"/>
+	<s:Label x="20" y="123" fontSize="30" fontWeight="normal" text="Showing all patients on tablet, tap to view patient profile:"/>
+	<s:List id="PatientList" y="156" left="2" right="2" height="1091"
+			click="navigator.pushView(PatientProfileView, PatientList.selectedItem)" color="#000000"
+			 fontFamily="Arial"
+			fontSize="52" fontWeight="normal">
+		<s:AsyncListView list="{data.lastResult}"/>
+		
+		<s:itemRenderer>
+			<fx:Component>
+				<s:IconItemRenderer
+					label="{data.fname} {data.sirname}"
+					messageField="patientid"/>
+			</fx:Component>
+		</s:itemRenderer>
+
+
+		
+	
+	
+	</s:List>
+	<s:Label x="256" y="39" color="#0978E9" fontSize="65" fontWeight="bold" text="Local Patients"/>
+</s:View>

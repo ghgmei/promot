@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard">
+	
+	<fx:Script>
+		
+	</fx:Script>
+	
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Label y="322" color="#232323" fontSize="40" fontWeight="normal" horizontalCenter="0"
+			 text="Enter patient lab results below"/>
+	<s:Label x="30" y="411" color="#232323" fontSize="35" fontWeight="normal" text="1. G6PD Result:"/>
+	<s:Button id="backButton" left="30" bottom="30" width="308" height="90" label="&lt; Back"
+			  click="navigator.popView()" color="#747373" fontSize="50"/>
+	<s:Button right="30" bottom="30" width="484" height="90" label="Save" fontSize="50"/>
+	<s:TextInput x="50" y="457" width="551" height="70" fontSize="25" text="asd"/>
+	<s:Label x="30" y="549" color="#232323" fontSize="35" fontWeight="normal" text="1. G6PD Result:"/>
+	<s:TextInput x="50" y="595" width="551" height="70" fontSize="25" text="asd"/>
+	<s:Label x="30" y="687" color="#232323" fontSize="35" fontWeight="normal" text="1. G6PD Result:"/>
+	<s:TextInput x="50" y="733" width="551" height="70" fontSize="25" text="asd"/>
+	<s:Label x="368" y="124" fontSize="50" fontWeight="bold" text="{data.patientId}"/>
+	<s:Label x="368" y="187" fontSize="40" fontWeight="normal" text="{data.healthFacility}"/>
+	<s:Label y="30" width="632" color="#174573" fontSize="65" fontWeight="bold" horizontalCenter="0"
+			 text="Laboratory" textAlign="center"/>
+	<s:Image x="53" y="63" width="292" height="251" scaleMode="letterbox" source="assets/fb_user.jpg"/>
+
+</s:View>

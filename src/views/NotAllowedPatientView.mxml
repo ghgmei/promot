@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard">
+
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Button width="700" height="150" label="Dashboard" click="navigator.pushView(DashboardView)"
+			  fontSize="70" horizontalCenter="-1" verticalCenter="89"/>
+	<s:Button width="700" height="150" label="List Patients" fontSize="70" horizontalCenter="1"
+			  verticalCenter="-277" click="navigator.pushView(ListPatientsView)"/>
+	<s:Label top="132" width="804" height="123" color="#DB1515" fontSize="50" fontWeight="bold"
+			 horizontalCenter="-12"
+			 text="The individual does not meet the eligibility criteria for the study."
+			 textAlign="center"/>
+	<s:Button width="700" height="150" label="Health Facility" fontSize="70" horizontalCenter="-1"
+			  verticalCenter="-97" click="navigator.pushView(HealthFacilityView)"/>
+	<s:Label top="21" color="#174573" fontSize="45" fontWeight="bold" horizontalCenter="6"
+			 text="New Patient: Eligibility Form"/>
+</s:View>

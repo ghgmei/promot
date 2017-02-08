@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard">
+	
+	<fx:Script>
+		<![CDATA[
+			
+			public var dbFile:File;
+			public var dbConnection:SQLConnection;
+						
+			protected function createdbbutton_clickHandler(event:MouseEvent):void
+			{
+				 dbFile = File.applicationStorageDirectory.resolvePath("prompt1.db");
+				 dbConnection = new SQLConnection();
+				 dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
+				 dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
+				 
+				 dbConnection.openAsync(dbFile);
+						
+			}
+			
+			
+			private function onDatabaseOpen(evt:SQLEvent):void
+				
+			{
+				trace("Database is open");
+				var statement:SQLStatement = new SQLStatement();
+				statement.sqlConnection = dbConnection;
+				statement.text ="CREATE TABLE IF NOT EXISTS patients (id INTEGER PRIMARY KEY AUTOINCREMENT, dateAdded TEXT, healthFacility TEXT, familyName TEXT, fname TEXT, nationality TEXT, nationalityOther TEXT, countryOfResidence TEXT, age TEXT, ageType TEXT, sex TEXT, mobile1 TEXT, mobile2 TEXT, pregnant TEXT, weight TEXT, q11 TEXT, q12 TEXT, q13 TEXT, q13Other TEXT, q14 TEXT, q15DailyDose TEXT, q15DailyDoseOther TEXT, q15Days TEXT, q15DaysOther TEXT, tabletId TEXT, interviewer TEXT, dateModified TEXT, patientid TEXT)";
+				statement.execute();
+				
+			
+				
+			}
+			
+			
+			private function onDatabaseClose(evt:SQLEvent):void
+				
+			{
+				trace("Database is closed");
+			}
+			
+			
+		
+			
+			
+		]]>
+	</fx:Script>
+	
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Button width="795" height="150" label="Delete Local DBs" enabled="false" fontSize="70"
+			  horizontalCenter="0" verticalCenter="286"/>
+	<s:Button id="createdbbutton" width="795" height="150" label="Create Local DBs"
+			  click="createdbbutton_clickHandler(event)" enabled="false" fontSize="70"
+			  horizontalCenter="2" verticalCenter="89"/>
+	<s:Label top="92" color="#007EFF" fontSize="55" fontWeight="bold" horizontalCenter="-9"
+			 text="Configuration"/>
+	<s:Button id="backButton" width="795" height="150" label="&lt; Back" color="#747373"
+			  fontSize="70" horizontalCenter="0" verticalCenter="475" click="navigator.popView()" />
+	<s:TextInput x="53" y="262" width="795" height="110" fontSize="45" prompt="e.g 1000" text="1"/>
+	<s:TextInput x="53" y="405" width="795" height="119" fontSize="45" text="swaziland.promptsvr.org"/>
+	<s:TextInput x="55" y="572" width="795" height="114" fontSize="35" text="e5e67619fd6399281c9381bd0e13dbe0add3c04fddc55f5aafd287148781f350a96aa8f5bab7af6d705eb5421b4d6861b8b6ba3b57a21f0491686e25404ec302"/>
+	<s:Label x="55" y="547" text="Default Token:"/>
+	<s:Label x="53" y="380" text="Server URI:"/>
+	<s:Label x="53" y="237" text="Tablet ID:"/>
+</s:View>

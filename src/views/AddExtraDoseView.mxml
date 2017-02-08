@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Add Extra Drug"  creationComplete="onloaded()">
+	
+	<fx:Script>
+		
+		<![CDATA[
+						
+			// Get global vars
+			public var interviewerName:String  = userClass.getInstance().interviewer;
+			public var patientID:String = userClass.getInstance().patient;
+			public var tabletID:String  = userClass.getInstance().tabletId;
+			
+			
+			// Define local vars
+			public var q1:String;
+			public var q2:String;
+			public var q3:String;
+			public var space:String="/";
+			public var date1:String = ((new Date()).getDate()) +
+				"/" + ((new Date().getMonth()+ 1) +            
+					"/" + (new Date()).getFullYear());
+			
+			
+			
+			private function onloaded():void
+			{
+				
+				busy.visible=false;
+		
+				patiendidlabel.text=patientID;
+				
+				specifyLabel.visible=false;
+				specify.visible=false;
+				
+				
+				
+			}
+			
+			
+			protected function fin_btn_clickHandler(event:MouseEvent):void
+			{
+				// hide button show busy icon
+				fin_btn.visible=false;
+				busy.visible=true;
+				
+				
+				
+				
+				if (q1_1.selected) 
+				{
+					q1="1";
+				} 	
+				if (q1_2.selected) 
+				{
+					q1="0";
+				} 	
+				
+				
+				if (q2_1.selected) 
+				{
+					q2="1";
+				} 	
+				if (q2_2.selected) 
+				{
+					q2="2";
+				} 	
+				
+				
+				if (q3_1.selected) 
+				{
+					q3="1";
+				} 	
+				if (q3_2.selected) 
+				{
+					q3="0";
+				} 	
+				// prepares data to send to server
+				
+				var param:Object = new Object;
+				
+			
+				param.q2O=specify.text;
+				param.q1=q1;
+				param.q2=q2;
+				param.q3=q3;
+				param.pid=patientID;
+				param.tabletId=tabletID;
+				param.interviewer=interviewerName;
+				param.fynder='b7dce38b7994111508ed8e2f132e09d9cc3e36cb5f39c12e131bc942f6ebb4431dd4585587a64def7eabf42826ba7edd96ce21735b4007377d133cee08f9d1d9';		
+				
+				
+				// submit
+				
+				extradose.send(param);	
+				
+				
+				
+				
+			}
+			
+			
+			
+			private function resultHandler(event):void
+			{
+				
+				//	After Successfull Submission
+				
+			
+					navigator.pushView(addedExtraDoseView);
+					
+			
+			}
+			
+			private function faultHandler(event):void
+			{
+				
+				
+				//	After Unsuccessfull Submission - Tablet stores data until next login
+				
+				
+				
+			
+					
+					navigator.pushView(addedExtraDoseView);
+					
+			
+				
+			}
+			
+			protected function route6_clickHandler(event:MouseEvent):void
+			{
+				specifyLabel.visible=true;
+				specify.visible=true;
+			}
+			
+			
+			
+			
+			
+		]]>
+		
+	</fx:Script>
+	
+	
+	<fx:Declarations>
+		<s:HTTPService id="extradose" 
+					   url="http://swaziland.promptsvr.org/dose2.php" 
+					   method="POST"
+					   result="resultHandler(event)"
+					   resultFormat="text"
+					   contentType="application/x-www-form-urlencoded"
+					   requestTimeout = "10"
+					   fault="faultHandler(event)" /> 
+		<s:RadioButtonGroup id="q1op"/>
+		<s:RadioButtonGroup id="q3op"/>
+		<s:RadioButtonGroup id="unitop"/>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Label x="138" y="98" color="#232323" fontSize="25" fontWeight="normal"
+			 text="Enter information if patient was administered a 2nd dose." textAlign="center"/>
+	<s:Button id="fin_btn" right="30" bottom="30" width="826" height="111" label="Proceed"
+			  click="fin_btn_clickHandler(event)" fontSize="60"/>
+	<s:Label x="134" y="29" width="632" color="#174573" fontSize="65" fontWeight="bold"
+			 text="Record Extra Dose" textAlign="center"/>
+	
+	
+	<s:Label x="44" y="284" color="#232323" fontSize="25" fontWeight="normal" text="2. What was the reason?"/>
+	<s:RadioButton id="q1_1" x="109" y="208" label="Yes" groupName="q1op"/>
+	<s:RadioButton id="q1_2" x="283" y="207" label="No" groupName="uniq1optop"/>
+	<s:RadioButton id="q3_1" x="94" y="646" label="Yes" groupName="q3op"/>
+	<s:RadioButton id="q3_2" x="257" y="646" label="No" groupName="q3op"/>
+	<s:Label x="44" y="180" color="#232323" fontSize="25" fontWeight="normal" text="1. Have you administered a 2nd dose to this patient?"/>
+	<s:RadioButton id="q2_1" x="109" y="329" label="Patient vomited after 30mins" groupName="q2op"/>
+	<s:RadioButton id="q2_2" x="110" y="387" label="Other" click="route6_clickHandler(event)"
+				   groupName="q2op"/>
+	<s:Label top="288" color="#C9C3C3" fontSize="18" fontStyle="italic" fontWeight="normal"
+			 horizontalCenter="-76" text="Check one."/>
+	<s:Label id="patiendidlabel" x="752" y="142" color="#FF1313" fontWeight="bold" text="..."/>
+	<s:Label x="656" y="142" fontWeight="bold" text="Patient ID:"/>
+	<s:BusyIndicator id="busy" x="430" y="1377"/>
+	<s:Label x="38" y="609" color="#232323" fontSize="25" fontWeight="normal" text="3. Has this patient been excluded?"/>
+	<s:TextArea id="specify" x="117" y="495"/>
+	<s:Label id="specifyLabel" x="110" y="462" color="#FF0202" text="Specify other reason:"/>
+
+</s:View>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:supportClasses="spark.skins.mobile.supportClasses.*"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard" >
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+<fx:Script>
+	<![CDATA[
+		
+		
+		
+		
+	]]>
+</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Button id="supportButton" width="795" height="188" label="Local Patients"
+			  click="navigator.pushView(ListLocalPatientsView)" enabled="true" fontSize="70"
+			  horizontalCenter="0" icon="@Embed('img/patients.png')" verticalCenter="-468"/>
+	<s:Button id="supportButton0" width="795" height="188" label="Server Patients"
+			  click="navigator.pushView(ListServerPatientsView)" enabled="true" fontSize="70"
+			  horizontalCenter="0" icon="@Embed('img/patients.png')" verticalCenter="-248"/>
+	<s:Label top="40" width="780" height="69" color="#007EFF" fontSize="60" fontWeight="bold"
+			 horizontalCenter="0" text="All Patients" textAlign="center"/>
+	
+	<s:Button id="backButton" width="795" height="184" label="Deprecated "
+			  click="navigator.pushView(DepListLocalPatientsView)" color="#767676" fontSize="70"
+			  horizontalCenter="0" icon="@Embed('img/patients.png')" verticalCenter="-35"/>
+	<s:Button id="backButton0" width="795" height="184" label="Health Facility"
+			  click="navigator.pushView(HealthFacilityView)" color="#202020" fontSize="70"
+			  horizontalCenter="0" icon="@Embed('img/hf.png')" verticalCenter="178"/>
+</s:View>

@@ -1,0 +1,250 @@
+
+<model xmlns="http://ns.adobe.com/Fiber/1.0">
+  <annotation name="ActionScriptGeneration">
+    <item name="FullyQualifyReferences">true</item>
+  </annotation>
+  <entity name="Markers">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Markers</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">Follow1</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="follow1">
+      <item name="propertySpecifier">marker</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects2</item>
+    </annotation>
+    <property name="marker" type="Marker[]" required="true"/>
+  </entity>
+  <service name="Follow1">
+    <annotation name="ActionScriptGeneration">
+      <item name="ServiceType">HTTPMultiService</item>
+      <item name="Package">services.follow1</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">HTTPService</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects2</item>
+      <item name="LINKED_FILE"></item>
+    </annotation>
+    <function name="follow1" return-type="Peeps[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="ActionScriptGeneration">
+        <item name="SerializationFilter">com.adobe.serializers.xml.XMLSerializationFilter</item>
+        <item name="method">GET</item>
+        <item name="contentType">application/xml</item>
+        <item name="requestBodyParameter">true</item>
+        <item name="url">http://prompt.app-king.net/KML_followup2.php</item>
+      </annotation>
+      <annotation name="url group">
+        <item name="completeURL">http://prompt.app-king.net/KML_followup2.php?a=b1e4802a325e194ce80c8ceeb021533afa57b02e2f1977fa67946c23986b8349</item>
+      </annotation>
+      <annotation name="ValidProperties">
+        <item name="propertySpecifier">name,sirname,id,mobile1,mobile2,age</item>
+      </annotation>
+      <annotation name="Properties">
+        <item name="xPath">/::peeps</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">opaque</item>
+        <item name="inputParamNames">a</item>
+        <item name="inputParams">string</item>
+      </annotation>
+      <parameter name="a" type="string"/>
+    </function>
+  </service>
+  <service name="KML_followup2">
+    <annotation name="ActionScriptGeneration">
+      <item name="ServiceType">HTTPMultiService</item>
+      <item name="Package">services.kml_followup2</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">XML</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
+      <item name="LINKED_FILE"></item>
+    </annotation>
+    <function name="getData" return-type="Peeps[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="ActionScriptGeneration">
+        <item name="SerializationFilter">com.adobe.serializers.xml.XMLSerializationFilter</item>
+        <item name="method">GET</item>
+        <item name="url">http://swaziland.promptsvr.org/KML_followup2.php</item>
+      </annotation>
+      <annotation name="url group">
+        <item name="displayUrl">http://swaziland.promptsvr.org/KML_followup2.php?a=b1e4802a325e194ce80c8ceeb021533afa57b02e2f1977fa67946c23986b8349</item>
+        <item name="completeURL">http://swaziland.promptsvr.org/KML_followup2.php?a=b1e4802a325e194ce80c8ceeb021533afa57b02e2f1977fa67946c23986b8349</item>
+        <item name="isUrl">true</item>
+      </annotation>
+      <annotation name="ValidProperties">
+        <item name="propertySpecifier">name,sirname,id,mobile1,mobile2,age,calls</item>
+      </annotation>
+      <annotation name="Properties">
+        <item name="xPath">/::peeps</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParamNames">a</item>
+        <item name="inputParams">string</item>
+        <item name="returnType">opaque</item>
+      </annotation>
+      <parameter name="a" type="string"/>
+    </function>
+  </service>
+  <entity name="Listof">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Listof</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">KML_followup2</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects</item>
+    </annotation>
+    <property name="peeps" type="Peeps[]" required="true"/>
+  </entity>
+  <entity name="Peeps">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Peeps</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">KML_followup2,Follow1Dummy,KML_followup2Dummy</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="follow1">
+      <item name="propertySpecifier">name,sirname,id,mobile1,mobile2,age</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects2</item>
+    </annotation>
+    <annotation name="getData">
+      <item name="propertySpecifier">name,sirname,id,mobile1,mobile2,age,calls</item>
+    </annotation>
+    <property name="name" type="string" required="true"/>
+    <property name="sirname" type="string" required="true"/>
+    <property name="id" type="string" required="true"/>
+    <property name="mobile1" type="string" required="true"/>
+    <property name="mobile2" type="string" required="true"/>
+    <property name="age" type="string" required="true"/>
+    <property name="calls" type="string" required="true"/>
+  </entity>
+  <service name="KML_list1">
+    <annotation name="ActionScriptGeneration">
+      <item name="ServiceType">HTTPMultiService</item>
+      <item name="Package">services.kml_list1</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">XML</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
+      <item name="LINKED_FILE"></item>
+    </annotation>
+    <function name="getData" return-type="All[]">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="ActionScriptGeneration">
+        <item name="SerializationFilter">com.adobe.serializers.xml.XMLSerializationFilter</item>
+        <item name="method">GET</item>
+        <item name="url">http://swaziland.promptsvr.org/KML_list1.php</item>
+      </annotation>
+      <annotation name="url group">
+        <item name="displayUrl">http://swaziland.promptsvr.org/KML_list1.php?a=b1e4802a325e194ce80c8ceeb021533afa57b02e2f1977fa67946c23986b8349</item>
+        <item name="completeURL">http://swaziland.promptsvr.org/KML_list1.php?a=b1e4802a325e194ce80c8ceeb021533afa57b02e2f1977fa67946c23986b8349</item>
+        <item name="isUrl">true</item>
+      </annotation>
+      <annotation name="ValidProperties">
+        <item name="propertySpecifier">fname,sirname,patientid,mobile1,mobile2,healthFacility,day7,dateModified,dateAdded,calls</item>
+      </annotation>
+      <annotation name="Properties">
+        <item name="xPath">/::all</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParamNames">a</item>
+        <item name="inputParams">string</item>
+        <item name="returnType">opaque</item>
+      </annotation>
+      <parameter name="a" type="string"/>
+    </function>
+  </service>
+  <entity name="All">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">All</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">KML_list1</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="getData">
+      <item name="propertySpecifier">fname,sirname,patientid,mobile1,mobile2,healthFacility,day7,dateModified,dateAdded,calls</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects</item>
+    </annotation>
+    <property name="fname" type="string" required="true"/>
+    <property name="sirname" type="string" required="true"/>
+    <property name="patientid" type="string" required="true"/>
+    <property name="mobile1" type="string" required="true"/>
+    <property name="mobile2" type="string" required="true"/>
+    <property name="healthFacility" type="string" required="true"/>
+    <property name="day7" type="string" required="true"/>
+    <property name="dateModified" type="string" required="true"/>
+    <property name="dateAdded" type="string" required="true"/>
+    <property name="calls" type="string" required="true"/>
+  </entity>
+  <entity name="Marker">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">Marker</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">KML_list1</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects2</item>
+    </annotation>
+    <annotation name="follow1">
+      <item name="propertySpecifier">name,sirname,id,mobile1,mobile2,age</item>
+    </annotation>
+    <annotation name="list_patients">
+      <item name="propertySpecifier">fname,sirname,patientid,mobile1,mobile2,healthFacility,day7,dateModified,dateAdded,calls</item>
+    </annotation>
+    <annotation name="getData">
+      <item name="propertySpecifier">fname,sirname,patientid,mobile1,mobile2,healthFacility,day7,dateModified,dateAdded,calls</item>
+    </annotation>
+    <property name="marker" type="Marker[]" required="true"/>
+    <property name="name" type="string" required="true"/>
+    <property name="id" type="string" required="true"/>
+    <property name="age" type="string" required="true"/>
+    <property name="fname" type="string" required="true"/>
+    <property name="sirname" type="string" required="true"/>
+    <property name="patientid" type="string" required="true"/>
+    <property name="mobile1" type="string" required="true"/>
+    <property name="mobile2" type="string" required="true"/>
+    <property name="healthFacility" type="string" required="true"/>
+    <property name="day7" type="string" required="true"/>
+    <property name="dateModified" type="string" required="true"/>
+    <property name="dateAdded" type="string" required="true"/>
+    <property name="calls" type="string" required="true"/>
+  </entity>
+</model>

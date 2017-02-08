@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		xmlns:followup1="services.followup1.*"
+		xmlns:follow1="services.follow1.*"
+		xmlns:kml_followup2="services.kml_followup2.*"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard">
+	
+
+	
+	<fx:Script>
+	
+
+		<![CDATA[
+			import com.adobe.serializers.utility.TypeUtility;
+			
+			import mx.events.FlexEvent;
+			
+			
+			
+			
+	
+			
+			protected function scheduled_today_creationCompleteHandler(event:FlexEvent):void
+			{
+				//follow1Result.token = follow1.follow1('b1e4802a325e194ce80c8ceeb021533afa57b02e2f1977fa67946c23986b8349');
+				getDataResult.token = kML_followup2.getData('b1e4802a325e194ce80c8ceeb021533afa57b02e2f1977fa67946c23986b8349');
+			}
+			
+		]]>
+		
+	</fx:Script>
+	<fx:Declarations>
+		<s:CallResponder id="follow1Result"/>
+		<follow1:Follow1 id="follow1"/>
+		<s:CallResponder id="getDataResult"/>
+		<kml_followup2:KML_followup2 id="kML_followup2"/>
+	
+		
+	</fx:Declarations>
+	
+	
+	
+	<s:Button id="backButton" x="30" y="1311" width="315" height="142" label="&lt; Back"
+			  click="navigator.popView()" color="#000000" fontSize="60"/>
+	<s:Button id="backButton0" x="373" y="1311" width="481" height="141" label="Add Patient"
+			  click="navigator.pushView(NewPatientView1)" color="#000000" fontSize="60"
+			  icon="@Embed('img/patient.png')"/>
+	<s:Label x="30" y="131" width="136" height="17" color="#686565" fontSize="15" fontWeight="normal"
+			 text="Tap to follow up with patient."/>
+	<s:Label y="85" width="337" height="22" color="#797777" fontSize="18" fontWeight="normal"
+			 horizontalCenter="0" text="Scheduled Patient Day 7 &amp; 14 Follow Ups" textAlign="center"/>
+	<s:Label x="30" y="110" width="440" height="22" fontSize="20" fontWeight="bold"
+			 text="Patients scheduled for this week:"/>
+	<s:Label top="25" width="632" color="#174573" fontSize="55" fontWeight="bold"
+			 horizontalCenter="0" text="Follow Up" textAlign="center" verticalAlign="top"/>
+	<s:List id="scheduled_today" x="30" y="155" width="850" height="1090"
+			click="navigator.pushView(CallPatientView, scheduled_today.selectedItem)"
+			color="#232222" creationComplete="scheduled_today_creationCompleteHandler(event)"
+			fontFamily="Arial" fontSize="50" fontWeight="normal" >
+		<s:AsyncListView list="{getDataResult.lastResult}"/>
+
+	
+		<s:itemRenderer>
+			<fx:Component>
+				<s:IconItemRenderer
+					label="{data.name} {data.sirname}"
+					messageField="id"/>
+			</fx:Component>
+		</s:itemRenderer>
+		
+		
+	</s:List>
+</s:View>

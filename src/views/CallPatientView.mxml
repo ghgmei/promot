@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard"
+		xmlns:mx="library://ns.adobe.com/flex/mx" creationComplete="formloaded()">
+	
+
+	
+	<fx:Script>
+	
+		<![CDATA[
+			
+			// Get global vars
+			public var interviewerName:String  = userClass.getInstance().interviewer;
+			
+			public var tabletID:String  = userClass.getInstance().tabletId;
+			
+			
+			// Define local vars
+			public var q1:String;
+			public var q2:String;
+			public var q3:String;
+			public var space:String="/";
+			public var date1:String = ((new Date()).getDate()) +
+				"/" + ((new Date().getMonth()+ 1) +            
+					"/" + (new Date()).getFullYear());
+			
+			
+			
+			protected function formloaded():void
+			{
+				
+				loader1.visible=false;
+				error.visible=false;
+				
+				
+				if(data.calls >=3) {
+					
+					error.text='Feature disabled: Outcome recorded as unknown.';
+					error.visible=true;
+					call1.visible=false;
+					call2.visible=false;
+					
+				}
+				
+				
+
+			}
+			
+			protected function callNow_clickHandler(event:MouseEvent):void
+			{
+			
+				
+				loader1.visible=true;
+				call1.visible=false;
+				call2.visible=false;
+				// prepares data to send to server
+				
+				var param:Object = new Object;
+				
+				
+				// define parameters to send
+				param.pid=data.id;
+				param.mob=data.mobile1;
+				param.tabletId=tabletID;
+				param.interviewer=interviewerName;
+				param.fynder='b7dce38b7994111508ed8e2f132e09d9cc3e36cb5f39c12e131bc942f6ebb4431dd4585587a64def7eabf42826ba7edd96ce21735b4007377d133cee08f9d1d9';		
+				
+				
+				// submit
+				calllogger.send(param);	
+				
+				
+				
+				
+			
+			
+	
+			}
+			
+			
+			
+			
+			
+			private function resultHandler(event):void
+			{
+				
+				//	After successfull Submission
+				error.visible=false;
+				loader1.visible=false;
+				navigateToURL(new URLRequest("tel:"+data.mobile1));
+								
+			}
+			
+			
+			
+			private function resultHandler2(event):void
+			{
+				
+				//	After successfull Submission
+				error.visible=false;
+				loader1.visible=false;
+				navigateToURL(new URLRequest("tel:"+data.mobile2));
+				
+				
+			}
+			
+			
+			
+			
+			private function faultHandler(event):void
+			{
+				//	After unsuccessfull Submission
+				error.visible=true;
+				loader1.visible=false;
+				call1.visible=true;
+				call2.visible=true;
+				
+			}
+			
+			protected function callNow2_clickHandler(event:MouseEvent):void
+			{
+			
+			
+				loader1.visible=true;
+				call1.visible=false;
+				call2.visible=false;
+				// prepares data to send to server
+				
+				var param:Object = new Object;
+				
+				
+				// define parameters to send
+				param.pid=data.id;
+				param.mob=data.mobile1;
+				param.tabletId=tabletID;
+				param.interviewer=interviewerName;
+				param.fynder='b7dce38b7994111508ed8e2f132e09d9cc3e36cb5f39c12e131bc942f6ebb4431dd4585587a64def7eabf42826ba7edd96ce21735b4007377d133cee08f9d1d9';		
+				
+				
+				// submit
+				calllogger2.send(param);	
+				
+			}
+			
+			
+		]]>
+		
+	</fx:Script>
+	<fx:Declarations>
+		
+		<s:HTTPService id="calllogger" 
+					   url="http://swaziland.promptsvr.org/calllog.php" 
+					   method="POST"
+					   result="resultHandler(event)"
+					   resultFormat="text"
+					   contentType="application/x-www-form-urlencoded"
+					   requestTimeout = "10"
+					   fault="faultHandler(event)" /> 
+		
+		
+		<s:HTTPService id="calllogger2" 
+					   url="http://swaziland.promptsvr.org/calllog.php" 
+					   method="POST"
+					   result="resultHandler2(event)"
+					   resultFormat="text"
+					   contentType="application/x-www-form-urlencoded"
+					   requestTimeout = "10"
+					   fault="faultHandler(event)" /> 
+		
+		
+	</fx:Declarations>
+	
+	
+	
+	<s:Button id="backButton" x="27" y="1309" width="845" height="120" label="&lt; Back"
+			  click="navigator.popView()" color="#000000" fontSize="70"/>
+	<s:Label y="507" fontSize="30" fontWeight="normal" horizontalCenter="0"
+			 text="Your attempt to call this patient will be recorded."/>
+	<s:Label id="error" y="583" color="#F21212" fontSize="30" fontWeight="bold" horizontalCenter="-8"
+			 text="Request failed, try again later."/>
+	<s:Label y="544" width="653" height="26" color="#959090" fontSize="20" fontWeight="normal"
+			 horizontalCenter="0"
+			 text="After 3 recorded attempts, this feature will be disabled for this patient."/>
+	<s:Label x="370" y="108" fontSize="50" fontWeight="bold" text="{data.name}"/>
+	<s:Label id="mobile11" x="576" y="224" fontSize="40" fontWeight="bold" text="{data.mobile1}"/>
+	<s:Label x="576" y="177" fontSize="40" fontWeight="bold" text="{data.id}"/>
+	<s:Label x="369" y="224" fontSize="40" fontWeight="normal" text="Mobile 1:"/>
+	<s:Label id="mobile22" x="575" y="271" fontSize="40" fontWeight="bold" text="{data.mobile2}"/>
+	<s:Label x="369" y="176" fontSize="40" fontWeight="normal" text="Patient ID:"/>
+	<s:Label x="368" y="268" fontSize="40" fontWeight="normal" text="Mobile 2:"/>
+	<s:Label y="29" width="632" color="#174573" fontSize="65" fontWeight="bold" horizontalCenter="0"
+			 text="Call Patient" textAlign="center"/>
+	<s:Image x="38" y="63" width="313" height="269" scaleMode="letterbox" source="assets/fb_user.jpg"/>
+	<s:Button id="call1" y="633" width="824" height="228.99982" label="Call Mobile 1"
+			  click="callNow_clickHandler(event);" fontSize="75" horizontalCenter="0"
+			  icon="@Embed('img/phone.png')"/>
+	<s:Button id="call2" y="929" width="820" height="224.99982" label="Call Mobile 2"
+			  click="callNow2_clickHandler(event);" fontSize="75" horizontalCenter="0"
+			  icon="@Embed('img/phone.png')"/>
+	<s:BusyIndicator id="loader1" x="355" y="812" width="141" height="141"/>
+</s:View>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard">
+<fx:Script>
+	<![CDATA[
+		import mx.collections.ArrayCollection;
+		
+
+		
+		
+		
+	]]>
+</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Button x="54" y="347" width="795" height="183" label="Add Patient Visit"
+			  click="navigator.pushView(ScanToPE)" fontSize="80" icon="@Embed('img/walking.png')"/>
+	<s:Button x="53" y="559" width="795" height="183" label="Extra Dose"
+			  click="navigator.pushView(ScanToExtraPQ)" enabled="true" fontSize="80"
+			  icon="@Embed('img/dose.png')"/>
+	<s:Button x="53" y="783" width="795" height="183" label="Follow Up List"
+			  click="navigator.pushView(FollowUpsView)" enabled="true" fontSize="80"
+			  icon="@Embed('img/message.png')"/>
+	<s:Button id="backButton" x="52" y="1229" width="795" height="183" label="Dashboard"
+			  click="navigator.pushView(DashboardView)" color="#000000" fontSize="80"
+			  icon="@Embed('img/dashboard.png')"/>
+	<s:Button x="52" y="1006" width="795" height="183" label="All Patients"
+			  click="navigator.pushView(ListPatientsView)" enabled="true" fontSize="80"
+			  icon="@Embed('img/patients.png')"/>
+	<s:Button x="53" y="134" width="795" height="183" label="New Patient"
+			  click="navigator.pushView(NewPatientView1)" fontSize="80" icon="@Embed('img/patient.png')"/>
+	<s:Label x="230" y="43" color="#174573" fontSize="65" fontWeight="bold" text="Health Facility"
+			 textAlign="center"/>
+</s:View>

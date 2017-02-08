@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="SYNC"  creationComplete="formloaded()">
+	
+	<fx:Script>
+
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import spark.events.IndexChangeEvent;
+			
+	
+			
+			public var dbFile:File;
+			public var dbConnection:SQLConnection;
+			public var selectQuery:SQLStatement;
+			public var selectQuery2:SQLStatement;
+			public var updateQuery:SQLStatement;
+			
+		
+		public function onDatabaseOpen(evt:SQLEvent):void
+			
+		{
+			
+			
+			
+			
+		}
+			 
+			
+			private function onQueryResult(evt:SQLEvent):void
+			{
+			
+			var eligibilityArray:ArrayCollection = new ArrayCollection(selectQuery.getResult().data);				
+				
+			eList.dataProvider = eligibilityArray;		
+			
+		    // define eligibility parameters to send
+			status.text="Please choose a form to manually sync then wait.";
+			
+			trace("Length = "+eligibilityArray.length+"");
+			
+			if(eligibilityArray.length == 0)
+			{
+				navigator.pushView(SyncDone);
+			}
+			
+
+				
+		}
+			
+		
+		private function onDatabaseClose(evt:SQLEvent):void
+			
+		{
+			trace("Database is closed");
+		}
+		
+		
+		
+		protected function formloaded():void
+		{
+			
+			backButton.enabled = true;
+			
+			trace("Begin DB connection");
+			
+			//connects to Db
+			
+			dbFile = File.applicationStorageDirectory.resolvePath("prompt_local.db");
+			dbConnection = new SQLConnection();
+			dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
+			dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
+			
+			dbConnection.openAsync(dbFile);
+			
+			
+			trace("Searching eligibility");
+			
+			/**
+			 * Loads data from local database with check field set to 1
+			 * ______________________________________________________
+			 * 1 = saved to local with no server connection
+			 * 0 = saved to local with server connection
+			 * 2 = saved to local with manual sync 
+			 * */
+			
+			// check if db exists, then create if doesnt 
+			
+			selectQuery = new SQLStatement();
+			selectQuery.sqlConnection = dbConnection;
+			selectQuery.text ="SELECT *FROM eligibility WHERE cField = 1 ORDER BY id ASC";
+			selectQuery.addEventListener(SQLEvent.RESULT, onQueryResult);
+			
+			selectQuery.execute();
+			
+		
+		}
+			
+		private function resultHandler1(event):void
+		{
+			
+			
+			statusind.visible = true;
+			
+			status.text="Form submitted";
+			
+			
+			backButton.enabled = true;
+			
+			updateQuery = new SQLStatement();
+			updateQuery.sqlConnection = dbConnection;
+			updateQuery.text ="UPDATE eligibility SET cField = 2 WHERE id = '"+eList.selectedItem.id+"'";
+			updateQuery.addEventListener(SQLEvent.RESULT, onQueryResult2);
+			
+			updateQuery.execute();
+			
+			
+			
+				navigator.pushView(SyncView);	
+				
+	
+	
+			
+			
+		
+		}
+		private function faultHandler1(event):void
+		{
+			
+			status.text="Error submitting form, please try again in a little while.";
+			backButton.enabled = true;
+			
+		}
+			
+			
+			protected function eList_changeHandler(event:IndexChangeEvent):void
+			{
+				
+				statusind.visible = true;
+				
+				status.text="Please wait...";
+				
+				backButton.enabled = false;
+				
+				
+				trace("q1 = "+eList.selectedItem.q1+"");
+				
+				var param:Object = new Object;
+				param.q1=eList.selectedItem.q1;
+				param.age=eList.selectedItem.age;
+				param.ageType=eList.selectedItem.ageType;
+				param.guardian=eList.selectedItem.guardian;
+				param.q2=eList.selectedItem.q2;
+				param.q3=eList.selectedItem.q3;
+				param.q4=eList.selectedItem.q4;
+				param.q5=eList.selectedItem.q5;
+				param.q6=eList.selectedItem.q6;
+				param.q7=eList.selectedItem.q7;
+				param.q8=eList.selectedItem.q8;
+				param.gender=eList.selectedItem.gender;
+				param.childbearing_age=eList.selectedItem.childbearing_age;
+				param.breast_feeding=eList.selectedItem.breast_feeding;
+				param.q10=eList.selectedItem.q10;
+				param.q10_isTested=eList.selectedItem.q10_isTested;
+				param.q10_pregnant=eList.selectedItem.q10_pregnant;
+				param.q11=eList.selectedItem.q11;
+				param.q11a=eList.selectedItem.q11a;
+				param.no_2=eList.selectedItem.no_2;
+				param.no_4=eList.selectedItem.no_4;
+				param.hemoglobin=eList.selectedItem.hemoglobin;
+				param.tabletId=eList.selectedItem.tabletId;
+				param.interviewer=eList.selectedItem.interviewer;
+				param.fynder='2fbf1c14e1cacf8b441ea490f3e6178cdaa3440576d3158774711aefdbd98a7cf51b90e5b9cef11d5401950eb448a285f7122446c3ae2fbe59aefc40020898fc';		
+				
+				
+				// submit
+				trace("sending data");
+				eligibilitySend.send(param);	
+				
+				
+				
+			
+				
+			}
+			
+			
+			
+			private function onQueryResult2(evt:SQLEvent):void
+			{
+				
+				
+				selectQuery2 = new SQLStatement();
+				selectQuery2.sqlConnection = dbConnection;
+				selectQuery2.text ="SELECT * FROM eligibility WHERE cField = 1 ORDER BY id ASC";
+		
+				
+				selectQuery2.execute();
+				
+				var eligibilityArray:ArrayCollection =  new ArrayCollection(selectQuery2.getResult().data);
+				
+				eList.dataProvider = new ArrayCollection(selectQuery2.getResult().data);
+				// define eligibility parameters to send
+				status.text="Please wait...";
+				
+				trace("Length = "+eligibilityArray.length+"");
+				
+				if(eligibilityArray.length == 0)
+				{
+					navigator.pushView(SyncDone);
+				} else {
+					navigator.pushView(SyncView);	
+					
+				}
+				
+			}
+		]]>
+	</fx:Script>
+	
+	
+	<fx:Declarations>
+
+		<s:HTTPService id="eligibilitySend" 
+					   url="http://prompt.app-king.net/new1.php" 
+					   method="POST"
+					  result="resultHandler1(event)"
+					   resultFormat="text"
+					   contentType="application/x-www-form-urlencoded"
+					   requestTimeout = "10"
+					   fault="faultHandler1(event)" > 
+			
+			
+		</s:HTTPService>
+		
+		
+		
+	</fx:Declarations>
+	
+	<s:Label y="121" color="#232323" fontSize="30" fontWeight="normal" horizontalCenter="0"
+			 text="Submit eligibility data to local study server." textAlign="center"/>
+	<s:Label id="status" y="454" color="#232323" fontSize="30" fontWeight="bold"
+			 horizontalCenter="0" text="Loading forms..."
+			 textAlign="center" verticalAlign="middle"/>
+	<s:Button id="backButton" y="1290" left="30" right="30" height="150" label="&lt; Back"
+			  click="navigator.popView()" fontSize="70"/>
+	<s:Label y="42" color="#0074EA" fontSize="55" fontWeight="bold" horizontalCenter="0"
+			 text="Manual Sync"/>
+	<s:BusyIndicator id="statusind" y="191" width="213" height="213" horizontalCenter="0"/>
+	<s:List id="eList" y="513" left="0" right="0" height="736" change="eList_changeHandler(event)"
+			horizontalCenter="0">
+		<s:AsyncListView list="{data.lastResult}"/>
+		
+		<s:itemRenderer>
+			<fx:Component>
+				<s:IconItemRenderer
+					label="{data.id} {data.age}"
+					messageField="patientid"/>
+			</fx:Component>
+		</s:itemRenderer>
+		
+</s:List>
+
+</s:View>

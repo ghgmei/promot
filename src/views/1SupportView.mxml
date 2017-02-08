@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard">
+
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Button width="795" height="250" label="Get Help" fontSize="70" horizontalCenter="-1"
+			  verticalCenter="190"/>
+	<s:Button width="795" height="250" label="Troubleshooting" fontSize="70" horizontalCenter="-2"
+			  verticalCenter="-98"/>
+	<s:Button width="795" height="250" label="SOPs" fontSize="70" horizontalCenter="-1"
+			  verticalCenter="-395"/>
+	<s:Label top="74" color="#174573" fontSize="55" fontWeight="bold" horizontalCenter="-9"
+			 text="Support"/>
+	<s:Button id="backButton" width="795" height="250" label="Back" color="#000000"
+			  fontSize="70" horizontalCenter="-3" verticalCenter="493" click="navigator.popView()" />
+</s:View>

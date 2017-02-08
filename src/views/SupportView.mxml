@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard">
+	
+	<fx:Script>
+		<![CDATA[
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				navigateToURL(new URLRequest("sop/1.pdf"));
+			}
+		]]>
+	</fx:Script>
+	
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Button width="795" height="206" label="SOP 1"
+			  click="button1_clickHandler(event)" fontSize="70"
+			  horizontalCenter="0" verticalCenter="-506"/>
+	<s:Label top="24" color="#1981EB" fontSize="55" fontWeight="bold" horizontalCenter="-3"
+			 text="SOPs"/>
+	<s:Button id="backButton" width="795" height="160" label="&lt; Back" color="#000000"
+			  fontSize="70" horizontalCenter="-2" verticalCenter="633" click="navigator.popView()" />
+</s:View>

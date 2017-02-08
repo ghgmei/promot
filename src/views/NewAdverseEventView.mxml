@@ -1,0 +1,824 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard" creationComplete="onloaded()">
+	
+	<fx:Script>
+		
+		<![CDATA[
+			
+			
+			// Get global vars
+			public var interviewerName:String  = userClass.getInstance().interviewer;
+			public var patientID:String = userClass.getInstance().patient;
+			public var tabletID:String  = userClass.getInstance().tabletId;
+			
+			
+			// Define local vars
+			public var type:String;
+			public var onset:String;
+			public var resolved:String;
+			public var severity:String;
+			public var actions:String;
+			public var actionsOther:String;
+			public var isrelated:String;
+			public var isALrelated:String;
+			public var outcome:String;
+			public var serious:String;
+			public var space:String="/";
+			public var date1:String = ((new Date()).getDate()) +
+				"/" + ((new Date().getMonth()+ 1) +            
+					"/" + (new Date()).getFullYear());
+			
+			
+			
+			
+			private function onloaded():void
+			{
+			
+				busy.visible=false;
+				type_other.visible=false;
+				patiendidlabel.text=patientID;
+				actionsTaken_other.visible=false;
+				q1_label.visible=false;
+				q4_label.visible=false;
+				seriousAE.visible=false;
+				saveBtn.visible=false;
+				ansall.visible=true;
+				
+				gradeofurine01.visible=false;
+				gradeofurine02.visible=false;
+				gradeofurine03.visible=false;
+				gradeofurine1.visible=false;
+				gradeofurine2.visible=false;
+				gradeofurine3.visible=false;
+				gradeofurine4.visible=false;
+				gradeofurine5.visible=false;
+				gradeofurine6.visible=false;
+				gradeofurine7.visible=false;
+				gradeofurine8.visible=false;
+				gradeofurine9.visible=false;
+				gradeofurine10.visible=false;
+				
+			}
+				
+				
+			protected function radiobutton1_clickHandler(event:MouseEvent):void
+		
+			{
+				if(q7_5.selected=true) {
+					qn8_yes.selected=true;
+					
+					seriousAE.visible=true;
+				}
+				
+			}
+			
+			
+			protected function q1pther_clickHandler(event:MouseEvent):void
+			{
+				type_other.visible=true;
+				q1_label.visible=true;
+				
+				gradeofurine01.visible=false;
+				gradeofurine02.visible=false;
+				gradeofurine03.visible=false;
+				gradeofurine1.visible=false;
+				gradeofurine2.visible=false;
+				gradeofurine3.visible=false;
+				gradeofurine4.visible=false;
+				gradeofurine5.visible=false;
+				gradeofurine6.visible=false;
+				gradeofurine7.visible=false;
+				gradeofurine8.visible=false;
+				gradeofurine9.visible=false;
+				gradeofurine10.visible=false;
+				
+			}
+			
+			protected function qn4_5_clickHandler(event:MouseEvent):void
+			{
+				actionsTaken_other.visible=true;
+				q4_label.visible=true;
+				
+			}
+			
+			
+			
+			
+			
+			protected function saveBtn_clickHandler(event:MouseEvent):void
+			{
+				// hide button show busy icon
+				saveBtn.visible=false;
+				busy.visible=true;
+				
+				
+				// q1
+				
+				if (q1_1.selected) 
+				{
+					type="1";
+				} 
+				
+				if (q1_2.selected) 
+				{
+					type="2";
+				} 
+				
+
+				if (q1_3.selected) 
+				{
+					type="3";
+				} 
+				
+
+				if (q1_4.selected) 
+				{
+					type="4";
+				} 
+				
+
+				if (q1_5.selected) 
+				{
+					type="5";
+				} 
+				
+
+				if (q1_6.selected) 
+				{
+					type="6";
+				} 
+				
+
+				if (q1_7.selected) 
+				{
+					type="7";
+				} 
+				
+				// q2
+				
+				onset= qn2_d.text+space+qn2_m.text+space+qn2_y.text;
+				
+				// q3 
+				
+				if (qn3_1.selected) 
+				{
+					severity="1";
+				} 
+				
+				if (qn3_2.selected) 
+				{
+					severity="2";
+				} 
+				
+				if (qn3_3.selected) 
+				{
+					severity="3";
+				} 
+				
+				if (qn3_4.selected) 
+				{
+					severity="4";
+				} 
+				
+				
+				// q4
+				
+				if (qn4_1.selected) 
+				{
+					actions="1";
+				} 
+				
+				
+				if (qn4_2.selected) 
+				{
+					actions="2";
+				} 
+				
+				
+				if (qn4_3.selected) 
+				{
+					actions="3";
+				} 
+				
+				
+				if (qn4_4.selected) 
+				{
+					actions="4";
+				} 
+				
+				
+				if (qn4_5.selected) 
+				{
+					actions="5";
+				} 
+				
+				// q5
+				
+				if (q5_1.selected) 
+				{
+					isrelated="1";
+				} 
+				
+				if (q5_2.selected) 
+				{
+					isrelated="2";
+				} 
+				
+				if (q5_3.selected) 
+				{
+					isrelated="3";
+				} 
+				
+				if (q5_4.selected) 
+				{
+					isrelated="4";
+				} 
+				
+				if (q5_5.selected) 
+				{
+					isrelated="5";
+				} 
+				
+				
+				// q5.2 related to AL?
+				
+				if (al_1.selected) 
+				{
+					isALrelated="1";
+				} 
+				
+				if (al_2.selected) 
+				{
+					isALrelated="2";
+				} 
+				
+				if (al_3.selected) 
+				{
+					isALrelated="3";
+				} 
+				
+				if (al_4.selected) 
+				{
+					isALrelated="4";
+				} 
+				
+				if (al_5.selected) 
+				{
+					isALrelated="5";
+				} 
+				
+				
+				
+				// q6
+				
+				resolved= qn6_d.text+space+qn6_m.text+space+qn6_y.text;
+				
+				
+				// q7
+				
+				if (q7_1.selected) 
+				{
+					outcome="1";
+				} 
+				
+				if (q7_2.selected) 
+				{
+					outcome="2";
+				}
+				
+				if (q7_3.selected) 
+				{
+					outcome="3";
+				} 
+				
+				if (q7_4.selected) 
+				{
+					outcome="4";
+				} 
+				
+				if (q7_5.selected) 
+				{
+					outcome="5";
+				} 
+				
+				if (q7_6.selected) 
+				{
+					outcome="6";
+				} 
+				
+				
+				
+				
+				
+				// q8
+				
+				if (qn8_yes.selected) 
+				{
+					serious="1";
+				} 
+				
+				if (qn8_no.selected) 
+				{
+					serious="0";
+				} 
+				
+				// prepares data to send to server
+				
+				var param:Object = new Object;
+				param.type=type;
+				param.type_other=type_other.text;
+				param.onset=onset;
+				param.resolved=resolved;
+				param.severity=severity;
+				param.actions=actions;
+				param.actionsOther=actionsTaken_other.text;
+				param.isrelated=isrelated;
+				param.outcome=outcome;
+				param.isalrelated=isALrelated;
+				param.serious=serious;
+				param.pid=patientID;
+				param.tabletId=tabletID;
+				param.interviewer=interviewerName;
+				param.fynder='b7dce38b7994111508ed8e2f132e09d9cc3e36cb5f39c12e131bc942f6ebb4431dd4585587a64def7eabf42826ba7edd96ce21735b4007377d133cee08f9d1d9';		
+				
+				
+				// submit
+				
+				newpatientvisit.send(param);	
+				
+				
+				
+				
+				
+				
+				
+			
+			}
+			
+			
+			private function resultHandler(event):void
+			{
+				
+				//	After Successfull Submission
+				
+				
+				
+				
+				if (qn8_yes.selected) {
+					userClass.getInstance().concomitant = "Y";
+					
+				} else {
+					
+					userClass.getInstance().concomitant = "N";
+					
+				}
+				
+				
+				
+				
+				
+				
+				if (moreEvents.selected) {
+					
+					navigator.pushView(NewAdverseEventView);
+				} else
+					
+				{
+					if (userClass.getInstance().otherDrugs == "Y") {
+						
+						navigator.pushView(views.AddOtherDrugView);
+						
+					} else {
+						
+						navigator.pushView(addedEncounterView);
+						
+					}
+				}
+				
+				
+			}
+			
+			
+			private function faultHandler(event):void
+			{
+				
+				
+				//	After Unsuccessfull Submission - Tablet stores data until next login
+				
+				
+				
+				if (moreEvents.selected) {
+					
+					navigator.pushView(NewAdverseEventView);
+				} else
+					
+				{
+					if (userClass.getInstance().otherDrugs == "Y") {
+						
+						navigator.pushView(views.AddOtherDrugView);
+						
+					} else {
+						
+						navigator.pushView(addedEncounterView);
+						
+					}
+				}
+				
+				
+				
+			}
+			
+			protected function qn8_yes_clickHandler(event:MouseEvent):void
+			{
+				seriousAE.visible=true;
+			
+				
+			}
+			
+			protected function last_clickHandler(event:MouseEvent):void
+			{
+				
+				
+				
+				
+				if(!q1_1.selected && !q1_2.selected && !q1_3.selected && !q1_4.selected && !q1_5.selected && !q1_6.selected && !q1_7.selected)
+					
+				{
+					
+					ansall.visible=true;
+					last.selected=false;
+					
+				}else 
+				{
+					
+					
+					
+					ansall.visible=false;
+					saveBtn.visible=true;
+					
+					
+				}
+				
+				
+				if(!qn3_1.selected && !qn3_2.selected && !qn3_3.selected && !qn3_4.selected)
+					
+				{
+					
+					ansall.visible=true;
+					last.selected=false;
+					
+				}else 
+				{
+					
+					
+					
+					ansall.visible=false;
+					saveBtn.visible=true;
+					
+					
+				}
+				
+				
+				
+				if(!qn4_1.selected && !qn4_2.selected && !qn4_3.selected && !qn4_4.selected && !qn4_5.selected)
+					
+				{
+					
+					ansall.visible=true;
+					last.selected=false;
+					
+				}else 
+				{
+					
+					
+					
+					ansall.visible=false;
+					saveBtn.visible=true;
+					
+					
+				}
+				
+				
+				if(!q5_1.selected && !q5_2.selected && !q5_3.selected && !q5_4.selected && !q5_5.selected)
+					
+				{
+					
+					ansall.visible=true;
+					last.selected=false;
+					
+				}else 
+				{
+					
+					
+					
+					ansall.visible=false;
+					saveBtn.visible=true;
+					
+					
+				}
+				
+				
+				
+				if(!qn8_yes.selected && !qn8_no.selected)
+					
+				{
+					
+					ansall.visible=true;
+					last.selected=false;
+					
+				}else 
+				{
+					
+					
+					
+					ansall.visible=false;
+					saveBtn.visible=true;
+					
+					
+				}
+				
+				
+				
+				
+				if (!last.selected) {
+					
+					
+					saveBtn.visible=false;
+					ansall.visible=true;
+					
+				}
+				
+				
+				
+				
+			}
+			
+			protected function q1_5_clickHandler(event:MouseEvent):void
+			{
+				gradeofurine01.visible=true;
+				gradeofurine02.visible=true;
+				gradeofurine03.visible=true;
+				gradeofurine1.visible=true;
+				gradeofurine2.visible=true;
+				gradeofurine3.visible=true;
+				gradeofurine4.visible=true;
+				gradeofurine5.visible=true;
+				gradeofurine6.visible=true;
+				gradeofurine7.visible=true;
+				gradeofurine8.visible=true;
+				gradeofurine9.visible=true;
+				gradeofurine10.visible=true;
+				
+				type_other.visible=false;
+				q1_label.visible=false;
+			
+				
+				
+			}
+			
+			protected function q1_6_clickHandler(event:MouseEvent):void
+			{
+				gradeofurine01.visible=false;
+				gradeofurine02.visible=false;
+				gradeofurine03.visible=false;
+				gradeofurine1.visible=false;
+				gradeofurine2.visible=false;
+				gradeofurine3.visible=false;
+				gradeofurine4.visible=false;
+				gradeofurine5.visible=false;
+				gradeofurine6.visible=false;
+				gradeofurine7.visible=false;
+				gradeofurine8.visible=false;
+				gradeofurine9.visible=false;
+				gradeofurine10.visible=false;
+				
+			}
+			
+			protected function qn8_no_clickHandler(event:MouseEvent):void
+			{
+				seriousAE.visible=false;
+				
+			}
+			
+		]]>
+		
+	</fx:Script>
+	
+	<s:layout>
+		<s:BasicLayout />
+	</s:layout>
+
+	<fx:Declarations>
+		
+		<s:HTTPService id="newpatientvisit" 
+					   url="http://prompt.app-king.net/ae1.php" 
+					   method="POST"
+					   result="resultHandler(event)"
+					   resultFormat="text"
+					   contentType="application/x-www-form-urlencoded"
+					   requestTimeout = "10"
+					   fault="faultHandler(event)" /> 
+		
+		<s:RadioButtonGroup id="qn_2_options"/>
+		<s:RadioButtonGroup id="severity_grade"/>
+		<s:RadioButtonGroup id="qn5_group"/>
+		<s:RadioButtonGroup id="qn1_group"/>
+		<s:RadioButtonGroup id="qn4_group"/>
+		<s:RadioButtonGroup id="qn7_group"/>
+		<s:RadioButtonGroup id="qn81"/>
+		<s:RadioButtonGroup id="last1"/>
+		<s:RadioButtonGroup id="gradeofurine_group"/>
+		
+		
+
+	</fx:Declarations>
+	<s:Scroller width="894" height="3500"><s:Group fontSize="20">
+	
+	
+	
+	<s:Label x="50" y="64" color="#232323" fontSize="23" fontWeight="bold"
+			 text="1. Type of adverse event:"/>
+	<s:Label x="688" y="10" color="#232323" fontSize="18" fontWeight="normal"
+			 text="Patient ID: "/>
+	<s:Label id="patiendidlabel" x="782" y="11" color="#FF0000" fontSize="18" fontWeight="bold"
+			 text="..."/>
+	
+	<s:Label x="50" y="869" color="#232323" fontSize="23" fontWeight="bold"
+			 text="5.1. Is Adverse Event Related To PQ?"/>
+	<s:Label x="50" y="497" color="#232323" fontSize="23" fontWeight="bold" text="3. Severity Grade:"/>
+	<s:Button id="saveBtn" x="103" y="1806" width="770" height="102" label="Proceed"
+			  click="saveBtn_clickHandler(event)" fontSize="60"/>
+	<s:Label top="12" color="#0599E6" fontSize="55" fontWeight="bold" horizontalCenter="0"
+			 text="Adverse Event"/>
+	<s:Label x="50" y="398" color="#232323" fontSize="23" fontWeight="bold" text="2. Onset Date:"/>
+	<s:Label x="50" y="1193" color="#232323" fontSize="23" fontWeight="bold" text="6. Date Resolved:"/>
+	<s:Label top="1225" color="#7C7878" fontSize="18" fontStyle="italic" fontWeight="normal"
+			 horizontalCenter="-287" text="Leave blank if ongoing."/>
+	<s:RadioButton id="qn3_1" x="80" y="580" label="Mild" fontSize="25" fontWeight="normal"
+				   groupName="severity_grade"/>
+	<s:RadioButton id="qn3_2" x="208" y="580" label="Moderate" fontSize="25" fontWeight="normal"
+				   groupName="severity_grade"/>
+	<s:Label x="50" y="1494" color="#232323" fontSize="25" fontWeight="bold"
+			 text="8. Serious Adverse Event?"/>
+	<s:RadioButton id="qn8_yes" x="384" y="1478" label="Yes" click="qn8_yes_clickHandler(event)"
+				   fontSize="22" groupName="qn81"/>
+	<s:RadioButton id="qn8_no" x="498" y="1478" label="No" click="qn8_no_clickHandler(event)"
+				   fontSize="22" groupName="qn81"/>
+	<s:Label x="50" y="1648" color="#232323" fontSize="23" fontWeight="bold"
+			 text="Answered all questions?"/>
+	<s:RadioButton id="last" x="344" y="1633" label="Yes" click="last_clickHandler(event)"
+				   fontSize="23" groupName="last1"/>
+	<s:RadioButton x="456" y="1633" label="No" fontSize="23" groupName="last1"/>
+	<s:RadioButton id="qn3_3" x="387" y="580" label="Severe" fontSize="25" fontWeight="normal"
+				   groupName="severity_grade"/>
+	<s:RadioButton id="qn3_4" x="543" y="580" label="Life-threatening" fontSize="25"
+				   fontWeight="normal" groupName="severity_grade"/>
+	<s:Label x="50" y="658" color="#232323" fontSize="23" fontWeight="bold" text="4. Actions Taken:"/>
+	<s:RadioButton id="qn4_3" x="573" y="688" label="None" fontSize="23" groupName="qn4_group"/>
+	<s:RadioButton id="qn4_1" x="81" y="692" label="Prescribed drug" fontSize="23"
+				   groupName="qn4_group"/>
+	<s:RadioButton id="qn4_4" x="81" y="744" label="Blood Transfusion" fontSize="23"
+				   groupName="qn4_group"/>
+	<s:RadioButton id="qn4_2" x="341" y="688" label="Hospitalization" fontSize="23"
+				   groupName="qn4_group"/>
+								  <s:RadioButton id="qn4_6" x="341" y="744" label="Stopped AL"
+												 fontSize="23" groupName="qn4_group"/>
+	<s:RadioButton id="qn4_5" x="573" y="744" label="Other**" click="qn4_5_clickHandler(event)"
+				   fontSize="23" groupName="qn4_group"/>
+	<s:Label x="50" y="1276" color="#232323" fontSize="23" fontWeight="bold"
+			 text="7. Outcome of Adverse Event:"/>
+	<s:RadioButton id="q7_1" x="66" y="1301" label="Recovered/resolved" fontSize="23"
+				   groupName="qn7_group"/>
+	<s:RadioButton id="q7_2" x="391" y="1305" label=" Recovered/resolved with sequelae" fontSize="23"
+				   groupName="qn7_group"/>
+	<s:RadioButton id="q7_5" x="67" y="1412" label="Fatal" click="radiobutton1_clickHandler(event)"
+				   fontSize="23" groupName="qn7_group"/>
+	<s:RadioButton id="q7_3" x="66" y="1356" label="Recovering/resolving" fontSize="23"
+				   groupName="qn7_group"/>
+	<s:RadioButton id="q7_4" x="392" y="1357" label="Not recovered/not resolved" fontSize="23"
+				   groupName="qn7_group"/>
+	<s:RadioButton id="q7_6" x="392" y="1413" label="Unknown" fontSize="23" groupName="qn7_group"/>
+
+	
+	
+	<s:CheckBox id="moreEvents" x="61" y="1705" label="Add another adverse event?"
+				 fontSize="30"/>
+
+	<s:RadioButton id="q5_4" x="80" y="952" label="Probable" fontSize="23" groupName="qn5_group"/>
+	<s:RadioButton id="q5_3" x="432" y="897" label="Possible" fontSize="23" groupName="qn5_group"/>
+	<s:RadioButton id="q5_5" x="269" y="953" label="Definite" fontSize="23" groupName="qn5_group"/>
+	<s:RadioButton id="q5_1" x="80" y="897" label="Unrelated" fontSize="23" groupName="qn5_group"/>
+	<s:RadioButton id="q5_2" x="266" y="897" label="Unlikely" fontSize="23" groupName="qn5_group"/>
+	<s:Label x="467" y="870" color="#CCCACA" fontSize="20" text="Check one"/>
+											  <s:Label x="50" y="1031" color="#232323" fontSize="23" fontWeight="bold"
+													   text="5.2. Is Adverse Event Related To AL?"/>
+											  <s:RadioButton id="al_4" x="80" y="1114" label="Probable" fontSize="23" groupName="qn5_group"/>
+											  <s:RadioButton id="al_3" x="432" y="1059" label="Possible" fontSize="23" groupName="qn5_group"/>
+											  <s:RadioButton id="al_5" x="269" y="1115" label="Definite" fontSize="23" groupName="qn5_group"/>
+											  <s:RadioButton id="al_1" x="80" y="1059" label="Unrelated" fontSize="23" groupName="qn5_group"/>
+											  <s:RadioButton id="al_2" x="266" y="1059" label="Unlikely" fontSize="23" groupName="qn5_group"/>
+											  <s:Label x="463" y="1031" color="#CCCACA" fontSize="20" text="Check one"/>
+	<s:Label x="386" y="1277" color="#CCCACA" fontSize="20" text="Check one"/>
+	<s:Label id="seriousAE" x="53" y="1542" width="821" height="72" color="#076D97" fontSize="30"
+			 fontWeight="normal"
+			 text="Remember to contact the Medical Officer &amp; NMCP and complete an Adverse Drug Reaction form."/>
+	<s:Label id="q4_label" x="42" y="804" width="179" height="54" color="#B62222" fontSize="23"
+			 fontWeight="bold" text="Describe other actions taken:"/>
+	<s:TextArea id="actionsTaken_other" x="219" y="802" width="519" height="49" fontSize="23"/>
+	<s:TextInput id="qn6_d" x="285" y="1190" width="83" fontSize="23" prompt="DD"/>
+	<s:TextInput id="qn6_y" x="498" y="1190" width="104" fontSize="23" prompt="YYYY"/>
+	<s:TextInput id="qn6_m" x="391" y="1190" width="83" fontSize="23" prompt="MM"/>
+	<s:Label x="576" y="402" color="#CECECE" fontSize="20" fontStyle="italic" fontWeight="normal"
+			 text="DD / MM / YYYY"/>
+								  <s:Label x="628" y="1206" color="#CECECE" fontSize="20"
+										   fontStyle="italic" fontWeight="normal"
+										   text="DD / MM / YYYY"/>
+	<s:TextInput id="qn2_d" x="233" y="383" width="83" fontSize="23" prompt="DD" skinClass="spark.skins.mobile.TextInputSkin"/>
+	<s:TextInput id="qn2_y" x="446" y="383" width="104" fontSize="23" prompt="YYYY" skinClass="spark.skins.mobile.TextInputSkin"/>
+	<s:TextInput id="qn2_m" x="339" y="383" width="83" fontSize="23" prompt="MM" skinClass="spark.skins.mobile.TextInputSkin"/>
+	<s:BusyIndicator id="busy" x="427" y="1810" width="95" height="95"/>
+	<s:Label id="ansall" x="272" y="1847" color="#F00E0E" fontSize="45" fontWeight="bold"
+			 text="Answer all questions!"/>
+	
+	
+	
+	<s:RadioButton id="q1_1" x="80" y="95" label="Rash" click="q1_6_clickHandler(event)"
+				   fontSize="23" groupName="qn1_group"/>
+	<s:RadioButton id="q1_2" x="281" y="95" label="Nausea" click="q1_6_clickHandler(event)"
+				   fontSize="23" groupName="qn1_group"/>
+	<s:RadioButton id="q1_3" x="475" y="95" label="Vomitting" click="q1_6_clickHandler(event)"
+				   fontSize="23" groupName="qn1_group"/>
+	<s:RadioButton id="q1_4" x="80" y="154" label="Anemia" click="q1_6_clickHandler(event)"
+				   fontSize="23" groupName="qn1_group"/>
+	<s:RadioButton id="q1_5" x="281" y="154" label="Dark Urine" click="q1_5_clickHandler(event)"
+				   fontSize="23" groupName="qn1_group"/>
+	<s:RadioButton id="q1_6" x="474" y="154" label="Diarrhea" click="q1_6_clickHandler(event)"
+				   fontSize="23" groupName="qn1_group"/>
+	<s:RadioButton id="q1_7" x="663" y="154" label="Other*" click="q1pther_clickHandler(event)"
+				   fontSize="23" groupName="qn1_group"/>
+	
+	
+	<s:Label id="gradeofurine01" x="42" y="208" color="#AE0A0A" fontSize="23" fontWeight="bold"
+			 text="Grade of colour of urine:"/>
+	<s:RadioButton id="gradeofurine1" x="14" y="324" label="1 " color="#FF0000" fontSize="23"
+				   fontWeight="bold" groupName="gradeofurine_group"/>
+	<s:RadioButton id="gradeofurine2" x="101" y="324" label="2" fontSize="23" fontStyle="normal"
+				   fontWeight="bold" groupName="gradeofurine_group"/>
+	<s:RadioButton id="gradeofurine3" x="188" y="324" label="3" color="#FF0000" fontSize="23"
+				   fontWeight="bold" groupName="gradeofurine_group"/>
+	
+	<s:RadioButton id="gradeofurine4" x="273" y="324" label="4" fontSize="23" fontWeight="bold"
+				   groupName="gradeofurine_group"/>
+	<s:RadioButton id="gradeofurine5" x="355" y="324" label="5" color="#FF0000" fontSize="23"
+				   fontWeight="bold" groupName="gradeofurine_group"/>
+	<s:RadioButton id="gradeofurine6" x="448" y="324" label="6" fontSize="23" fontWeight="bold"
+				   groupName="gradeofurine_group"/>
+	<s:RadioButton id="gradeofurine7" x="533" y="324" label="7" color="#FF0000" fontSize="23"
+				   fontWeight="bold" groupName="gradeofurine_group"/>
+	<s:RadioButton id="gradeofurine8" x="617" y="324" label="8" color="#000000" fontSize="23"
+				   fontWeight="bold" groupName="gradeofurine_group"/>
+	<s:RadioButton id="gradeofurine9" x="703" y="324" label="9" color="#FF0000" fontSize="23"
+				   fontWeight="bold" groupName="gradeofurine_group"/>
+	<s:RadioButton id="gradeofurine10" x="796" y="324" label="10" fontSize="23" fontWeight="bold"
+				   groupName="gradeofurine_group"/>
+	
+	
+	
+	<s:Label id="gradeofurine02" x="345" y="265" color="#2F60D1" fontSize="20" fontWeight="normal"
+			 text="Grade the colour of urine using the chart provided."/>
+	<s:Label x="171" y="549" color="#2F60D1" fontSize="20" fontWeight="normal" text="Grade the severity of this AE using the information provided."/>
+	<s:CalloutButton id="gradeofurine03" x="39" y="238" width="279" height="61"
+					 label="Hillman Urine Chart" fontSize="23">
+		<s:Image id="urine_grade1"  source="img/urine_grade.png"/>
+		
+	</s:CalloutButton>
+	
+	
+
+
+		
+	
+			
+		<s:Label x="257" y="659" color="#CCCACA" fontSize="20" text="Check one"/>
+		<s:TextInput id="type_other" x="38" y="239" width="778" height="72" fontSize="19" skinClass="spark.skins.mobile.TextInputSkin"/>
+		<s:Label id="q1_label" x="38" y="210" color="#B62222" fontSize="23" fontWeight="bold"
+				 text="Describe other type of event:"/>
+		<s:CalloutButton x="352" y="470" width="301" height="66" label="Severity Grade Information"
+						 fontSize="21">
+			<s:Image id="severity_grades0"  source="img/severity.jpg"/>
+			
+		</s:CalloutButton>
+
+							  </s:Group>
+		
+		
+	</s:Scroller>
+	
+
+
+</s:View>
+
+

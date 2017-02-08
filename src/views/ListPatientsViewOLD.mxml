@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		xmlns:list1="services.list1.*"
+		xmlns:follow1="services.follow1.*"
+		xmlns:kml_list1="services.kml_list1.*"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard">
+	
+
+	
+	<fx:Script>
+	
+	
+		
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+		
+			public var dbFile:File;
+			public var dbConnection:SQLConnection;
+			public var selectQuery:SQLStatement;
+		
+			/**
+		private function connectDB():void
+		{
+		creationComplete="connectDB()"
+			
+		//connects to Db
+			
+			dbFile = File.applicationStorageDirectory.resolvePath("prompt1.db");
+			dbConnection = new SQLConnection();
+			dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
+			dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
+			
+			dbConnection.openAsync(dbFile);
+					
+		// Query DB
+		//var SQLStatement1:SQLStatement = new SQLStatement();
+		//SQLStatement1.sqlConnection = dbConnection;
+		//SQLStatement1.text ="INSERT INTO patients (dateAdded, healthFacility, familyName, fname, nationality, nationalityOther, countryOfResidence, age, ageType, sex, mobile1, mobile2, pregnant, weight, q11, q12, q13, q13Other, q14, q15DailyDose, q15DailyDoseOther, q15Days, q15DaysOther, tabletId, interviewer, patientid) VALUES ('"+dateLabel.text+"','"+healthFacility+"','"+familyname.text+"','"+firstname.text+"','"+nationality+"','"+qn4_specify_other.text+"','"+countryOfResidence+"','"+qn5_age.text+"','"+ageType+"','"+sex+"','"+mobile1.text+"','"+mobile2.text+"','"+pregnant+"','"+weight.text+"','"+q11+"','"+q12+"','"+q13+"','"+qn13_other_specify.text+"','"+q14+"','"+q15DailyDose+"','"+q15DailyDoseOther+"','"+q15Days+"','"+q15DaysOther+"','"+tabletId+"','"+interviewer+"','"+patientid+"')";
+		
+		//SQLStatement1.execute();
+		
+		//navigator.pushView(addedPatientView);
+			
+		}
+		
+			 private function onDatabaseOpen(evt:SQLEvent):void
+			
+		{
+			
+			
+			trace("Database is open");
+			selectQuery = new SQLStatement();
+			selectQuery.sqlConnection = dbConnection;
+			selectQuery.text ="SELECT * FROM patients ORDER BY id ASC";
+			selectQuery.addEventListener(SQLEvent.RESULT, onQueryResult);
+			
+			selectQuery.execute();
+			
+		}
+		
+		private function onQueryResult(evt:SQLEvent):void
+		{
+			PatientList.dataProvider = new ArrayCollection(selectQuery.getResult().data);
+		}**/
+		
+		private function onDatabaseClose(evt:SQLEvent):void
+			
+		{
+			trace("Database is closed");
+		}
+		
+		
+		
+		
+			
+			//list_patientsResult2.token = list1.list_patients('b1e4802a325e194ce80c8ceeb021533afa57b02e2f1977fa67946c23986b8349');		
+			
+			
+		
+			
+		
+		
+		
+			
+			
+			protected function PatientList_creationCompleteHandler(event:FlexEvent):void
+			{
+				getDataResult2.token = kML_list1.getData('b1e4802a325e194ce80c8ceeb021533afa57b02e2f1977fa67946c23986b8349');
+			}
+			
+		]]>
+		
+	</fx:Script>
+	<fx:Declarations>
+		<s:CallResponder id="getDataResult"/>
+		<kml_list1:KML_list1 id="kML_list1"/>
+		<s:CallResponder id="getDataResult2"/>
+	
+		
+	
+		
+		
+		
+		
+	</fx:Declarations>
+	
+	
+	
+	<s:Button id="backButton" y="1274" left="20" width="420" height="183" label="Health Facility"
+			  click="navigator.pushView(HealthFacilityView)" color="#000000" fontSize="40"
+			  icon="@Embed('img/hf.png')"/>
+	<s:Button id="backButton0" y="1274" right="20" width="420" height="185" label="Add Patient"
+			  click="navigator.pushView(NewPatientView1)" color="#000000" fontSize="40"
+			  icon="@Embed('img/patient.png')"/>
+	<s:Label x="20" y="123" fontSize="30" fontWeight="normal" text="Showing all recorded patients, tap to view patient profile:"/>
+	<s:List id="PatientList" y="156" left="2" right="2" height="1091"
+			click="navigator.pushView(PatientProfileView, PatientList.selectedItem)" color="#000000"
+			creationComplete="PatientList_creationCompleteHandler(event)" fontFamily="Arial"
+			fontSize="52" fontWeight="normal">
+		<s:AsyncListView list="{getDataResult2.lastResult}"/>
+		
+		<s:itemRenderer>
+			<fx:Component>
+				<s:IconItemRenderer
+					label="{data.fname} {data.sirname}"
+					messageField="patientid"/>
+			</fx:Component>
+		</s:itemRenderer>
+
+
+		
+	
+	
+	</s:List>
+	<s:Label x="256" y="39" color="#174573" fontSize="65" fontWeight="bold" text="All Patients"/>
+</s:View>

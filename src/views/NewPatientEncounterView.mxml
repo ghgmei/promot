@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:mx="library://ns.adobe.com/flex/halo"
+		actionBarVisible="false" overlayControls="false" tabBarVisible="false" title="Dashboard" creationComplete="onloaded()">
+	
+
+	<fx:Script>
+		
+		<![CDATA[
+		
+			import mx.core.IFlexDisplayObject;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			
+			// Get global vars
+			public var interviewerName:String  = userClass.getInstance().interviewer;
+			public var patientID:String = userClass.getInstance().patient;
+			public var tabletID:String  = userClass.getInstance().tabletId;
+			
+			
+			// Define local vars
+			public var q6:String;
+			public var q2:String;
+			public var q7:String;
+			public var q8:String;
+			public var date1:String = ((new Date()).getDate()) +
+				"/" + ((new Date().getMonth()+ 1) +            
+					"/" + (new Date()).getFullYear());
+			
+			// for db connection
+			public var dbFile:File;
+			public var dbConnection:SQLConnection;
+			
+			private function onDatabaseOpen(evt:SQLEvent):void
+				
+			{
+				
+			}
+			
+			
+			private function onDatabaseClose(evt:SQLEvent):void
+				
+			{
+				trace("Database is closed");
+			}
+			
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+				
+			{
+				
+				//shows busy indicator, removes button
+				
+				busy.visible=true;
+				button1.visible=false;
+				
+				
+				
+				// Assigns radio buttons to variables
+		
+				//q2 
+				if (q2_no.selected) 
+				{
+					q2="0";
+				} 
+				
+				if (q2_yes.selected) 
+				{
+					q2="1";
+				} 
+				
+				//q7 
+				if (q7_no.selected) 
+				{
+					q7="0";
+				} 
+				
+				if (q7_yes.selected) 
+				{
+					q7="1";
+				} 
+				
+				
+				//q8
+				if (qn8_no.selected) 
+				{
+					q8="0";
+				} 
+				
+				if (qn8_yes.selected) 
+				{
+					q8="1";
+				} 
+				
+				
+				// q6
+				
+				if (qn6_yes.selected) 
+				{
+					q6="1";
+				} 
+				
+				if (q6_no.selected) 
+				{
+					q6="0";
+				} 
+				
+				// prepares data to send to server
+				
+				var param:Object = new Object;
+				param.date=date1;
+				param.qn2=q2;
+				param.q3=qn3.text;
+				param.q4=qn4.text;
+				param.q5="1";
+				param.q6=q6;
+				param.q7=q7;
+				param.q8=q8;
+				param.q8=q8;
+				param.q82=q8_details.text;
+				param.pid=patientID;
+				param.tabletId=tabletID;
+				param.interviewer=interviewerName;
+				param.fynder='b7dce38b7994111508ed8e2f132e09d9cc3e36cb5f39c12e131bc942f6ebb4431dd4585587a64def7eabf42826ba7edd96ce21735b4007377d133cee08f9d1d9';		
+				
+				
+				// submit
+				
+				newpatientvisit.send(param);	
+				
+				
+				
+				
+				
+					
+					
+					
+			
+				}
+			
+			private function onloaded():void
+			{
+				q8_if_yes.visible=false;
+				q8_details.visible=false;
+				q2_no_note.visible=false;
+				busy.visible=false;
+				patient_id.text=patientID;
+				button1.visible=false;
+				conn.visible=false;
+				
+				
+				trace("Begin DB connection");
+				
+				//connects to Db
+				
+				dbFile = File.applicationStorageDirectory.resolvePath("prompt1.db");
+				dbConnection = new SQLConnection();
+				dbConnection.addEventListener(SQLEvent.OPEN, onDatabaseOpen)
+				dbConnection.addEventListener(SQLEvent.CLOSE, onDatabaseClose);
+				
+				dbConnection.openAsync(dbFile);
+			}
+			
+			
+			protected function ttlWndw_close(evt:CloseEvent):void {
+				PopUpManager.removePopUp(evt.currentTarget as IFlexDisplayObject);
+			}
+		
+			protected function radiobutton1_clickHandler(event:MouseEvent):void
+			{
+					
+				q2_no_note.visible=true;
+			}
+			
+			
+			protected function radiobutton2_clickHandler(event:MouseEvent):void
+			{
+				
+				q2_no_note.visible=false;
+			}
+			
+			
+			
+			protected function qn1_clickHandler(event:MouseEvent):void
+			{
+				q8_if_yes.visible=true;
+				q8_details.visible=true;
+			}
+			
+			
+			
+			
+			
+			
+			private function resultHandler(event):void
+			{
+				
+				//	After Successfull Submission
+				
+				
+				if (q7_yes.selected) {
+					userClass.getInstance().otherDrugs = "Y";
+					
+				} else {
+					
+					userClass.getInstance().otherDrugs = "N";
+					
+				}
+				
+				
+				if (qn6_yes.selected) {
+					
+					navigator.pushView(NewAdverseEventView);
+				} else
+					
+				{
+					if (userClass.getInstance().otherDrugs == "Y") {
+						
+						navigator.pushView(views.AddOtherDrugView);
+						
+					} else {
+						
+						navigator.pushView(addedEncounterView);
+						
+					}
+				
+				
+			}
+			}
+			
+			
+			private function faultHandler(event):void
+			{
+				
+				
+				//	After Unsuccessfull Submission - Tablet stores data until next login
+				
+				
+				var statement:SQLStatement = new SQLStatement();
+				statement.sqlConnection = dbConnection;
+				statement.text ="CREATE TABLE IF NOT EXISTS patient_encounters (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, q2 TEXT, q3 TEXT, q4 TEXT, q5 TEXT, q6 TEXT, q7 TEXT, q8 TEXT, q8_details TEXT, tabletId TEXT, interviewer TEXT, dateModified TEXT, patientid TEXT)";
+				statement.execute();
+				
+				
+				// Saves to DB
+				var SQLStatement1:SQLStatement = new SQLStatement();
+				SQLStatement1.sqlConnection = dbConnection;
+				SQLStatement1.text ="INSERT INTO patient_encounters (date, q2, q3, q4, q5, q6, q7, q8, q8_details, tabletId, interviewer, dateModified, patientid) VALUES ('"+date.text+"','"+q2+"','"+qn3.text+"','"+qn4.text+"','1','"+q6+"','"+q7+"','"+q8+"','"+q8_details.text+"','"+tabletID+"','"+interviewerName+"','"+date.text+"','"+patientID+"')";
+				
+				SQLStatement1.execute();
+				
+				
+				
+				
+				
+				busy.visible=false;
+				conn.visible=true;
+				button1.visible=true;
+			}
+			
+			protected function last_clickHandler(event:MouseEvent):void
+			{
+				
+				if(!q2_yes.selected && !q2_no.selected)	
+				{
+					
+					ansall.visible=true;
+					last.selected=false;
+					
+				}else 
+				{
+					
+					
+					
+					ansall.visible=false;
+					button1.visible=true;
+					
+					
+				}
+				
+				
+				
+				if(!qn8_yes.selected && !qn8_no.selected)	
+				{
+					
+					ansall.visible=true;
+					last.selected=false;
+					
+				}else 
+				{
+					
+					
+					
+					ansall.visible=false;
+					button1.visible=true;
+					
+					
+				}
+				
+				
+				
+				if(!q7_yes.selected && !q7_no.selected)	
+				{
+					
+					ansall.visible=true;
+					last.selected=false;
+					
+				}else 
+				{
+					
+					
+					
+					ansall.visible=false;
+					button1.visible=true;
+					
+					
+				}
+				
+				
+				if(!qn6_yes.selected && !q6_no.selected)	
+				{
+					
+					ansall.visible=true;
+					last.selected=false;
+					
+				}else 
+				{
+					
+					
+					
+					ansall.visible=false;
+					button1.visible=true;
+					
+					
+				}
+				
+				
+				
+				
+				
+				if(qn3.text == '')
+				{
+					
+					ansall.visible=true;
+					last.selected=false;
+					
+				}else 
+				{
+					
+					
+					
+					ansall.visible=false;
+					button1.visible=true;
+					
+					
+				}
+				
+				if(qn4.text == '')
+				{
+					
+					ansall.visible=true;
+					last.selected=false;
+					
+				}else 
+				{
+					
+					
+					
+					ansall.visible=false;
+					button1.visible=true;
+					
+					
+				}
+				
+				
+				if (!last.selected) {
+					
+					
+					button1.visible=false;
+					ansall.visible=true;
+					
+				}
+			}
+			
+		]]>
+		</fx:Script>
+	
+	
+	<fx:Declarations>
+		<s:HTTPService id="newpatientvisit" 
+					   url="http://prompt.app-king.net/visit1.php" 
+					   method="POST"
+					   result="resultHandler(event)"
+					   resultFormat="text"
+					   contentType="application/x-www-form-urlencoded"
+					   requestTimeout = "10"
+					   fault="faultHandler(event)" /> 
+			
+			
+		<s:RadioButtonGroup id="qn_2_options"/>
+		<s:RadioButtonGroup id="qn_6_options"/>
+		<s:RadioButtonGroup id="qn_5_options"/>
+		<s:RadioButtonGroup id="qn_7_options"/>
+		<s:RadioButtonGroup id="qn_8_options"/>
+	</fx:Declarations>
+	
+	
+	
+	
+	<s:Label x="40" y="130" color="#232323" fontSize="25" fontWeight="normal" text="1. Date :"/>
+	<s:Label x="40" y="180" color="#232323" fontSize="25" fontWeight="normal"
+			 text="2. Is this a scheduled day 7 visit?"/>
+	
+	<s:Label id="q2_no_note" top="232" width="907" color="#E61515" fontSize="24" fontWeight="bold"
+			 horizontalCenter="0"
+			 text="Remind patient to return for a scheduled day 7 visit unless day 7 has passed."
+			 textAlign="center"/>
+	<s:Label x="40" y="292" color="#232323" fontSize="25" fontWeight="normal" text="3. Hemoglobin: "/>
+
+	<s:Label top="292" color="#232323" fontSize="25" fontWeight="normal" horizontalCenter="-51"
+			 text="g/dl"/>
+	<s:Button id="button1" x="368" y="1327" width="492" height="105" label="Proceed"
+			  click="button1_clickHandler(event)" fontSize="60"/>
+	<s:Label top="13" color="#1282F5" fontSize="55" fontWeight="bold" horizontalCenter="0"
+			 text="Patient Visit Form"/>
+	<s:Label id="date" x="142" y="130" color="#797979" fontSize="25"
+			 text="{(new Date()).toDateString()}"/>
+	<s:Label x="522" y="128" color="#232323" fontSize="25" fontWeight="bold" text="Patient ID:"/>
+	<s:Label id="patient_id" x="652" y="128" color="#CC0909" fontSize="25" fontWeight="bold"
+			 text="..."/>
+
+	<s:RadioButton id="q2_yes" x="446" y="162" label="Yes" click="radiobutton2_clickHandler(event)" groupName="qn_2_options"/>
+	<s:RadioButton id="q2_no" x="561" y="162" label="No" click="radiobutton1_clickHandler(event)"
+				   groupName="qn_2_options"/>
+	<s:Label x="40" y="484" width="845" height="62" color="#232323" fontSize="25" fontWeight="normal"
+			 text="6. Did the patient experience an adverse event since being treated with PQ?"/>
+	<s:RadioButton id="qn6_yes" x="85" y="527" label="Yes" groupName="qn_6_options" selected="false"/>
+	<s:RadioButton id="q6_no" x="200" y="527" label="No" groupName="qn_6_options"/>
+	<s:RadioButton id="q5" x="477" y="416" label="1 Day" enabled="true" groupName="qn_5_options"
+				   selected="true"/>
+	<s:Label x="39" y="600" width="850" height="91" color="#232323" fontSize="25" fontWeight="normal"
+			 text="7. Did the patient take any other drugs along with PQ at the time of treatment or in the two week period prior to the onset of the event?"/>
+	<s:RadioButton id="q7_yes" x="83" y="674" label="Yes"   selected="false" groupName="qn_7_options"/>
+	<s:RadioButton id="q7_no" x="198" y="674" label="No" groupName="qn_7_options"/>
+	<s:Label x="40" y="743" width="820" height="91" color="#232323" fontSize="25" fontWeight="normal"
+			 text="8. Did the patient take any traditional medicines along with PQ at the time of treatment or in the two-week period to the onset of the event?"
+			 textAlign="left"/>
+	<s:Label id="q8_if_yes" x="40" y="863" width="716" height="28" color="#232323" fontSize="25"
+			 fontStyle="italic" fontWeight="normal" text="If yes, give details if known."
+			 textAlign="left"/>
+	<s:RadioButton id="qn8_yes" x="88" y="806" label="Yes" click="qn1_clickHandler(event)"
+				   groupName="qn_8_options" selected="false" />
+	<s:RadioButton id="qn8_no" x="203" y="806" label="No"  groupName="qn_8_options"/>
+	<s:TextInput id="qn3" x="214" y="278" width="158" height="55"/>
+	<s:Label x="40" y="359" color="#232323" fontSize="25" fontWeight="normal"
+			 text="4. Number of PQ tablets taken per day: "/>
+	<s:Label x="41" y="429" color="#232323" fontSize="25" fontWeight="normal"
+			 text="5. Number of  days PQ tablets taken :"/>
+	<s:TextInput id="qn4" x="487" y="344" width="166" height="55"/>
+	<s:TextArea id="q8_details" x="40" y="904" width="788" height="231"/>
+	<s:BusyIndicator id="busy" x="563" y="1343" width="88" height="88"/>
+	<s:Button x="46" y="1327" width="301" height="105" label="Back" click="navigator.popView()"
+			  fontSize="60"/>
+	<s:Label id="ansall" x="424" y="1371" color="#F00E0E" fontSize="35" fontWeight="bold"
+			 text="Answer all questions!"/>
+	<s:Label id="conn" x="467" y="1289" color="#F00E0E" fontSize="20" fontWeight="bold"
+			 text="Connection lost, please try again."/>
+	<s:Label x="39" y="1170" color="#232323" fontSize="24" fontWeight="bold"
+			 text="Answered all questions?"/>
+	<s:RadioButton id="last" x="81" y="1200" label="Yes" click="last_clickHandler(event)"
+				   fontSize="24" groupName="severity_grade"/>
+	<s:RadioButton x="194" y="1200" label="No" fontSize="24" groupName="severity_grade"/>
+
+</s:View>
